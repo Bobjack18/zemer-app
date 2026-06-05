@@ -71,6 +71,7 @@ import com.jtech.zemer.constants.SYSTEM_DEFAULT
 import com.jtech.zemer.constants.TopSize
 import com.jtech.zemer.sync.SyncState
 import com.jtech.zemer.sync.SyncStatus
+import com.jtech.zemer.ui.component.InfoCard
 import com.jtech.zemer.ui.component.EditTextPreference
 import com.jtech.zemer.ui.component.IconButton
 import com.jtech.zemer.ui.component.ListPreference
@@ -491,14 +492,8 @@ private fun SyncStatusCard(
     onUnlockClick: () -> Unit,
     isLocked: Boolean
 ) {
-      Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 16.dp, vertical = 8.dp)
-    ) {
-        Column(
-            modifier = Modifier.padding(16.dp)
-        ) {
+    InfoCard(
+        content = {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier.fillMaxWidth()
@@ -675,6 +670,6 @@ private fun SyncStatusCard(
                     // If locked, show no buttons - settings are permanently locked
                 }
             }
-        }
-    }
+        },
+    )
 }
