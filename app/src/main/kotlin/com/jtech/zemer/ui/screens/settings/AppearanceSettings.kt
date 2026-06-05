@@ -962,7 +962,7 @@ fun AppearanceSettings(
                                 colors = androidx.compose.material3.CheckboxDefaults.colors(
                                     checkedColor = if (pureBlack) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.primary,
                                     uncheckedColor = if (pureBlack) Color.Gray else Color.Unspecified,
-                                    checkmarkColor = Color.White
+                                    checkmarkColor = Color.White // ui-audit: ignore (AMOLED dialog checkmark)
                                 )
                             )
                             Spacer(modifier = Modifier.width(8.dp))

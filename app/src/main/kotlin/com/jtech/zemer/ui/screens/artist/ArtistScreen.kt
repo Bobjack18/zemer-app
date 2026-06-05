@@ -33,7 +33,6 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -75,7 +74,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.compose.ui.util.fastForEach
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavController
@@ -112,6 +110,7 @@ import com.jtech.zemer.ui.menu.YouTubeArtistMenu
 import com.jtech.zemer.ui.menu.YouTubePlaylistMenu
 import com.jtech.zemer.ui.menu.YouTubeSongMenu
 import com.jtech.zemer.ui.screens.videoRoute
+import com.jtech.zemer.ui.theme.PillShape
 import com.jtech.zemer.ui.utils.backToMain
 import com.jtech.zemer.ui.utils.fadingEdge
 import com.jtech.zemer.ui.utils.resize
@@ -251,7 +250,7 @@ fun ArtistScreen(
                                             .shimmer()
                                             .background(
                                                 MaterialTheme.colorScheme.onSurface,
-                                                RoundedCornerShape(24.dp)
+                                                MaterialTheme.shapes.large
                                             )
                                     )
                                 }
@@ -322,7 +321,6 @@ fun ArtistScreen(
                                     fontWeight = FontWeight.Bold,
                                     maxLines = 1,
                                     overflow = TextOverflow.Ellipsis,
-                                    fontSize = 32.sp,
                                     modifier = Modifier.padding(bottom = 8.dp)
                                 )
 
@@ -358,7 +356,7 @@ fun ArtistScreen(
                                             else
                                                 Color.Transparent
                                         ),
-                                        shape = RoundedCornerShape(50),
+                                        shape = PillShape,
                                         modifier = Modifier
                                             .height(40.dp)
                                             .focusRequester(firstFocus)
@@ -366,7 +364,7 @@ fun ArtistScreen(
                                         val isSubscribed = libraryArtist?.artist?.bookmarkedAt != null
                                         Text(
                                             text = stringResource(if (isSubscribed) R.string.subscribed else R.string.subscribe),
-                                            fontSize = 14.sp,
+                                            style = MaterialTheme.typography.labelLarge,
                                             color = if (!isSubscribed) MaterialTheme.colorScheme.error else LocalContentColor.current
                                         )
                                     }
@@ -384,7 +382,7 @@ fun ArtistScreen(
                                                     onClick = {
                                                         playerConnection.playQueue(YouTubeQueue(radioEndpoint, preloadItem = null, database))
                                                     },
-                                                    shape = RoundedCornerShape(50),
+                                                    shape = PillShape,
                                                     modifier = Modifier.height(40.dp)
                                                 ) {
                                                     Icon(
@@ -395,7 +393,7 @@ fun ArtistScreen(
                                                     Spacer(modifier = Modifier.width(8.dp))
                                                     Text(
                                                         text = stringResource(R.string.radio),
-                                                        fontSize = 14.sp
+                                                        style = MaterialTheme.typography.labelLarge
                                                     )
                                                 }
                                             }
@@ -412,7 +410,7 @@ fun ArtistScreen(
                                                         .size(48.dp)
                                                         .background(
                                                             MaterialTheme.colorScheme.primary,
-                                                            RoundedCornerShape(24.dp)
+                                                            MaterialTheme.shapes.large
                                                         )
                                                 ) {
                                                     Icon(
@@ -440,7 +438,7 @@ fun ArtistScreen(
                                                     .size(48.dp)
                                                     .background(
                                                         MaterialTheme.colorScheme.primary,
-                                                        RoundedCornerShape(24.dp)
+                                                        MaterialTheme.shapes.large
                                                     )
                                             ) {
                                                 Icon(

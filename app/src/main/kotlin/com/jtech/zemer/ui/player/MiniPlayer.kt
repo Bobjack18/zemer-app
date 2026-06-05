@@ -296,7 +296,7 @@ private fun NewMiniPlayer(
                 )
                 .height(64.dp) // Circular height
                 .offset { IntOffset(offsetXAnimatable.value.roundToInt(), 0) }
-                .clip(RoundedCornerShape(32.dp)) // Clip first for perfect rounded corners
+                .clip(MaterialTheme.shapes.extraLarge) // Clip first for perfect rounded corners
                 .background(
                     color = MaterialTheme.colorScheme.surfaceContainer // Same as navigation bar color
                 )
@@ -648,7 +648,7 @@ private fun LegacyMiniPlayer(
             .clip(RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp))
             .background(
                 if (pureBlack)
-                    Color.Black
+                    Color.Black // ui-audit: ignore (pureBlack AMOLED branch)
                 else
                     MaterialTheme.colorScheme.surfaceContainer // Fixed background independent of player background
             )

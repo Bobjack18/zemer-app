@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -19,7 +18,6 @@ import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
@@ -43,6 +41,7 @@ import com.jtech.zemer.constants.AndroidAutoSectionsOrderKey
 import com.jtech.zemer.constants.AndroidAutoTargetPlaylistKey
 import com.jtech.zemer.constants.MediaSessionConstants
 import com.jtech.zemer.ui.component.IconButton
+import com.jtech.zemer.ui.component.ListDialog
 import com.jtech.zemer.ui.component.PreferenceEntry
 import com.jtech.zemer.ui.component.PreferenceGroupTitle
 import com.jtech.zemer.ui.component.SwitchPreference
@@ -222,39 +221,29 @@ fun AndroidAutoSettings(
     }
 
     if (showTargetPlaylistDialog) {
-        AlertDialog(
-            onDismissRequest = { showTargetPlaylistDialog = false },
-            title = { Text(stringResource(R.string.android_auto_target_playlist)) },
-            text = {
-                LazyColumn {
-                    items(playlistOptions) { value ->
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .clickable {
-                                    showTargetPlaylistDialog = false
-                                    onTargetPlaylistChange(value)
-                                }
-                                .padding(vertical = 12.dp),
-                        ) {
-                            RadioButton(selected = value == targetPlaylist, onClick = null)
-                            Text(
-                                text = playlistLabel(value),
-                                style = MaterialTheme.typography.bodyLarge,
-                                modifier = Modifier.padding(start = 16.dp),
-                            )
+        ListDialog(
+            onDismiss = { showTargetPlaylistDialog = false },
+        ) {
+            items(playlistOptions) { value ->
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable {
+                            showTargetPlaylistDialog = false
+                            onTargetPlaylistChange(value)
                         }
-                    }
+                        .padding(horizontal = 24.dp, vertical = 12.dp),
+                ) {
+                    RadioButton(selected = value == targetPlaylist, onClick = null)
+                    Text(
+                        text = playlistLabel(value),
+                        style = MaterialTheme.typography.bodyLarge,
+                        modifier = Modifier.padding(start = 16.dp),
+                    )
                 }
-            },
-            confirmButton = {},
-            dismissButton = {
-                TextButton(onClick = { showTargetPlaylistDialog = false }) {
-                    Text(stringResource(android.R.string.cancel))
-                }
-            },
-        )
+            }
+        }
     }
 
     TopAppBar(

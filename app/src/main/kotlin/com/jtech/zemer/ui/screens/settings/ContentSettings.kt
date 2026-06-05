@@ -16,7 +16,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
@@ -78,6 +77,7 @@ import com.jtech.zemer.ui.component.PreferenceEntry
 import com.jtech.zemer.ui.component.PreferenceGroupTitle
 import com.jtech.zemer.ui.component.SwitchPreference
 import com.jtech.zemer.ui.component.AnonymousAuthEmailDialog
+import com.jtech.zemer.ui.component.DefaultDialog
 import com.jtech.zemer.ui.utils.backToMain
 import com.jtech.zemer.utils.ContentFilterState
 import com.jtech.zemer.utils.rememberEnumPreference
@@ -388,29 +388,20 @@ fun ContentSettings(
     if (showSignInDialog) {
         var isLoading by remember { mutableStateOf(false) }
 
-        AlertDialog(
-            onDismissRequest = { if (!isLoading) showSignInDialog = false },
+        DefaultDialog(
+            onDismiss = { if (!isLoading) showSignInDialog = false },
             title = { Text("Create Sync Account") },
-            text = {
-                if (isLoading) {
-                    Text("Creating account and locking your preferences...")
-                } else {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .verticalScroll(rememberScrollState())
+            buttons = {
+                if (!isLoading) {
+                    TextButton(
+                        onClick = {
+                            showSignInDialog = false
+                            signInDelaySeconds = 0
+                        }
                     ) {
-                        Text("Create an anonymous account to sync and backup your content filter settings.")
-                        Spacer(modifier = Modifier.height(8.dp))
-                        Text("This will permanently lock your preferences to prevent accidental changes.", color = MaterialTheme.colorScheme.primary)
-                        Spacer(modifier = Modifier.height(4.dp))
-                        Text("THIS CANNOT BE CHANGED ONCE SET, IT WILL PERSIST CLEARING DATA OR UNINSTALLATION OF THE APP!", color = MaterialTheme.colorScheme.error, fontWeight = FontWeight.Bold)
-                        Spacer(modifier = Modifier.height(12.dp))
-                        Text("Please wait $signInDelaySeconds second${if (signInDelaySeconds != 1) "s" else ""} before continuing...", color = MaterialTheme.colorScheme.error)
+                        Text("Cancel")
                     }
                 }
-            },
-            confirmButton = {
                 Button(
                     onClick = {
                         if (signInDelaySeconds == 0) {
@@ -448,20 +439,26 @@ fun ContentSettings(
                         Text(if (signInDelaySeconds == 0) "Create Account & Lock" else "Please wait...")
                     }
                 }
-            },
-            dismissButton = {
-                if (!isLoading) {
-                    TextButton(
-                        onClick = {
-                            showSignInDialog = false
-                            signInDelaySeconds = 0
-                        }
-                    ) {
-                        Text("Cancel")
-                    }
+            }
+        ) {
+            if (isLoading) {
+                Text("Creating account and locking your preferences...")
+            } else {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .verticalScroll(rememberScrollState())
+                ) {
+                    Text("Create an anonymous account to sync and backup your content filter settings.")
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Text("This will permanently lock your preferences to prevent accidental changes.", color = MaterialTheme.colorScheme.primary)
+                    Spacer(modifier = Modifier.height(4.dp))
+                    Text("THIS CANNOT BE CHANGED ONCE SET, IT WILL PERSIST CLEARING DATA OR UNINSTALLATION OF THE APP!", color = MaterialTheme.colorScheme.error, fontWeight = FontWeight.Bold)
+                    Spacer(modifier = Modifier.height(12.dp))
+                    Text("Please wait $signInDelaySeconds second${if (signInDelaySeconds != 1) "s" else ""} before continuing...", color = MaterialTheme.colorScheme.error)
                 }
             }
-        )
+        }
     }
 
     TopAppBar(

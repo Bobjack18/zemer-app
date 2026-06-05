@@ -250,8 +250,8 @@ fun Queue(
                     Box(
                         modifier = Modifier
                             .size(buttonSize)
-                            .clip(RoundedCornerShape(5.dp))
-                            .border(1.dp, borderColor, RoundedCornerShape(5.dp))
+                            .clip(MaterialTheme.shapes.extraSmall)
+                            .border(1.dp, borderColor, MaterialTheme.shapes.extraSmall)
                             .clickable {
                                 if (sleepTimerEnabled) {
                                     playerConnection.service.sleepTimer.clear()
@@ -291,8 +291,8 @@ fun Queue(
                     Box(
                         modifier = Modifier
                             .size(buttonSize)
-                            .clip(RoundedCornerShape(5.dp))
-                            .border(1.dp, borderColor, RoundedCornerShape(5.dp))
+                            .clip(MaterialTheme.shapes.extraSmall)
+                            .border(1.dp, borderColor, MaterialTheme.shapes.extraSmall)
                             .clickable {
                                 onShowLyrics()
                             },

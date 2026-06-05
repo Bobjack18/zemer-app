@@ -190,6 +190,20 @@ R12); has a `contentDescription` path for icon-only use; no parallel duplicate.
 New dialog: built from a `Dialog.kt` helper (R7); follows the Dialogs structure; shared `Motion`;
 D-pad-operable with the safe default focus; localized.
 
+## Exemptions
+
+R9 flags magic-number / hardcoded literals only. These documented cases are exempt (and encoded in
+`scripts/ui-audit.sh`); everything else must use tokens:
+- `ui/theme/*` (the token definitions) and `LyricsImageCard` (a fixed-size share bitmap).
+- Media / video / art overlays, which use `AppColors` (`scrim`/`onMedia`/`mediaOverlay`).
+- The AMOLED pure-black convention (`if (pureBlack) <color> else <role>`) - `ColorScheme.pureBlack()`
+  cannot express the foreground overrides.
+- Alpha masks (`BlendMode.DstIn`, fading edges) where the color value is irrelevant.
+- User-selectable color data (e.g. the lyrics share-image palette).
+- Named shape constants (`ThumbnailCornerRadius`), asymmetric (per-corner) shapes, and
+  computed/animated shapes - none are magic-number literals.
+- `AutoResizeText` (computed size) and typography-derived sizes (`MaterialTheme.typography.x.fontSize`).
+
 ## Documentation
 
 No emojis or decorative symbols anywhere under `docs/` - ASCII only (use `->` over a glyph). Keep this

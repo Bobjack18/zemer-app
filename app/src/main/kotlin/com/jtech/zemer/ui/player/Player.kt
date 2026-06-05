@@ -46,7 +46,6 @@ import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.FilledTonalIconButton
@@ -95,7 +94,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.DialogProperties
 import androidx.media3.common.C
 import androidx.media3.common.Player
 import androidx.media3.common.Player.STATE_ENDED
@@ -125,6 +123,7 @@ import com.jtech.zemer.extensions.toggleRepeatMode
 import com.jtech.zemer.models.MediaMetadata
 import com.jtech.zemer.ui.component.BottomSheet
 import com.jtech.zemer.ui.component.BottomSheetState
+import com.jtech.zemer.ui.component.DefaultDialog
 import com.jtech.zemer.ui.component.LocalBottomSheetPageState
 import com.jtech.zemer.ui.component.LocalMenuState
 import com.jtech.zemer.ui.component.PlayerSliderTrack
@@ -328,9 +327,8 @@ fun BottomSheetPlayer(
         mutableFloatStateOf(30f)
     }
     if (showSleepTimerDialog) {
-        AlertDialog(
-            properties = DialogProperties(usePlatformDefaultWidth = false),
-            onDismissRequest = { showSleepTimerDialog = false },
+        DefaultDialog(
+            onDismiss = { showSleepTimerDialog = false },
             icon = {
                 Icon(
                     painter = painterResource(R.drawable.bedtime),
@@ -338,7 +336,12 @@ fun BottomSheetPlayer(
                 )
             },
             title = { Text(stringResource(R.string.sleep_timer)) },
-            confirmButton = {
+            buttons = {
+                TextButton(
+                    onClick = { showSleepTimerDialog = false },
+                ) {
+                    Text(stringResource(android.R.string.cancel))
+                }
                 TextButton(
                     onClick = {
                         showSleepTimerDialog = false
@@ -348,46 +351,38 @@ fun BottomSheetPlayer(
                     Text(stringResource(android.R.string.ok))
                 }
             },
-            dismissButton = {
-                TextButton(
-                    onClick = { showSleepTimerDialog = false },
+        ) {
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                Text(
+                    text = pluralStringResource(
+                        R.plurals.minute,
+                        sleepTimerValue.roundToInt(),
+                        sleepTimerValue.roundToInt()
+                    ),
+                    style = MaterialTheme.typography.bodyLarge,
+                )
+
+                Slider(
+                    value = sleepTimerValue,
+                    onValueChange = { sleepTimerValue = it },
+                    valueRange = 5f..120f,
+                    steps = (120 - 5) / 5 - 1,
+                )
+
+                OutlinedIconButton(
+                    onClick = {
+                        showSleepTimerDialog = false
+                        playerConnection.service.sleepTimer.start(-1)
+                    },
+                    border = BorderStroke(1.dp, accentColor),
+                    colors = IconButtonDefaults.outlinedIconButtonColors(
+                        contentColor = accentColor
+                    ),
                 ) {
-                    Text(stringResource(android.R.string.cancel))
+                    Text(stringResource(R.string.end_of_song))
                 }
-            },
-            text = {
-                Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    Text(
-                        text = pluralStringResource(
-                            R.plurals.minute,
-                            sleepTimerValue.roundToInt(),
-                            sleepTimerValue.roundToInt()
-                        ),
-                        style = MaterialTheme.typography.bodyLarge,
-                    )
-
-                    Slider(
-                        value = sleepTimerValue,
-                        onValueChange = { sleepTimerValue = it },
-                        valueRange = 5f..120f,
-                        steps = (120 - 5) / 5 - 1,
-                    )
-
-                    OutlinedIconButton(
-                        onClick = {
-                            showSleepTimerDialog = false
-                            playerConnection.service.sleepTimer.start(-1)
-                        },
-                        border = BorderStroke(1.dp, accentColor),
-                        colors = IconButtonDefaults.outlinedIconButtonColors(
-                            contentColor = accentColor
-                        ),
-                    ) {
-                        Text(stringResource(R.string.end_of_song))
-                    }
-                }
-            },
-        )
+            }
+        }
     }
 
     LaunchedEffect(playbackState) {
@@ -548,7 +543,7 @@ fun BottomSheetPlayer(
                     Box(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .border(2.dp, titleBorderColor.value, RoundedCornerShape(4.dp))
+                            .border(2.dp, titleBorderColor.value, MaterialTheme.shapes.extraSmall)
                             .padding(4.dp)
                             .focusable()
                             .onFocusChanged { titleFocused.value = it.isFocused }
@@ -615,7 +610,7 @@ fun BottomSheetPlayer(
                         Box(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .border(2.dp, artistBorderColor.value, RoundedCornerShape(4.dp))
+                                .border(2.dp, artistBorderColor.value, MaterialTheme.shapes.extraSmall)
                                 .padding(4.dp)
                                 .basicMarquee(iterations = 1, initialDelayMillis = 3000, velocity = 30.dp)
                                 .focusable()
@@ -779,9 +774,9 @@ fun BottomSheetPlayer(
                         modifier =
                         Modifier
                             .size(40.dp)
-                            .clip(RoundedCornerShape(24.dp))
+                            .clip(MaterialTheme.shapes.large)
                             .background(textButtonColor)
-                            .border(3.dp, oldShareBorderColor.value, RoundedCornerShape(24.dp))
+                            .border(3.dp, oldShareBorderColor.value, MaterialTheme.shapes.large)
                             .focusable()
                             .onFocusChanged { oldShareFocused.value = it.isFocused }
                             .clickable {
@@ -815,9 +810,9 @@ fun BottomSheetPlayer(
                         modifier =
                         Modifier
                             .size(40.dp)
-                            .clip(RoundedCornerShape(24.dp))
+                            .clip(MaterialTheme.shapes.large)
                             .background(textButtonColor)
-                            .border(3.dp, oldMenuBorderColor.value, RoundedCornerShape(24.dp))
+                            .border(3.dp, oldMenuBorderColor.value, MaterialTheme.shapes.large)
                             .focusable()
                             .onFocusChanged { oldMenuFocused.value = it.isFocused }
                             .clickable {
@@ -994,8 +989,8 @@ fun BottomSheetPlayer(
                             ),
                             modifier = Modifier
                                 .size(width = sideButtonWidth, height = sideButtonHeight)
-                                .clip(RoundedCornerShape(32.dp))
-                                .border(3.dp, skipPrevBorderColor.value, RoundedCornerShape(32.dp))
+                                .clip(MaterialTheme.shapes.extraLarge)
+                                .border(3.dp, skipPrevBorderColor.value, MaterialTheme.shapes.extraLarge)
                                 .focusable()
                                 .onFocusChanged { skipPrevFocused.value = it.isFocused }
                                 .combinedClickable(
@@ -1044,8 +1039,8 @@ fun BottomSheetPlayer(
                             ),
                             modifier = Modifier
                                 .size(width = playButtonWidth, height = playButtonHeight)
-                                .clip(RoundedCornerShape(32.dp))
-                                .border(3.dp, playButtonBorderColor.value, RoundedCornerShape(32.dp))
+                                .clip(MaterialTheme.shapes.extraLarge)
+                                .border(3.dp, playButtonBorderColor.value, MaterialTheme.shapes.extraLarge)
                                 .focusable()
                                 .onFocusChanged { playButtonFocused.value = it.isFocused }
                         ) {
@@ -1083,8 +1078,8 @@ fun BottomSheetPlayer(
                             ),
                             modifier = Modifier
                                 .size(width = sideButtonWidth, height = sideButtonHeight)
-                                .clip(RoundedCornerShape(32.dp))
-                                .border(3.dp, skipNextBorderColor.value, RoundedCornerShape(32.dp))
+                                .clip(MaterialTheme.shapes.extraLarge)
+                                .border(3.dp, skipNextBorderColor.value, MaterialTheme.shapes.extraLarge)
                                 .focusable()
                                 .onFocusChanged { skipNextFocused.value = it.isFocused }
                                 .combinedClickable(
@@ -1304,7 +1299,7 @@ fun BottomSheetPlayer(
             navController = navController,
             background =
             if (useBlackBackground) {
-                Color.Black
+                Color.Black // ui-audit: ignore (pureBlack AMOLED branch)
             } else {
                 MaterialTheme.colorScheme.surfaceContainer
             },

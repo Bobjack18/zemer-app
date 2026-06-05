@@ -20,9 +20,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -66,6 +64,8 @@ import com.jtech.zemer.constants.InnerTubeCookieKey
 import com.jtech.zemer.constants.UseLoginForBrowse
 import com.jtech.zemer.constants.VisitorDataKey
 import com.jtech.zemer.constants.YtmSyncKey
+import com.jtech.zemer.ui.component.DefaultDialog
+import com.jtech.zemer.ui.component.IconButton
 import com.jtech.zemer.ui.component.PreferenceEntry
 import com.jtech.zemer.ui.component.SwitchPreference
 import com.jtech.zemer.ui.component.TextFieldDialog
@@ -131,7 +131,7 @@ fun AccountSettings(
                 modifier = Modifier.padding(start = 4.dp)
             )
             Spacer(modifier = Modifier.weight(1f))
-            IconButton(onClick = onClose) {
+            IconButton(onClick = onClose, onLongClick = onClose) {
                 Icon(painterResource(R.drawable.close), contentDescription = null)
             }
         }
@@ -394,25 +394,10 @@ fun AccountSettings(
 
         // Logout confirmation dialog
         if (showLogoutDialog) {
-            AlertDialog(
-                onDismissRequest = { showLogoutDialog = false },
+            DefaultDialog(
+                onDismiss = { showLogoutDialog = false },
                 title = { Text("Keep library data?") },
-                text = { Text("Do you want to keep your downloaded songs, playlists, and library data?") },
-                confirmButton = {
-                    TextButton(
-                        onClick = {
-                            scope.launch {
-                                App.forgetAccount(context)
-                                Toast.makeText(context, context.getString(R.string.logged_out), Toast.LENGTH_SHORT).show()
-                                showLogoutDialog = false
-                                onClose()
-                            }
-                        }
-                    ) {
-                        Text("Keep")
-                    }
-                },
-                dismissButton = {
+                buttons = {
                     TextButton(
                         onClick = {
                             scope.launch {
@@ -426,8 +411,22 @@ fun AccountSettings(
                     ) {
                         Text("Clear")
                     }
+                    TextButton(
+                        onClick = {
+                            scope.launch {
+                                App.forgetAccount(context)
+                                Toast.makeText(context, context.getString(R.string.logged_out), Toast.LENGTH_SHORT).show()
+                                showLogoutDialog = false
+                                onClose()
+                            }
+                        }
+                    ) {
+                        Text("Keep")
+                    }
                 }
-            )
+            ) {
+                Text("Do you want to keep your downloaded songs, playlists, and library data?")
+            }
         }
 
         if (latestVersionName != BuildConfig.VERSION_NAME) {

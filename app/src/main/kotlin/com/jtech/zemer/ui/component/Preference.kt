@@ -16,7 +16,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -73,7 +72,7 @@ fun PreferenceEntry(
         modifier =
         modifier
             .fillMaxWidth()
-            .clip(RoundedCornerShape(8.dp))
+            .clip(MaterialTheme.shapes.extraSmall)
             .onFocusChanged { isFocused = it.isFocused }
             .focusable()
             .clickable(
@@ -82,7 +81,7 @@ fun PreferenceEntry(
             )
             .alpha(if (isEnabled) 1f else 0.5f)
             .background(backgroundColor)
-            .border(width = 1.5.dp, color = borderColor, shape = RoundedCornerShape(8.dp))
+            .border(width = 1.5.dp, color = borderColor, shape = MaterialTheme.shapes.extraSmall)
             .padding(horizontal = 16.dp, vertical = 16.dp),
     ) {
         if (icon != null) {

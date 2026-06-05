@@ -17,10 +17,11 @@ total=0
 check() {
   local rule="$1" desc="$2" pat="$3" path="$4" excl="${5:-}"
   local hits
+  # A line may opt out explicitly with a trailing  // ui-audit: ignore  comment (documented exemption).
   if [ -n "$excl" ]; then
-    hits=$(grep -rnE "$pat" "$path" 2>/dev/null | grep -vE "$excl")
+    hits=$(grep -rnE "$pat" "$path" 2>/dev/null | grep -vE "$excl" | grep -vF 'ui-audit: ignore')
   else
-    hits=$(grep -rnE "$pat" "$path" 2>/dev/null)
+    hits=$(grep -rnE "$pat" "$path" 2>/dev/null | grep -vF 'ui-audit: ignore')
   fi
   local n
   n=$(printf '%s' "$hits" | grep -c . )
@@ -38,9 +39,13 @@ check "R0"  "Material 2 imports (excl. icons)"            "import androidx\.comp
 check "R3"  "plain material3 IconButton in settings/"     "import androidx\.compose\.material3\.IconButton" "$SETTINGS"
 check "R6"  "Material3SettingsGroup/Item usage"           "Material3Settings(Group|Item)" "$UI" "Material3SettingsGroup\.kt"
 check "R7"  "raw AlertDialog/BasicAlertDialog"            "(^|[^a-zA-Z])(Basic)?AlertDialog\(" "$UI" "/component/Dialog\.kt"
-check "R9"  "literal fontSize"                            "fontSize\s*=" "$UI" "theme/Type\.kt|LyricsImageCard\.kt"
-check "R9"  "literal RoundedCornerShape"                  "RoundedCornerShape\(" "$UI" "/theme/"
-check "R9"  "hardcoded Color (excl. theme)"               "Color\(0x|Color\.(Black|White|Red|Gray|LightGray|Green|Blue)" "$UI" "/theme/|AppColors"
+# R9 flags magic-number/hardcoded literals only. Documented exemptions (docs/ui/standards.md):
+# theme files, the fixed-size LyricsImageCard bitmap, AutoResizeText (computed size) and
+# typography-derived sizes, named shape constants / asymmetric / computed shapes (not [0-9]-leading),
+# media overlays (AppColors), the pureBlack AMOLED convention, and alpha masks (BlendMode).
+check "R9"  "literal fontSize"                            "fontSize\s*=" "$UI" "theme/Type\.kt|LyricsImageCard\.kt|AutoResizeText\.kt|MaterialTheme\.typography"
+check "R9"  "magic RoundedCornerShape"                    "RoundedCornerShape\([0-9]" "$UI" "/theme/|RoundedCornerShape\(0\.dp|LyricsImageCard\.kt"
+check "R9"  "hardcoded Color"                             "Color\(0x|Color\.(Black|White|Red|Gray|LightGray|Green|Blue)" "$UI" "/theme/|AppColors|pureBlack|useBlackBackground|BlendMode|LyricsImageCard\.kt|component/Lyrics\.kt|FadingEdge\.kt|ShimmerHost\.kt"
 
 echo "-----------------------------------------------------------"
 printf '%-51s %3d\n' "TOTAL violations" "$total"

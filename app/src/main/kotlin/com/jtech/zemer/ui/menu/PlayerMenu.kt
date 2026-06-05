@@ -24,7 +24,6 @@ import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -32,7 +31,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -53,7 +51,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.DialogProperties
 import androidx.media3.common.PlaybackParameters
 import androidx.media3.exoplayer.offline.Download
 import androidx.navigation.NavController
@@ -64,8 +61,10 @@ import com.jtech.zemer.R
 import com.jtech.zemer.constants.ListItemHeight
 import com.jtech.zemer.models.MediaMetadata
 import com.jtech.zemer.playback.MediaStoreDownloadManager
+import com.jtech.zemer.ui.component.ActionPromptDialog
 import com.jtech.zemer.ui.component.BigSeekBar
 import com.jtech.zemer.ui.component.BottomSheetState
+import com.jtech.zemer.ui.component.DefaultDialog
 import com.jtech.zemer.ui.component.ListDialog
 import com.jtech.zemer.ui.component.NewAction
 import com.jtech.zemer.ui.component.NewActionGrid
@@ -179,39 +178,16 @@ fun PlayerMenu(
             "bad_images" to stringResource(R.string.report_reason_bad_images),
             "other" to stringResource(R.string.report_reason_other),
         )
-        androidx.compose.material3.AlertDialog(
-            onDismissRequest = { if (!isSubmitting) showReportDialog = false },
+        DefaultDialog(
+            onDismiss = { if (!isSubmitting) showReportDialog = false },
             title = { Text(stringResource(R.string.report_artist)) },
-            text = {
-                Column {
-                    reasons.forEach { (value, label) ->
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .clickable { selectedReason = value }
-                                .padding(vertical = 6.dp),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            androidx.compose.material3.RadioButton(
-                                selected = selectedReason == value,
-                                onClick = { selectedReason = value }
-                            )
-                            Spacer(modifier = Modifier.width(8.dp))
-                            Text(text = label)
-                        }
-                    }
-                    Spacer(modifier = Modifier.height(8.dp))
-                    androidx.compose.material3.OutlinedTextField(
-                        value = comment,
-                        onValueChange = { comment = it },
-                        label = { Text(stringResource(R.string.report_optional_comment)) },
-                        modifier = Modifier.fillMaxWidth(),
-                        singleLine = false,
-                        maxLines = 3
-                    )
+            buttons = {
+                androidx.compose.material3.TextButton(
+                    onClick = { if (!isSubmitting) showReportDialog = false },
+                    enabled = !isSubmitting
+                ) {
+                    Text(stringResource(R.string.report_cancel))
                 }
-            },
-            confirmButton = {
                 androidx.compose.material3.Button(
                     onClick = {
                         if (selectedReason.isBlank()) {
@@ -256,16 +232,36 @@ fun PlayerMenu(
                         Text(stringResource(R.string.report_submit))
                     }
                 }
-            },
-            dismissButton = {
-                androidx.compose.material3.TextButton(
-                    onClick = { if (!isSubmitting) showReportDialog = false },
-                    enabled = !isSubmitting
-                ) {
-                    Text(stringResource(R.string.report_cancel))
-                }
             }
-        )
+        ) {
+            Column {
+                reasons.forEach { (value, label) ->
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable { selectedReason = value }
+                            .padding(vertical = 6.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        androidx.compose.material3.RadioButton(
+                            selected = selectedReason == value,
+                            onClick = { selectedReason = value }
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text(text = label)
+                    }
+                }
+                Spacer(modifier = Modifier.height(8.dp))
+                androidx.compose.material3.OutlinedTextField(
+                    value = comment,
+                    onValueChange = { comment = it },
+                    label = { Text(stringResource(R.string.report_optional_comment)) },
+                    modifier = Modifier.fillMaxWidth(),
+                    singleLine = false,
+                    maxLines = 3
+                )
+            }
+        }
     }
 
     var showPitchTempoDialog by rememberSaveable {
@@ -617,56 +613,40 @@ fun TempoPitchDialog(onDismiss: () -> Unit) {
             PlaybackParameters(tempo, 2f.pow(transposeValue.toFloat() / 12))
     }
 
-    AlertDialog(
-        properties = DialogProperties(usePlatformDefaultWidth = false),
-        onDismissRequest = onDismiss,
-        title = {
-            Text(stringResource(R.string.tempo_and_pitch))
+    ActionPromptDialog(
+        title = stringResource(R.string.tempo_and_pitch),
+        onDismiss = onDismiss,
+        onConfirm = onDismiss,
+        onReset = {
+            tempo = 1f
+            transposeValue = 0
+            updatePlaybackParameters()
         },
-        dismissButton = {
-            TextButton(
-                onClick = {
-                    tempo = 1f
-                    transposeValue = 0
+    ) {
+        Column {
+            ValueAdjuster(
+                icon = R.drawable.speed,
+                currentValue = tempo,
+                values = (0..35).map { round((0.25f + it * 0.05f) * 100) / 100 },
+                onValueUpdate = {
+                    tempo = it
                     updatePlaybackParameters()
                 },
-            ) {
-                Text(stringResource(R.string.reset))
-            }
-        },
-        confirmButton = {
-            TextButton(
-                onClick = onDismiss,
-            ) {
-                Text(stringResource(android.R.string.ok))
-            }
-        },
-        text = {
-            Column {
-                ValueAdjuster(
-                    icon = R.drawable.speed,
-                    currentValue = tempo,
-                    values = (0..35).map { round((0.25f + it * 0.05f) * 100) / 100 },
-                    onValueUpdate = {
-                        tempo = it
-                        updatePlaybackParameters()
-                    },
-                    valueText = { "x$it" },
-                    modifier = Modifier.padding(bottom = 12.dp),
-                )
-                ValueAdjuster(
-                    icon = R.drawable.discover_tune,
-                    currentValue = transposeValue,
-                    values = (-12..12).toList(),
-                    onValueUpdate = {
-                        transposeValue = it
-                        updatePlaybackParameters()
-                    },
-                    valueText = { "${if (it > 0) "+" else ""}$it" },
-                )
-            }
-        },
-    )
+                valueText = { "x$it" },
+                modifier = Modifier.padding(bottom = 12.dp),
+            )
+            ValueAdjuster(
+                icon = R.drawable.discover_tune,
+                currentValue = transposeValue,
+                values = (-12..12).toList(),
+                onValueUpdate = {
+                    transposeValue = it
+                    updatePlaybackParameters()
+                },
+                valueText = { "${if (it > 0) "+" else ""}$it" },
+            )
+        }
+    }
 }
 
 @Composable

@@ -25,7 +25,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
@@ -79,6 +78,7 @@ import com.jtech.zemer.models.MediaMetadata
 import com.jtech.zemer.models.toMediaMetadata
 import com.jtech.zemer.playback.MediaStoreDownloadManager
 import com.jtech.zemer.playback.queues.YouTubeQueue
+import com.jtech.zemer.ui.component.DefaultDialog
 import com.jtech.zemer.ui.component.ListDialog
 import com.jtech.zemer.utils.VideoLinkBuilder
 import com.jtech.zemer.ui.component.LocalBottomSheetPageState
@@ -139,39 +139,16 @@ fun YouTubeSongMenu(
             "bad_images" to stringResource(R.string.report_reason_bad_images),
             "other" to stringResource(R.string.report_reason_other),
         )
-        AlertDialog(
-            onDismissRequest = { if (!isSubmitting) showReportDialog = false },
+        DefaultDialog(
+            onDismiss = { if (!isSubmitting) showReportDialog = false },
             title = { Text(stringResource(R.string.report_artist)) },
-            text = {
-                Column {
-                    reasons.forEach { (value, label) ->
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .clickable { selectedReason = value }
-                                .padding(vertical = 6.dp),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            RadioButton(
-                                selected = selectedReason == value,
-                                onClick = { selectedReason = value }
-                            )
-                            Spacer(modifier = Modifier.width(8.dp))
-                            Text(text = label)
-                        }
-                    }
-                    Spacer(modifier = Modifier.height(8.dp))
-                    OutlinedTextField(
-                        value = comment,
-                        onValueChange = { comment = it },
-                        label = { Text(stringResource(R.string.report_optional_comment)) },
-                        modifier = Modifier.fillMaxWidth(),
-                        singleLine = false,
-                        maxLines = 3
-                    )
+            buttons = {
+                TextButton(
+                    onClick = { if (!isSubmitting) showReportDialog = false },
+                    enabled = !isSubmitting
+                ) {
+                    Text(stringResource(R.string.report_cancel))
                 }
-            },
-            confirmButton = {
                 Button(
                     onClick = {
                         if (selectedReason.isBlank()) {
@@ -216,16 +193,36 @@ fun YouTubeSongMenu(
                         Text(stringResource(R.string.report_submit))
                     }
                 }
-            },
-            dismissButton = {
-                TextButton(
-                    onClick = { if (!isSubmitting) showReportDialog = false },
-                    enabled = !isSubmitting
-                ) {
-                    Text(stringResource(R.string.report_cancel))
-                }
             }
-        )
+        ) {
+            Column {
+                reasons.forEach { (value, label) ->
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable { selectedReason = value }
+                            .padding(vertical = 6.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        RadioButton(
+                            selected = selectedReason == value,
+                            onClick = { selectedReason = value }
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text(text = label)
+                    }
+                }
+                Spacer(modifier = Modifier.height(8.dp))
+                OutlinedTextField(
+                    value = comment,
+                    onValueChange = { comment = it },
+                    label = { Text(stringResource(R.string.report_optional_comment)) },
+                    modifier = Modifier.fillMaxWidth(),
+                    singleLine = false,
+                    maxLines = 3
+                )
+            }
+        }
     }
 
     var showChoosePlaylistDialog by rememberSaveable {  

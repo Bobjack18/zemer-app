@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -41,6 +40,8 @@ import androidx.navigation.NavController
 import com.jtech.zemer.LocalPlayerAwareWindowInsets
 import com.jtech.zemer.R
 import com.jtech.zemer.constants.CheckForUpdatesKey
+import com.jtech.zemer.ui.component.ActionPromptDialog
+import com.jtech.zemer.ui.component.DefaultDialog
 import com.jtech.zemer.ui.component.IconButton
 import com.jtech.zemer.ui.component.PreferenceEntry
 import com.jtech.zemer.ui.component.SwitchPreference
@@ -144,63 +145,22 @@ fun UpdaterScreen(
                 val downloadProgress = (downloadState as? UpdateChecker.DownloadState.Downloading)?.progress ?: 0f
                 val downloadError = (downloadState as? UpdateChecker.DownloadState.Error)?.message
 
-                AlertDialog(
-                    onDismissRequest = {
+                DefaultDialog(
+                    onDismiss = {
                         if (!isDownloading) {
                             showResultDialog = false
                             downloadState = UpdateChecker.DownloadState.Idle
                         }
                     },
                     title = { Text(stringResource(R.string.update_available)) },
-                    text = {
-                        Column {
-                            Text(stringResource(R.string.update_available_message, result.currentVersion, result.latestVersion))
-                            if (!result.notes.isNullOrBlank()) {
-                                Spacer(Modifier.height(12.dp))
-                                Text(
-                                    text = stringResource(R.string.whats_new),
-                                    style = MaterialTheme.typography.labelMedium,
-                                    color = MaterialTheme.colorScheme.primary
-                                )
-                                Spacer(Modifier.height(4.dp))
-                                Text(
-                                    text = result.notes,
-                                    style = MaterialTheme.typography.bodySmall
-                                )
-                            }
-                            if (isDownloading) {
-                                Spacer(Modifier.height(16.dp))
-                                Text(
-                                    text = stringResource(R.string.downloading_update),
-                                    style = MaterialTheme.typography.labelMedium
-                                )
-                                Spacer(Modifier.height(8.dp))
-                                if (downloadProgress >= 0) {
-                                    LinearProgressIndicator(
-                                        progress = { downloadProgress },
-                                        modifier = Modifier.fillMaxWidth()
-                                    )
-                                    Spacer(Modifier.height(4.dp))
-                                    Text(
-                                        text = "${(downloadProgress * 100).toInt()}%",
-                                        style = MaterialTheme.typography.bodySmall
-                                    )
-                                } else {
-                                    LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
-                                }
-                            }
-                            if (downloadError != null) {
-                                Spacer(Modifier.height(12.dp))
-                                Text(
-                                    text = downloadError,
-                                    style = MaterialTheme.typography.bodySmall,
-                                    color = MaterialTheme.colorScheme.error
-                                )
-                            }
-                        }
-                    },
-                    confirmButton = {
+                    buttons = {
                         if (!isDownloading) {
+                            TextButton(onClick = {
+                                showResultDialog = false
+                                downloadState = UpdateChecker.DownloadState.Idle
+                            }) {
+                                Text(stringResource(R.string.later))
+                            }
                             TextButton(onClick = {
                                 downloadState = UpdateChecker.DownloadState.Downloading(0f)
                                 scope.launch {
@@ -212,46 +172,72 @@ fun UpdaterScreen(
                                 Text(stringResource(R.string.download_and_install))
                             }
                         }
-                    },
-                    dismissButton = {
-                        if (!isDownloading) {
-                            TextButton(onClick = {
-                                showResultDialog = false
-                                downloadState = UpdateChecker.DownloadState.Idle
-                            }) {
-                                Text(stringResource(R.string.later))
+                    }
+                ) {
+                    Column {
+                        Text(stringResource(R.string.update_available_message, result.currentVersion, result.latestVersion))
+                        if (!result.notes.isNullOrBlank()) {
+                            Spacer(Modifier.height(12.dp))
+                            Text(
+                                text = stringResource(R.string.whats_new),
+                                style = MaterialTheme.typography.labelMedium,
+                                color = MaterialTheme.colorScheme.primary
+                            )
+                            Spacer(Modifier.height(4.dp))
+                            Text(
+                                text = result.notes,
+                                style = MaterialTheme.typography.bodySmall
+                            )
+                        }
+                        if (isDownloading) {
+                            Spacer(Modifier.height(16.dp))
+                            Text(
+                                text = stringResource(R.string.downloading_update),
+                                style = MaterialTheme.typography.labelMedium
+                            )
+                            Spacer(Modifier.height(8.dp))
+                            if (downloadProgress >= 0) {
+                                LinearProgressIndicator(
+                                    progress = { downloadProgress },
+                                    modifier = Modifier.fillMaxWidth()
+                                )
+                                Spacer(Modifier.height(4.dp))
+                                Text(
+                                    text = "${(downloadProgress * 100).toInt()}%",
+                                    style = MaterialTheme.typography.bodySmall
+                                )
+                            } else {
+                                LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
                             }
                         }
+                        if (downloadError != null) {
+                            Spacer(Modifier.height(12.dp))
+                            Text(
+                                text = downloadError,
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.error
+                            )
+                        }
                     }
-                )
+                }
             }
             is UpdateChecker.UpdateResult.UpToDate -> {
-                AlertDialog(
-                    onDismissRequest = { showResultDialog = false },
-                    title = { Text(stringResource(R.string.up_to_date)) },
-                    text = {
-                        Text(stringResource(R.string.up_to_date_message, result.currentVersion))
-                    },
-                    confirmButton = {
-                        TextButton(onClick = { showResultDialog = false }) {
-                            Text(stringResource(android.R.string.ok))
-                        }
-                    }
-                )
+                ActionPromptDialog(
+                    title = stringResource(R.string.up_to_date),
+                    onDismiss = { showResultDialog = false },
+                    onConfirm = { showResultDialog = false },
+                ) {
+                    Text(stringResource(R.string.up_to_date_message, result.currentVersion))
+                }
             }
             is UpdateChecker.UpdateResult.Error -> {
-                AlertDialog(
-                    onDismissRequest = { showResultDialog = false },
-                    title = { Text(stringResource(R.string.error)) },
-                    text = {
-                        Text(result.message)
-                    },
-                    confirmButton = {
-                        TextButton(onClick = { showResultDialog = false }) {
-                            Text(stringResource(android.R.string.ok))
-                        }
-                    }
-                )
+                ActionPromptDialog(
+                    title = stringResource(R.string.error),
+                    onDismiss = { showResultDialog = false },
+                    onConfirm = { showResultDialog = false },
+                ) {
+                    Text(result.message)
+                }
             }
             null -> { }
         }

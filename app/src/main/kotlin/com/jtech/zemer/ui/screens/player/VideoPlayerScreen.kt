@@ -30,13 +30,13 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.border
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -94,6 +94,7 @@ import com.jtech.zemer.R
 import com.jtech.zemer.constants.AudioQuality
 import com.jtech.zemer.constants.BlockVideosKey
 import com.jtech.zemer.db.entities.SongEntity
+import com.jtech.zemer.ui.component.ListDialog
 import com.jtech.zemer.ui.theme.AppColors
 import com.jtech.zemer.utils.MediaStoreHelper
 import com.jtech.zemer.utils.UrlValidator
@@ -794,7 +795,7 @@ fun VideoPlayerScreen(
                                             )
                                             Text(
                                                 text = artistName ?: "Unknown artist",
-                                                color = Color.LightGray,
+                                                color = AppColors.onMedia(0.7f),
                                                 style = MaterialTheme.typography.labelMedium,
                                                 maxLines = 1,
                                                 overflow = TextOverflow.Ellipsis
@@ -858,11 +859,11 @@ fun VideoPlayerScreen(
                                     modifier = Modifier
                                         .fillMaxWidth()
                                         .padding(top = 12.dp)
-                                        .clip(RoundedCornerShape(18.dp))
+                                        .clip(MaterialTheme.shapes.large)
                                         .border(
                                             width = 1.dp,
                                             color = outlineColor,
-                                            shape = RoundedCornerShape(18.dp)
+                                            shape = MaterialTheme.shapes.large
                                         )
                                         .background(AppColors.mediaOverlay(0.6f))
                                         .padding(horizontal = 12.dp, vertical = 12.dp)
@@ -897,7 +898,7 @@ fun VideoPlayerScreen(
                                             modifier = Modifier.size(52.dp),
                                             colors = buttonColors,
                                             border = buttonBorder,
-                                            shape = RoundedCornerShape(18.dp)
+                                            shape = MaterialTheme.shapes.large
                                         ) {
                                             Icon(
                                                 painter = painterResource(R.drawable.skip_previous),
@@ -909,7 +910,7 @@ fun VideoPlayerScreen(
                                             modifier = Modifier.size(64.dp),
                                             colors = buttonColors,
                                             border = buttonBorder,
-                                            shape = RoundedCornerShape(22.dp)
+                                            shape = MaterialTheme.shapes.large
                                         ) {
                                             Icon(
                                                 painter = painterResource(if (isPlaying) R.drawable.pause else R.drawable.play),
@@ -921,7 +922,7 @@ fun VideoPlayerScreen(
                                             modifier = Modifier.size(52.dp),
                                             colors = buttonColors,
                                             border = buttonBorder,
-                                            shape = RoundedCornerShape(18.dp)
+                                            shape = MaterialTheme.shapes.large
                                         ) {
                                             Icon(
                                                 painter = painterResource(R.drawable.skip_next),
@@ -984,77 +985,98 @@ fun VideoPlayerScreen(
     }
 
     if (showDownloadDialog) {
-        AlertDialog(
-            onDismissRequest = { showDownloadDialog = false },
-            title = { Text("Download video") },
-            text = {
-                Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                    Text("Choose a quality", style = MaterialTheme.typography.bodyMedium)
+        ListDialog(
+            onDismiss = { showDownloadDialog = false },
+        ) {
+            item {
+                Column(
+                    verticalArrangement = Arrangement.spacedBy(4.dp),
+                    modifier = Modifier.padding(horizontal = 24.dp)
+                ) {
+                    Text("Download video", style = MaterialTheme.typography.headlineSmall)
                     Spacer(modifier = Modifier.height(8.dp))
-                    if (availableQualities.isNotEmpty()) {
-                        availableQualities.forEach { quality ->
-                            val bitrateKbps = quality.bitrate?.div(1000) ?: 4000
-                            TextButton(
-                                onClick = { downloadVideo(bitrateKbps) },
-                                modifier = Modifier.fillMaxWidth()
-                            ) {
-                                Text(
-                                    text = quality.label,
-                                    modifier = Modifier.fillMaxWidth()
-                                )
-                            }
-                        }
-                    } else {
-                        // Fallback if qualities not yet loaded
-                        Text("Loading available qualities...", style = MaterialTheme.typography.bodySmall)
+                    Text("Choose a quality", style = MaterialTheme.typography.bodyMedium)
+                }
+                Spacer(modifier = Modifier.height(8.dp))
+            }
+            if (availableQualities.isNotEmpty()) {
+                items(availableQualities) { quality ->
+                    val bitrateKbps = quality.bitrate?.div(1000) ?: 4000
+                    TextButton(
+                        onClick = { downloadVideo(bitrateKbps) },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 24.dp)
+                    ) {
+                        Text(
+                            text = quality.label,
+                            modifier = Modifier.fillMaxWidth()
+                        )
                     }
                 }
-            },
-            confirmButton = {},
-            dismissButton = {
-                TextButton(onClick = { showDownloadDialog = false }) {
-                    Text("Close")
+            } else {
+                item {
+                    // Fallback if qualities not yet loaded
+                    Text(
+                        "Loading available qualities...",
+                        style = MaterialTheme.typography.bodySmall,
+                        modifier = Modifier.padding(horizontal = 24.dp)
+                    )
                 }
             }
-        )
+        }
     }
 
     if (showSpeedDialog) {
         val speeds = listOf(0.5f, 0.75f, 1f, 1.25f, 1.5f, 2f)
-        AlertDialog(
-            onDismissRequest = { showSpeedDialog = false },
-            title = { Text("Playback speed") },
-            text = {
-                Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                    speeds.forEach { speed ->
-                        TextButton(onClick = {
-                            playerInstance?.setPlaybackSpeed(speed)
-                            showSpeedDialog = false
-                        }) {
-                            Text(if (speed == 1f) "1.0x (Normal)" else "${speed}x")
-                        }
-                    }
-                }
-            },
-            confirmButton = {},
-            dismissButton = {
-                TextButton(onClick = { showSpeedDialog = false }) { Text("Close") }
+        ListDialog(
+            onDismiss = { showSpeedDialog = false },
+        ) {
+            item {
+                Text(
+                    "Playback speed",
+                    style = MaterialTheme.typography.headlineSmall,
+                    modifier = Modifier.padding(horizontal = 24.dp)
+                )
+                Spacer(modifier = Modifier.height(8.dp))
             }
-        )
+            items(speeds) { speed ->
+                TextButton(
+                    onClick = {
+                        playerInstance?.setPlaybackSpeed(speed)
+                        showSpeedDialog = false
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 24.dp)
+                ) {
+                    Text(if (speed == 1f) "1.0x (Normal)" else "${speed}x")
+                }
+            }
+        }
     }
 
     if (showQualityDialog) {
-        AlertDialog(
-            onDismissRequest = { showQualityDialog = false },
-            title = { Text("Video quality") },
-            text = {
-                Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+        ListDialog(
+            onDismiss = { showQualityDialog = false },
+        ) {
+            item {
+                Column(
+                    verticalArrangement = Arrangement.spacedBy(8.dp),
+                    modifier = Modifier.padding(horizontal = 24.dp)
+                ) {
+                    Text("Video quality", style = MaterialTheme.typography.headlineSmall)
                     Text(
                         text = if (selectedQualityId == "auto") "Current: Auto" else availableQualities.firstOrNull { it.id == selectedQualityId }?.label
                             ?: "Current: Auto",
                         style = MaterialTheme.typography.labelMedium
                     )
-                    TextButton(onClick = {
+                }
+                Spacer(modifier = Modifier.height(8.dp))
+            }
+            item {
+                TextButton(
+                    onClick = {
                         playerInstance?.let { player ->
                             val params = player.trackSelectionParameters
                                 .buildUpon()
@@ -1064,33 +1086,37 @@ fun VideoPlayerScreen(
                         }
                         selectedQualityId = "auto"
                         showQualityDialog = false
-                    }) {
-                        Text("Auto")
-                    }
-                    availableQualities.forEach { option ->
-                        TextButton(onClick = {
-                            playerInstance?.let { player ->
-                                val builder = player.trackSelectionParameters
-                                    .buildUpon()
-                                    .clearOverridesOfType(C.TRACK_TYPE_VIDEO)
-                                    .setOverrideForType(
-                                        TrackSelectionOverride(option.group, listOf(option.trackIndex))
-                                    )
-                                player.trackSelectionParameters = builder.build()
-                                selectedQualityId = option.id
-                            }
-                            showQualityDialog = false
-                        }) {
-                            Text(option.label.ifBlank { "Track ${option.trackIndex + 1}" })
-                        }
-                    }
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 24.dp)
+                ) {
+                    Text("Auto")
                 }
-            },
-            confirmButton = {},
-            dismissButton = {
-                TextButton(onClick = { showQualityDialog = false }) { Text("Close") }
             }
-        )
+            items(availableQualities) { option ->
+                TextButton(
+                    onClick = {
+                        playerInstance?.let { player ->
+                            val builder = player.trackSelectionParameters
+                                .buildUpon()
+                                .clearOverridesOfType(C.TRACK_TYPE_VIDEO)
+                                .setOverrideForType(
+                                    TrackSelectionOverride(option.group, listOf(option.trackIndex))
+                                )
+                            player.trackSelectionParameters = builder.build()
+                            selectedQualityId = option.id
+                        }
+                        showQualityDialog = false
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 24.dp)
+                ) {
+                    Text(option.label.ifBlank { "Track ${option.trackIndex + 1}" })
+                }
+            }
+        }
     }
 }
 

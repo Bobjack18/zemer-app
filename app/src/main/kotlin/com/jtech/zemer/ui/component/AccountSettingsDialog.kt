@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
@@ -50,7 +49,7 @@ fun AccountSettingsDialog(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = 72.dp, start = 16.dp, end = 16.dp)
-                    .clip(RoundedCornerShape(28.dp)),
+                    .clip(MaterialTheme.shapes.extraLarge),
                 shape = MaterialTheme.shapes.large,
                 color = MaterialTheme.colorScheme.surface,
                 tonalElevation = 8.dp

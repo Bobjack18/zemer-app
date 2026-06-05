@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.IconButtonColors
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.LocalContentColor
@@ -58,9 +57,9 @@ fun ResizableIconButton(
 
     Box(
         modifier = modifier
-            .clip(RoundedCornerShape(8.dp))
+            .clip(MaterialTheme.shapes.extraSmall)
             .background(bgColor.value)
-            .border(3.dp, borderColor.value, RoundedCornerShape(8.dp))
+            .border(3.dp, borderColor.value, MaterialTheme.shapes.extraSmall)
             .focusable()
             .onFocusChanged { isFocused.value = it.isFocused },
         contentAlignment = Alignment.Center

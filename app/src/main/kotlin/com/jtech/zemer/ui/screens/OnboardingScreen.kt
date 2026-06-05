@@ -103,7 +103,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.first
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.launch
-import androidx.compose.material3.AlertDialog
+import com.jtech.zemer.ui.component.DefaultDialog
 import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
 import androidx.compose.ui.res.painterResource
@@ -1190,30 +1190,21 @@ private fun ContentFiltersScreen(
 
         // Sign-in dialog (matching ContentSettings dialog)
         if (showSignInDialog) {
-            AlertDialog(
-                onDismissRequest = {
+            DefaultDialog(
+                onDismiss = {
                     showSignInDialog = false
                     signInDelaySeconds = 0
                 },
                 title = { Text("⚠️ Important - Read Carefully") },
-                text = {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .verticalScroll(rememberScrollState())
-                    ) {
-                        Text("Create an anonymous account to sync and backup your content filter settings.")
-                        Spacer(modifier = Modifier.height(8.dp))
-                        Text("This will permanently lock your preferences to prevent accidental changes.", color = MaterialTheme.colorScheme.primary)
-                        Spacer(modifier = Modifier.height(4.dp))
-                        Text("THIS CANNOT BE CHANGED ONCE SET, IT WILL PERSIST CLEARING DATA OR UNINSTALLATION OF THE APP!", color = MaterialTheme.colorScheme.error, fontWeight = FontWeight.Bold)
-                        if (signInDelaySeconds > 0) {
-                            Spacer(modifier = Modifier.height(12.dp))
-                            Text("Please wait $signInDelaySeconds second${if (signInDelaySeconds != 1) "s" else ""} before continuing...", color = MaterialTheme.colorScheme.error)
+                buttons = {
+                    TextButton(
+                        onClick = {
+                            showSignInDialog = false
+                            signInDelaySeconds = 0
                         }
+                    ) {
+                        Text("Cancel")
                     }
-                },
-                confirmButton = {
                     Button(
                         onClick = {
                             if (signInDelaySeconds == 0) {
@@ -1233,18 +1224,24 @@ private fun ContentFiltersScreen(
                     ) {
                         Text(if (signInDelaySeconds == 0) "Create Account" else "Please wait...")
                     }
-                },
-                dismissButton = {
-                    TextButton(
-                        onClick = {
-                            showSignInDialog = false
-                            signInDelaySeconds = 0
-                        }
-                    ) {
-                        Text("Cancel")
+                }
+            ) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .verticalScroll(rememberScrollState())
+                ) {
+                    Text("Create an anonymous account to sync and backup your content filter settings.")
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Text("This will permanently lock your preferences to prevent accidental changes.", color = MaterialTheme.colorScheme.primary)
+                    Spacer(modifier = Modifier.height(4.dp))
+                    Text("THIS CANNOT BE CHANGED ONCE SET, IT WILL PERSIST CLEARING DATA OR UNINSTALLATION OF THE APP!", color = MaterialTheme.colorScheme.error, fontWeight = FontWeight.Bold)
+                    if (signInDelaySeconds > 0) {
+                        Spacer(modifier = Modifier.height(12.dp))
+                        Text("Please wait $signInDelaySeconds second${if (signInDelaySeconds != 1) "s" else ""} before continuing...", color = MaterialTheme.colorScheme.error)
                     }
                 }
-            )
+            }
         }
     }
 }
