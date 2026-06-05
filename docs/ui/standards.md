@@ -1,37 +1,37 @@
-# UI standards (hard rules)
+# UI standards (design guidelines and requirements)
 
-The single source of truth for building UI in this app. These are rules, not suggestions; new code
-must comply and existing code is being migrated to comply. All UI is Jetpack Compose on
-**Material 3 Expressive** (`material3 1.4.0`). Enforced by review, the checklists at the end, and
+The single source of truth for building UI in this app. These are requirements, not suggestions: new
+code must comply and existing code is being migrated to comply. All UI is Jetpack Compose on
+**Material 3** (standard `MaterialTheme`). Enforced by review, the checklists at the end, and
 `scripts/ui-audit.sh`.
 
 ## Principles
 
-- **Material 3 Expressive, exclusively.** The app root is `MaterialExpressiveTheme`. Never Material 2
+- **Material 3 only.** Standard `MaterialTheme` (the app's `ZemerTheme`). Never Material 2
   (`androidx.compose.material.*` components/theme). The Material Icons library is allowed.
 - **D-pad first.** Every screen, dialog, sheet, and menu must be 100% navigable AND operable with a
   directional pad (D-pad + center + back) - TV, Android Auto, switch/keyboard. No action is
   touch-only. Permanent and non-negotiable.
-- **Expressive but tasteful.** Spring motion, shape morph, and `MaterialShapes` for hero/selection
-  moments; settings, lists, and dialogs stay calm and legible. Beautiful = cohesive, not loud.
-- **Tokens over magic numbers.** Every size, gap, radius, motion spec, and color resolves to a token.
+- **Beautiful and cohesive.** One visual language. Consistent shape, spacing, motion, and color across
+  every surface. Polished, not loud.
+- **Tokens over magic numbers.** Every size, gap, radius, duration, and color resolves to a token.
 - **One canonical component.** Reuse `ui/component/` before building; never a parallel widget set.
-- **Theme-driven.** Color from `colorScheme`, type from `typography`, shape from `shapes`/`MaterialShapes`,
-  motion from `motionScheme`.
+- **Theme-driven.** Color from `colorScheme`, type from `typography`, shape from `shapes`, motion from
+  shared specs.
 
 ## Foundations (tokens)
 
-- **Theme:** app root is `MaterialExpressiveTheme(colorScheme, motionScheme = MotionScheme.expressive(), shapes, typography)`. Keep dynamic color + `ColorScheme.pureBlack()` (the only AMOLED path).
+- **Theme:** the app root is `ZemerTheme` -> `MaterialTheme(colorScheme, typography = AppTypography, shapes)`. Dynamic color + `ColorScheme.pureBlack()` (the only AMOLED path) stay.
 - **Color:** `MaterialTheme.colorScheme` roles only. Media/video/art overlays use `AppColors`
   (`scrim`/`onMedia`/`mediaOverlay`). No `Color(0x...)` or named `Color.*` outside `ui/theme/`.
 - **Typography:** `MaterialTheme.typography.*` roles (`.copy()` for weight/color only). No literal
   `fontSize`. Exempt: `LyricsImageCard` (fixed-size share bitmap).
-- **Shape:** `MaterialTheme.shapes` (`extraSmall..extraLarge`) + a `pill`; `MaterialShapes` for accents.
-  No `RoundedCornerShape(N.dp)` literals.
+- **Shape:** `MaterialTheme.shapes` (a defined scale: small 12 / medium 16 / large 20 / extraLarge 28)
+  + a `pill` token. No `RoundedCornerShape(N.dp)` literals in screens.
 - **Spacing/size:** `Dimens` tokens (`space1..space8` = 4/8/12/16/24/32; `ScreenPaddingH=16`,
-  `IconSize=24`, `MinTouchTarget=48`). No bare `.dp` outside the token defs.
-- **Motion:** `MaterialTheme.motionScheme` spring specs (`spatialSpec`/`effectsSpec`) for transitions.
-  No millisecond literals.
+  `IconSize=24`, `MinTouchTarget=48`, `DialogPadding=24`). No bare `.dp` outside the token defs.
+- **Motion:** shared animation specs in `Motion` (a standard spring + `short=150`/`medium=250`/
+  `long=400` ms tweens). Transitions, expand/collapse, and selection use these - no ad-hoc durations.
 
 ## Components
 
@@ -43,8 +43,6 @@ Use these; do not hand-roll equivalents.
   Switch+Row.
 - **Dialogs (`Dialog.kt`):** `DefaultDialog`, `ListDialog`, `TextFieldDialog`, `ActionPromptDialog`,
   `InfoLabel`. Never a raw `AlertDialog`/`BasicAlertDialog`/Card-as-dialog. See "Dialogs" below.
-- **Expressive variants:** `LoadingIndicator`/wavy progress over plain spinners; the expressive +
-  wavy `Slider`; `ButtonGroup`/`SplitButton`; `FloatingActionButtonMenu`.
 - **App bar:** Material3 `TopAppBar` + the app's `ui/component/IconButton`.
 - **Lists/items:** `Items.kt`, `ChipsRow`. **States:** `EmptyPlaceholder`, `AppStateViews`,
   `shimmer/ShimmerHost`.
@@ -110,13 +108,13 @@ Always via the `Dialog.kt` helpers. One look, one structure, one motion.
 
 - Structure (top to bottom): optional centered hero icon -> title (`headlineSmall`, `onSurface`) ->
   supporting text (`bodyMedium`, `onSurfaceVariant`) -> content -> actions row.
-- Surface: `shapes.extraLarge`, `surfaceContainerHigh` tonal background, 24dp content padding,
+- Surface: `shapes.extraLarge`, `surfaceContainerHigh` tonal background, `Dimens.DialogPadding` (24dp),
   constrained max width, respects insets.
 - Actions: text buttons, end-aligned, max 2-3. Affirmative in `confirmButton`, cancel/negative in
   `dismissButton`. Destructive affirmative uses `colorScheme.error`.
 - Long or "pick one of N" content scrolls; selection uses `ListDialog` via `SelectPreference` - never a
   hand-rolled radio column.
-- Motion: expressive spring (scale + fade) from `motionScheme`.
+- Motion: enter/exit via the shared `Motion` spec (scale + fade).
 - D-pad: takes focus when shown, fully traversable, center activates, back dismisses; the *safe* action
   is default-focused (cancel for destructive dialogs).
 - All text localized; no duplicated dialog content across screens (one component).
@@ -127,9 +125,45 @@ Always via the `Dialog.kt` helpers. One look, one structure, one motion.
 - New strings go in `app/src/main/res/values/metrolist_strings.xml`. Never `strings.xml` (upstream;
   headed "do not add new features here").
 
+## Lists, cards, and surfaces
+
+- Song / album / artist / playlist rows use the shared items in `Items.kt` - never a bespoke
+  `Row` of thumbnail + text + menu. Context menus open via `GridMenu` / `NewMenuComponents`.
+- Cards and containers use a `MaterialTheme.shapes` token and a `surfaceContainer*` tonal color; rich
+  status blocks use `InfoCard` / `StatusRow`, not a one-off `Card`.
+- Chips use `ChipsRow` (filter/sort). A standalone chip uses `MaterialTheme.shapes` / `PillShape`.
+- Bottom sheets use `BottomSheet` / `BottomSheetMenu` / `BottomSheetPage`; never build a sheet from
+  scratch. Sheets are D-pad operable and dismissable (R11).
+
+## States
+
+Every list or content surface handles three states with the shared components:
+- Loading: `shimmer/ShimmerHost` placeholders for content that will fill in (not a bare spinner).
+- Empty: `EmptyPlaceholder` (icon + message + optional action).
+- Error: `AppStateViews` (message + retry). Always offer a retry path.
+
+Transient feedback is a snackbar/Toast with a localized string - never a hardcoded literal.
+
+## Navigation
+
+- Screens are registered as routes in `NavigationBuilder.kt`; settings screens are reached from
+  `SettingsScreen` via a `PreferenceEntry` row.
+- Back: the app-bar `IconButton` does `navigateUp`, long-press does `backToMain` (R3). Hardware/gesture
+  back maps to `navigateUp`.
+- Bottom-navigation items are user-configurable; respect the saved set and order.
+- Screen transitions use the shared `Motion` specs (R9).
+
+## Accessibility
+
+- D-pad and focus per the section above (R10/R11) - this also covers keyboard and switch access.
+- Touch targets `>= 48dp` (R12); icon-only controls carry a localized `contentDescription`; decorative
+  icons pass `null`.
+- Rely on `colorScheme` for contrast; never hardcode a color that can fail in light/dark/pureBlack.
+- Text scales with the user's font-size setting (typography roles, no fixed `fontSize`).
+
 ## The rules (quick reference)
 
-- R0 Material 3 Expressive only; `MaterialExpressiveTheme`; no Material 2.
+- R0 Material 3 only (standard `MaterialTheme`); no Material 2.
 - R1 Screen `(navController, scrollBehavior)`, `@OptIn(ExperimentalMaterial3Api)`, file name = function.
 - R2 `TopAppBar` receives `scrollBehavior`.
 - R3 Back button = app `IconButton` + `onLongClick = backToMain`.
@@ -153,7 +187,7 @@ build green + `ui-audit.sh` clean.
 New component: lives in `ui/component/`; tokens only (R9); focusable + visible focus + `>= 48dp` (R10,
 R12); has a `contentDescription` path for icon-only use; no parallel duplicate.
 
-New dialog: built from a `Dialog.kt` helper (R7); follows the Dialogs structure; spring motion;
+New dialog: built from a `Dialog.kt` helper (R7); follows the Dialogs structure; shared `Motion`;
 D-pad-operable with the safe default focus; localized.
 
 ## Documentation

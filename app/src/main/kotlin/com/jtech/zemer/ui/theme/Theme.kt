@@ -67,11 +67,11 @@ fun ZemerTheme(
         if (darkTheme && pureBlack) mergedColorScheme.pureBlack(true) else mergedColorScheme
     }
 
-    // Use standard MaterialTheme instead of MaterialExpressiveTheme
     MaterialTheme(
         colorScheme = colorScheme,
-        typography = AppTypography, // Use the defined AppTypography
-        content = content
+        shapes = AppShapes,
+        typography = AppTypography,
+        content = content,
     )
 }
 
