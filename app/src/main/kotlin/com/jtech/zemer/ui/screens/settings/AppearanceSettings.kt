@@ -46,6 +46,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.focusProperties
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -330,7 +331,9 @@ fun AppearanceSettings(
                         onValueChange = {
                             sliderValue = it
                         },
-                        modifier = Modifier.weight(1f)
+                        modifier = Modifier
+                            .weight(1f)
+                            .focusProperties { canFocus = false }
                     )
                     Text(
                         text = stringResource(R.string.default_),
@@ -364,7 +367,9 @@ fun AppearanceSettings(
                         onValueChange = {
                             sliderValue = it
                         },
-                        modifier = Modifier.weight(1f)
+                        modifier = Modifier
+                            .weight(1f)
+                            .focusProperties { canFocus = false }
                     )
                     Text(
                         text = stringResource(R.string.squiggly),
@@ -407,6 +412,7 @@ fun AppearanceSettings(
                         },
                         modifier = Modifier
                             .weight(1f)
+                            .focusProperties { canFocus = false }
                             .pointerInput(Unit) {
                                 detectTapGestures(
                                     onPress = {}
