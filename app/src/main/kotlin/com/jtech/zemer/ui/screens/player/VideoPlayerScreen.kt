@@ -713,7 +713,7 @@ fun VideoPlayerScreen(
                                         ) {
                                             Icon(
                                                 painter = painterResource(R.drawable.arrow_back),
-                                                contentDescription = null,
+                                                contentDescription = stringResource(R.string.back_button_desc),
                                                 tint = AppColors.onMedia
                                             )
                                         }
@@ -738,7 +738,7 @@ fun VideoPlayerScreen(
                                             ) {
                                                 Icon(
                                                     painter = painterResource(R.drawable.ic_pip),
-                                                    contentDescription = null,
+                                                    contentDescription = stringResource(R.string.picture_in_picture),
                                                     tint = AppColors.onMedia
                                                 )
                                             }
@@ -757,7 +757,7 @@ fun VideoPlayerScreen(
                                         ) {
                                             Icon(
                                                 painter = painterResource(R.drawable.link),
-                                                contentDescription = null,
+                                                contentDescription = stringResource(R.string.copy_link),
                                                 tint = AppColors.onMedia
                                             )
                                         }

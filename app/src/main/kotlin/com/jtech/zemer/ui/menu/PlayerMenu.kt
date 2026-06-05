@@ -86,6 +86,8 @@ fun PlayerMenu(
     navController: NavController,
     playerBottomSheetState: BottomSheetState,
     isQueueTrigger: Boolean? = false,
+    onMoveUp: (() -> Unit)? = null,
+    onMoveDown: (() -> Unit)? = null,
     onShowDetailsDialog: () -> Unit,
     onDismiss: () -> Unit,
 ) {
@@ -370,6 +372,41 @@ fun PlayerMenu(
                 ),
                 modifier = Modifier.padding(horizontal = 4.dp, vertical = 16.dp)
             )
+        }
+
+        if (isQueueTrigger == true && onMoveUp != null) {
+            item {
+                ListItem(
+                    headlineContent = { Text(text = stringResource(R.string.move_up)) },
+                    leadingContent = {
+                        Icon(
+                            painter = painterResource(R.drawable.arrow_upward),
+                            contentDescription = null,
+                        )
+                    },
+                    modifier = Modifier.clickable {
+                        onMoveUp()
+                        onDismiss()
+                    }
+                )
+            }
+        }
+        if (isQueueTrigger == true && onMoveDown != null) {
+            item {
+                ListItem(
+                    headlineContent = { Text(text = stringResource(R.string.move_down)) },
+                    leadingContent = {
+                        Icon(
+                            painter = painterResource(R.drawable.arrow_downward),
+                            contentDescription = null,
+                        )
+                    },
+                    modifier = Modifier.clickable {
+                        onMoveDown()
+                        onDismiss()
+                    }
+                )
+            }
         }
 
         item {

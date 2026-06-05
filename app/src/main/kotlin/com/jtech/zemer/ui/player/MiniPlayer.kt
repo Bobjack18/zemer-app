@@ -747,6 +747,16 @@ private fun LegacyMiniPlayer(
             }
 
             IconButton(
+                enabled = canSkipPrevious,
+                onClick = playerConnection::seekToPrevious,
+            ) {
+                Icon(
+                    painter = painterResource(R.drawable.skip_previous),
+                    contentDescription = stringResource(R.string.previous),
+                )
+            }
+
+            IconButton(
                 onClick = {
                     if (playbackState == Player.STATE_ENDED) {
                         playerConnection.player.seekTo(0, 0)
@@ -766,7 +776,7 @@ private fun LegacyMiniPlayer(
                             R.drawable.play
                         },
                     ),
-                    contentDescription = null,
+                    contentDescription = stringResource(R.string.play_pause),
                 )
             }
 
@@ -776,7 +786,7 @@ private fun LegacyMiniPlayer(
             ) {
                 Icon(
                     painter = painterResource(R.drawable.skip_next),
-                    contentDescription = null,
+                    contentDescription = stringResource(R.string.next),
                 )
             }
         }

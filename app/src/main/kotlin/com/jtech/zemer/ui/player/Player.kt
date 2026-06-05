@@ -725,7 +725,7 @@ fun BottomSheetPlayer(
                         ) {
                             Image(
                                 painter = painterResource(R.drawable.share),
-                                contentDescription = null,
+                                contentDescription = stringResource(R.string.share),
                                 colorFilter = ColorFilter.tint(iconButtonColor),
                                 modifier = Modifier
                                     .align(Alignment.Center)
@@ -751,7 +751,10 @@ fun BottomSheetPlayer(
                                         R.drawable.favorite
                                     else R.drawable.favorite_border
                                 ),
-                                contentDescription = null,
+                                contentDescription = stringResource(
+                                    if (currentSong?.song?.liked == true) R.string.action_remove_like
+                                    else R.string.action_like
+                                ),
                                 colorFilter = ColorFilter.tint(iconButtonColor),
                                 modifier = Modifier
                                     .align(Alignment.Center)
@@ -794,7 +797,7 @@ fun BottomSheetPlayer(
                     ) {
                         Image(
                             painter = painterResource(R.drawable.share),
-                            contentDescription = null,
+                            contentDescription = stringResource(R.string.share),
                             colorFilter = ColorFilter.tint(iconButtonColor),
                             modifier =
                             Modifier
@@ -835,7 +838,7 @@ fun BottomSheetPlayer(
                     ) {
                         Image(
                             painter = painterResource(R.drawable.more_horiz),
-                            contentDescription = null,
+                            contentDescription = stringResource(R.string.more_options),
                             colorFilter = ColorFilter.tint(iconButtonColor),
                         )
                     }

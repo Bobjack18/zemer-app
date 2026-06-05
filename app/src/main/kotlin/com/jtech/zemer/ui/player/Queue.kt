@@ -637,6 +637,28 @@ fun Queue(
             }
         }
 
+        // D-pad reorder path (parity with the touch drag-handle): mirrors the drag-end commit.
+        val moveQueueItem: (Int, Int) -> Unit = { from, to ->
+            val safeFrom = from.coerceIn(0, mutableQueueWindows.lastIndex)
+            val safeTo = to.coerceIn(0, mutableQueueWindows.lastIndex)
+            if (safeFrom != safeTo) {
+                mutableQueueWindows.move(safeFrom, safeTo)
+                if (!playerConnection.player.shuffleModeEnabled) {
+                    playerConnection.player.moveMediaItem(safeFrom, safeTo)
+                } else {
+                    playerConnection.player.setShuffleOrder(
+                        DefaultShuffleOrder(
+                            queueWindows.map { it.firstPeriodIndex }
+                                .toMutableList()
+                                .move(safeFrom, safeTo)
+                                .toIntArray(),
+                            System.currentTimeMillis()
+                        )
+                    )
+                }
+            }
+        }
+
         Box(
             modifier =
             Modifier
@@ -731,6 +753,12 @@ fun Queue(
                                                         navController = navController,
                                                         playerBottomSheetState = playerBottomSheetState,
                                                         isQueueTrigger = true,
+                                                        onMoveUp = if (!locked && index > 0) {
+                                                            { moveQueueItem(index, index - 1) }
+                                                        } else null,
+                                                        onMoveDown = if (!locked && index < mutableQueueWindows.lastIndex) {
+                                                            { moveQueueItem(index, index + 1) }
+                                                        } else null,
                                                         onShowDetailsDialog = {
                                                             window.mediaItem.mediaId.let {
                                                                 bottomSheetPageState.show {
@@ -745,7 +773,7 @@ fun Queue(
                                         ) {
                                             Icon(
                                                 painter = painterResource(R.drawable.more_vert),
-                                                contentDescription = null,
+                                                contentDescription = stringResource(R.string.more_options),
                                             )
                                         }
                                         if (!locked) {
@@ -931,7 +959,9 @@ fun Queue(
                         ) {
                             Icon(
                                 painter = painterResource(if (locked) R.drawable.lock else R.drawable.lock_open),
-                                contentDescription = null,
+                                contentDescription = stringResource(
+                                    if (locked) R.string.unlock_queue else R.string.lock_queue
+                                ),
                             )
                         }
                     }

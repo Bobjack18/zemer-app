@@ -1398,7 +1398,7 @@ fun BoxScope.OverlayEditButton(
         ) {
             Icon(
                 painter = painterResource(R.drawable.edit),
-                contentDescription = null,
+                contentDescription = stringResource(R.string.edit),
                 tint = AppColors.onMedia,
                 modifier = Modifier.size(20.dp)
             )
