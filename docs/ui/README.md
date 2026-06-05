@@ -113,6 +113,7 @@
 | `app/src/main/kotlin/com/jtech/zemer/ui/component/PlayingIndicator.kt` | 114 | PlayingIndicator, PlayingIndicatorBox |
 | `app/src/main/kotlin/com/jtech/zemer/ui/component/Preference.kt` | 366 | PreferenceEntry, ListPreference, SwitchPreference, EditTextPreference, SliderPreference, PreferenceGroupTitle |
 | `app/src/main/kotlin/com/jtech/zemer/ui/component/SearchBar.kt` | 371 | TopSearch, SearchBarInputField |
+| `app/src/main/kotlin/com/jtech/zemer/ui/component/SelectArtistDialog.kt` | 100 | SelectArtistDialog |
 | `app/src/main/kotlin/com/jtech/zemer/ui/component/SelectPreference.kt` | 71 | SelectPreference |
 | `app/src/main/kotlin/com/jtech/zemer/ui/component/WebViewAuthDialog.kt` | 130 | WebViewAuthDialog |
 | `app/src/main/kotlin/com/jtech/zemer/ui/component/shimmer/ButtonPlaceholder.kt` | 21 | ButtonPlaceholder |
@@ -122,28 +123,28 @@
 | `app/src/main/kotlin/com/jtech/zemer/ui/component/shimmer/TextPlaceholder.kt` | 33 | TextPlaceholder |
 | `app/src/main/kotlin/com/jtech/zemer/ui/menu/AddToPlaylistDialog.kt` | 191 | AddToPlaylistDialog |
 | `app/src/main/kotlin/com/jtech/zemer/ui/menu/AddToPlaylistDialogOnline.kt` | 281 | AddToPlaylistDialogOnline |
-| `app/src/main/kotlin/com/jtech/zemer/ui/menu/AlbumMenu.kt` | 673 | AlbumMenu |
+| `app/src/main/kotlin/com/jtech/zemer/ui/menu/AlbumMenu.kt` | 631 | AlbumMenu |
 | `app/src/main/kotlin/com/jtech/zemer/ui/menu/ArtistMenu.kt` | 361 | ArtistMenu |
 | `app/src/main/kotlin/com/jtech/zemer/ui/menu/CustomThumbnailMenu.kt` | 70 | CustomThumbnailMenu |
 | `app/src/main/kotlin/com/jtech/zemer/ui/menu/ImportPlaylistDialog.kt` | 63 | ImportPlaylistDialog |
 | `app/src/main/kotlin/com/jtech/zemer/ui/menu/LoadingScreen.kt` | 37 | LoadingScreen |
 | `app/src/main/kotlin/com/jtech/zemer/ui/menu/LyricsMenu.kt` | 378 | LyricsMenu |
-| `app/src/main/kotlin/com/jtech/zemer/ui/menu/PlayerMenu.kt` | 740 | PlayerMenu, TempoPitchDialog, ValueAdjuster |
+| `app/src/main/kotlin/com/jtech/zemer/ui/menu/PlayerMenu.kt` | 718 | PlayerMenu, TempoPitchDialog, ValueAdjuster |
 | `app/src/main/kotlin/com/jtech/zemer/ui/menu/PlaylistMenu.kt` | 331 | PlaylistMenu |
 | `app/src/main/kotlin/com/jtech/zemer/ui/menu/SelectionSongsMenu.kt` | 898 | SelectionSongMenu, SelectionMediaMetadataMenu |
-| `app/src/main/kotlin/com/jtech/zemer/ui/menu/SongMenu.kt` | 895 | SongMenu |
-| `app/src/main/kotlin/com/jtech/zemer/ui/menu/YouTubeAlbumMenu.kt` | 607 | YouTubeAlbumMenu |
+| `app/src/main/kotlin/com/jtech/zemer/ui/menu/SongMenu.kt` | 856 | SongMenu |
+| `app/src/main/kotlin/com/jtech/zemer/ui/menu/YouTubeAlbumMenu.kt` | 559 | YouTubeAlbumMenu |
 | `app/src/main/kotlin/com/jtech/zemer/ui/menu/YouTubeArtistMenu.kt` | 316 | YouTubeArtistMenu |
 | `app/src/main/kotlin/com/jtech/zemer/ui/menu/YouTubePlaylistMenu.kt` | 563 | YouTubePlaylistMenu |
-| `app/src/main/kotlin/com/jtech/zemer/ui/menu/YouTubeSongMenu.kt` | 747 | YouTubeSongMenu |
+| `app/src/main/kotlin/com/jtech/zemer/ui/menu/YouTubeSongMenu.kt` | 700 | YouTubeSongMenu |
 | `app/src/main/kotlin/com/jtech/zemer/ui/player/LyricsScreen.kt` | 797 | LyricsScreen |
 | `app/src/main/kotlin/com/jtech/zemer/ui/player/MiniPlayer.kt` | 911 | MiniPlayer, NewMiniPlayer, LegacyMiniPlayer, LegacyMiniMediaInfo |
 | `app/src/main/kotlin/com/jtech/zemer/ui/player/PlaybackError.kt` | 39 | PlaybackError |
-| `app/src/main/kotlin/com/jtech/zemer/ui/player/Player.kt` | 1382 | BottomSheetPlayer, BottomSheetPlayerPreview |
+| `app/src/main/kotlin/com/jtech/zemer/ui/player/Player.kt` | 1331 | BottomSheetPlayer, BottomSheetPlayerPreview |
 | `app/src/main/kotlin/com/jtech/zemer/ui/player/Queue.kt` | 1162 | Queue |
 | `app/src/main/kotlin/com/jtech/zemer/ui/player/Thumbnail.kt` | 471 | Thumbnail |
 | `app/src/main/kotlin/com/jtech/zemer/ui/screens/AccountScreen.kt` | 200 | AccountScreen |
-| `app/src/main/kotlin/com/jtech/zemer/ui/screens/AlbumScreen.kt` | 723 | AlbumScreen |
+| `app/src/main/kotlin/com/jtech/zemer/ui/screens/AlbumScreen.kt` | 646 | AlbumScreen |
 | `app/src/main/kotlin/com/jtech/zemer/ui/screens/BrowseScreen.kt` | 144 | BrowseScreen |
 | `app/src/main/kotlin/com/jtech/zemer/ui/screens/ChartsScreen.kt` | 306 | ChartsScreen |
 | `app/src/main/kotlin/com/jtech/zemer/ui/screens/ExploreScreen.kt` | 399 | ExploreScreen |
@@ -236,6 +237,7 @@
 | `app/src/main/kotlin/com/jtech/zemer/ui/component/PlayingIndicator.kt` | 114 | fun PlayingIndicator, val animatables, fun PlayingIndicatorBox |
 | `app/src/main/kotlin/com/jtech/zemer/ui/component/Preference.kt` | 366 | fun PreferenceEntry, var isFocused, val backgroundColor, val borderColor, var showDialog, fun SwitchPreference, fun EditTextPreference, var showDialog, fun SliderPreference, var showDialog, var sliderValue, fun PreferenceGroupTitle |
 | `app/src/main/kotlin/com/jtech/zemer/ui/component/SearchBar.kt` | 371 | fun TopSearch, val animationProgress, val defaultInputFieldShape, val defaultFullScreenShape, val animatedShape, val animatedRadius, val topInset, val startInset, val endInset, val topPadding, val animatedSurfaceTopPadding, val animatedInputFieldPadding, … +20 more |
+| `app/src/main/kotlin/com/jtech/zemer/ui/component/SelectArtistDialog.kt` | 100 | class SelectableArtist, val id, val name, val thumbnailUrl, fun SelectArtistDialog, var isFocused, val backgroundColor |
 | `app/src/main/kotlin/com/jtech/zemer/ui/component/SelectPreference.kt` | 71 | var showDialog |
 | `app/src/main/kotlin/com/jtech/zemer/ui/component/SortHeader.kt` | 106 | var menuExpanded |
 | `app/src/main/kotlin/com/jtech/zemer/ui/component/WebViewAuthDialog.kt` | 130 | fun WebViewAuthDialog, val context, val coroutineScope, var isLoading |
@@ -246,28 +248,28 @@
 | `app/src/main/kotlin/com/jtech/zemer/ui/component/shimmer/TextPlaceholder.kt` | 33 | fun TextPlaceholder |
 | `app/src/main/kotlin/com/jtech/zemer/ui/menu/AddToPlaylistDialog.kt` | 191 | fun AddToPlaylistDialog, val database, val coroutineScope, var playlists, val _, var showCreatePlaylistDialog, var showDuplicateDialog, var selectedPlaylist, var songIds, var duplicates |
 | `app/src/main/kotlin/com/jtech/zemer/ui/menu/AddToPlaylistDialogOnline.kt` | 281 | fun AddToPlaylistDialogOnline, val database, val coroutineScope, var playlists, var showCreatePlaylistDialog, var showDuplicateDialog, var selectedPlaylist, val songIds, val duplicates, fun findFirstSong, val allArtists, val query, … +7 more |
-| `app/src/main/kotlin/com/jtech/zemer/ui/menu/AlbumMenu.kt` | 673 | fun AlbumMenu, val context, val database, val downloadUtil, val playerConnection, val scope, val libraryAlbum, val album, var songs, val auth, val firestore, var showReportDialog, … +26 more |
+| `app/src/main/kotlin/com/jtech/zemer/ui/menu/AlbumMenu.kt` | 631 | fun AlbumMenu, val context, val database, val downloadUtil, val playerConnection, val scope, val libraryAlbum, val album, var songs, val auth, val firestore, var showReportDialog, … +26 more |
 | `app/src/main/kotlin/com/jtech/zemer/ui/menu/ArtistMenu.kt` | 361 | fun ArtistMenu, val context, val auth, val firestore, var showReportDialog, var selectedReason, var comment, var isSubmitting, val database, val playerConnection, val artistState, val artist, … +8 more |
 | `app/src/main/kotlin/com/jtech/zemer/ui/menu/CustomThumbnailMenu.kt` | 70 | fun CustomThumbnailMenu |
 | `app/src/main/kotlin/com/jtech/zemer/ui/menu/ImportPlaylistDialog.kt` | 63 | fun ImportPlaylistDialog, val database, val coroutineScope, val textFieldValue, var songIds, val newPlaylist, val playlist |
 | `app/src/main/kotlin/com/jtech/zemer/ui/menu/LoadingScreen.kt` | 37 | fun LoadingScreen |
 | `app/src/main/kotlin/com/jtech/zemer/ui/menu/LyricsMenu.kt` | 378 | fun LyricsMenu, val context, val database, var showEditDialog, var showSearchDialog, var showSearchResultDialog, val searchMediaMetadata, val titleField, val onTitleFieldChange, val artistField, val onArtistFieldChange, val isNetworkAvailable, … +6 more |
-| `app/src/main/kotlin/com/jtech/zemer/ui/menu/PlayerMenu.kt` | 740 | fun PlayerMenu, val context, val auth, val firestore, val database, val playerConnection, val playerVolume, val activityResultLauncher, val coroutineScope, val downloadUtil, val mediaStoreDownload, val download, … +23 more |
+| `app/src/main/kotlin/com/jtech/zemer/ui/menu/PlayerMenu.kt` | 718 | fun PlayerMenu, val context, val auth, val firestore, val database, val playerConnection, val playerVolume, val activityResultLauncher, val coroutineScope, val downloadUtil, val mediaStoreDownload, val download, … +23 more |
 | `app/src/main/kotlin/com/jtech/zemer/ui/menu/PlaylistMenu.kt` | 331 | fun PlaylistMenu, val context, val database, val downloadUtil, val playerConnection, val auth, val firestore, val dbPlaylist, var songs, var showReportDialog, var selectedReason, var comment, … +7 more |
 | `app/src/main/kotlin/com/jtech/zemer/ui/menu/SelectionSongsMenu.kt` | 898 | fun SelectionSongMenu, val context, val database, val downloadUtil, val coroutineScope, val playerConnection, val syncUtils, val auth, val firestore, var showReportDialog, var selectedReason, var comment, … +31 more |
-| `app/src/main/kotlin/com/jtech/zemer/ui/menu/SongMenu.kt` | 895 | fun SongMenu, val context, val database, val playerConnection, val songState, val song, val downloadUtil, val mediaStoreDownload, val coroutineScope, val syncUtils, val scope, var refetchIconDegree, … +39 more |
-| `app/src/main/kotlin/com/jtech/zemer/ui/menu/YouTubeAlbumMenu.kt` | 607 | fun YouTubeAlbumMenu, val context, val auth, val firestore, val database, val downloadUtil, val playerConnection, val album, val coroutineScope, var downloadState, val songs, var showChoosePlaylistDialog, … +15 more |
+| `app/src/main/kotlin/com/jtech/zemer/ui/menu/SongMenu.kt` | 856 | fun SongMenu, val context, val database, val playerConnection, val songState, val song, val downloadUtil, val mediaStoreDownload, val coroutineScope, val syncUtils, val scope, var refetchIconDegree, … +39 more |
+| `app/src/main/kotlin/com/jtech/zemer/ui/menu/YouTubeAlbumMenu.kt` | 559 | fun YouTubeAlbumMenu, val context, val auth, val firestore, val database, val downloadUtil, val playerConnection, val album, val coroutineScope, var downloadState, val songs, var showChoosePlaylistDialog, … +13 more |
 | `app/src/main/kotlin/com/jtech/zemer/ui/menu/YouTubeArtistMenu.kt` | 316 | fun YouTubeArtistMenu, val context, val auth, val firestore, val scope, var showReportDialog, var selectedReason, var comment, var isSubmitting, val database, val playerConnection, val libraryArtist, … +7 more |
 | `app/src/main/kotlin/com/jtech/zemer/ui/menu/YouTubePlaylistMenu.kt` | 563 | fun YouTubePlaylistMenu, val context, val database, val downloadUtil, val playerConnection, val dbPlaylist, var showChoosePlaylistDialog, var showImportPlaylistDialog, var showErrorPlaylistAddDialog, val notAddedList, val allSongs, val playlistEntity, … +8 more |
-| `app/src/main/kotlin/com/jtech/zemer/ui/menu/YouTubeSongMenu.kt` | 747 | fun YouTubeSongMenu, val context, val auth, val firestore, val database, val playerConnection, val downloadUtil, val librarySong, val mediaStoreDownload, val download, val coroutineScope, val syncUtils, … +26 more |
+| `app/src/main/kotlin/com/jtech/zemer/ui/menu/YouTubeSongMenu.kt` | 700 | fun YouTubeSongMenu, val context, val auth, val firestore, val database, val playerConnection, val downloadUtil, val librarySong, val mediaStoreDownload, val download, val coroutineScope, val syncUtils, … +24 more |
 | `app/src/main/kotlin/com/jtech/zemer/ui/player/LyricsScreen.kt` | 797 | fun LyricsScreen, val context, val activity, val playerConnection, val player, val menuState, val database, val coroutineScope, val playbackState, val isPlaying, val repeatMode, val shuffleModeEnabled, … +23 more |
 | `app/src/main/kotlin/com/jtech/zemer/ui/player/MiniPlayer.kt` | 911 | class MiniPlayerFocusTargets, val play, val account, val heart, val afterHeart, val down, fun Modifier, fun MiniPlayer, val useNewMiniPlayerDesign, fun NewMiniPlayer, val playerConnection, val database, … +74 more |
 | `app/src/main/kotlin/com/jtech/zemer/ui/player/PlaybackError.kt` | 39 | fun PlaybackError |
-| `app/src/main/kotlin/com/jtech/zemer/ui/player/Player.kt` | 1382 | fun BottomSheetPlayer, val context, val clipboardManager, val menuState, val bottomSheetPageState, val playerConnection, val useNewPlayerDesign, val _, val floatingMiniPlayerPref, val _, val floatingMiniPlayerEnabled, val playerBackground, … +98 more |
+| `app/src/main/kotlin/com/jtech/zemer/ui/player/Player.kt` | 1331 | fun BottomSheetPlayer, val context, val clipboardManager, val menuState, val bottomSheetPageState, val playerConnection, val useNewPlayerDesign, val _, val floatingMiniPlayerPref, val _, val floatingMiniPlayerEnabled, val playerBackground, … +82 more |
 | `app/src/main/kotlin/com/jtech/zemer/ui/player/Queue.kt` | 1162 | fun Queue, val context, val haptic, val menuState, val bottomSheetPageState, val playerConnection, val isPlaying, val repeatMode, val currentWindowIndex, val mediaMetadata, val selectedSongs, val selectedItems, … +39 more |
 | `app/src/main/kotlin/com/jtech/zemer/ui/player/Thumbnail.kt` | 471 | fun Thumbnail, val playerConnection, val context, val mediaMetadata, val error, val queueTitle, val swipeThumbnail, val hidePlayerThumbnail, val canSkipPrevious, val canSkipNext, val playerBackground, val textBackgroundColor, … +44 more |
 | `app/src/main/kotlin/com/jtech/zemer/ui/screens/AccountScreen.kt` | 200 | fun AccountScreen, val menuState, val haptic, val coroutineScope, val playlists, val albums, val artists, val selectedContentType |
-| `app/src/main/kotlin/com/jtech/zemer/ui/screens/AlbumScreen.kt` | 723 | fun AlbumScreen, val context, val menuState, val database, val haptic, val coroutineScope, val playerConnection, val isPlaying, val mediaMetadata, val playlistId, val albumWithSongs, val hideExplicit, … +34 more |
+| `app/src/main/kotlin/com/jtech/zemer/ui/screens/AlbumScreen.kt` | 646 | fun AlbumScreen, val context, val menuState, val database, val haptic, val coroutineScope, val playerConnection, val isPlaying, val mediaMetadata, val playlistId, val albumWithSongs, val hideExplicit, … +16 more |
 | `app/src/main/kotlin/com/jtech/zemer/ui/screens/BrowseScreen.kt` | 144 | fun BrowseScreen, val menuState, val playerConnection, val isPlaying, val title, val items, val coroutineScope |
 | `app/src/main/kotlin/com/jtech/zemer/ui/screens/ChartsScreen.kt` | 306 | fun ChartsScreen, val menuState, val database, val haptic, val playerConnection, val isPlaying, val mediaMetadata, val chartsPage, val isLoading, val lazyListState, val horizontalLazyGridItemWidthFactor, val horizontalLazyGridItemWidth, … +4 more |
 | `app/src/main/kotlin/com/jtech/zemer/ui/screens/ExploreScreen.kt` | 399 | fun ExploreScreen, val menuState, val database, val haptic, val playerConnection, val isPlaying, val mediaMetadata, val explorePage, val chartsPage, val isChartsLoading, val coroutineScope, val scrollState, … +8 more |
@@ -333,6 +335,7 @@
 | `app/src/main/kotlin/com/jtech/zemer/ui/theme/Type.kt` | 123 | val AppTypography |
 | `app/src/main/kotlin/com/jtech/zemer/ui/utils/AppBar.kt` | 75 | fun appBarScrollBehavior, class AppBarScrollBehavior, val state, val snapAnimationSpec, val flingAnimationSpec, val canScroll, val isPinned, var nestedScrollConnection, fun onPostScroll, fun TopAppBarState |
 | `app/src/main/kotlin/com/jtech/zemer/ui/utils/FadingEdge.kt` | 89 | fun Modifier, fun Modifier |
+| `app/src/main/kotlin/com/jtech/zemer/ui/utils/FocusBorder.kt` | 37 | fun Modifier, var focused, val borderColor |
 | `app/src/main/kotlin/com/jtech/zemer/ui/utils/ItemWrapper.kt` | 15 | class ItemWrapper, val item, val _isSelected, var isSelected |
 | `app/src/main/kotlin/com/jtech/zemer/ui/utils/KeyUtils.kt` | 50 | object KeyUtils, val counter, fun generateUniqueKey, val uniqueId, fun generateIndexedKey, val uniqueId, fun generateTimestampKey, val timestamp, val uniqueId |
 | `app/src/main/kotlin/com/jtech/zemer/ui/utils/LazyGridSnapLayoutInfoProvider.kt` | 66 | fun SnapLayoutInfoProvider, val layoutInfo, fun calculateApproachOffset, fun calculateSnapOffset, val bounds, fun calculateSnappingOffsetBounds, var lowerBoundOffset, var upperBoundOffset, val offset, fun calculateDistanceToDesiredSnapPosition, val containerSize, val desiredDistance, … +2 more |

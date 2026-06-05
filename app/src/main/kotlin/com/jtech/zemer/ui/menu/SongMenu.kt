@@ -11,7 +11,6 @@ import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -25,7 +24,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
@@ -50,7 +48,6 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalConfiguration
@@ -58,13 +55,10 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextRange
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavController
-import coil3.compose.AsyncImage
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
@@ -74,7 +68,6 @@ import com.jtech.zemer.LocalPlayerConnection
 import com.jtech.zemer.LocalSyncUtils
 import com.jtech.zemer.R
 import com.jtech.zemer.constants.BlockVideosKey
-import com.jtech.zemer.constants.ListItemHeight
 import com.jtech.zemer.constants.ListThumbnailSize
 import com.jtech.zemer.db.entities.Event
 import com.jtech.zemer.db.entities.PlaylistSong
@@ -82,6 +75,8 @@ import com.jtech.zemer.db.entities.Song
 import com.jtech.zemer.extensions.toMediaItem
 import com.jtech.zemer.models.toMediaMetadata
 import com.jtech.zemer.playback.queues.YouTubeQueue
+import com.jtech.zemer.ui.component.SelectableArtist
+import com.jtech.zemer.ui.component.SelectArtistDialog
 import com.jtech.zemer.ui.component.DefaultDialog
 import com.jtech.zemer.ui.component.ListDialog
 import com.jtech.zemer.ui.component.LocalBottomSheetPageState
@@ -372,47 +367,13 @@ fun SongMenu(
     }
 
     if (showSelectArtistDialog) {
-        ListDialog(
+        SelectArtistDialog(
+            artists = song.artists.map { SelectableArtist(it.id, it.name, it.thumbnailUrl) },
             onDismiss = { showSelectArtistDialog = false },
-        ) {
-            items(
-                items = song.artists.distinctBy { it.id },
-                key = { it.id },
-            ) { artist ->
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier
-                        .height(ListItemHeight)
-                        .clickable {
-                            navController.navigate("artist/${artist.id}")
-                            showSelectArtistDialog = false
-                            onDismiss()
-                        }
-                        .padding(horizontal = 12.dp),
-                ) {
-                    Box(
-                        modifier = Modifier.padding(8.dp),
-                        contentAlignment = Alignment.Center,
-                    ) {
-                        AsyncImage(
-                            model = artist.thumbnailUrl,
-                            contentDescription = null,
-                            modifier = Modifier
-                                .size(ListThumbnailSize)
-                                .clip(CircleShape),
-                        )
-                    }
-                    Text(
-                        text = artist.name,
-                        style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
-                        modifier = Modifier
-                            .weight(1f)
-                            .padding(horizontal = 8.dp),
-                    )
-                }
-            }
+        ) { artistId ->
+            navController.navigate("artist/$artistId")
+            showSelectArtistDialog = false
+            onDismiss()
         }
     }
 

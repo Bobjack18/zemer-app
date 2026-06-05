@@ -4,12 +4,8 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.res.Configuration
 import android.widget.Toast
-import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.focusable
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -49,15 +45,11 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.onFocusChanged
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.media3.exoplayer.offline.Download
 import androidx.navigation.NavController
@@ -65,11 +57,12 @@ import com.jtech.zemer.LocalDatabase
 import com.jtech.zemer.LocalDownloadUtil
 import com.jtech.zemer.LocalPlayerConnection
 import com.jtech.zemer.R
-import com.jtech.zemer.constants.ListItemHeight
 import com.jtech.zemer.constants.ListThumbnailSize
 import com.jtech.zemer.db.entities.Song
 import com.jtech.zemer.extensions.toMediaItem
 import com.jtech.zemer.playback.queues.YouTubeAlbumRadio
+import com.jtech.zemer.ui.component.SelectableArtist
+import com.jtech.zemer.ui.component.SelectArtistDialog
 import com.jtech.zemer.ui.component.DefaultDialog
 import com.jtech.zemer.ui.component.ListDialog
 import com.jtech.zemer.ui.component.NewAction
@@ -207,54 +200,13 @@ fun YouTubeAlbumMenu(
     }
 
     if (showSelectArtistDialog) {
-        ListDialog(
+        SelectArtistDialog(
+            artists = album?.artists.orEmpty().map { SelectableArtist(it.id, it.name) },
             onDismiss = { showSelectArtistDialog = false },
-        ) {
-            items(
-                items = album?.artists.orEmpty().distinctBy { it.id },
-                key = { it.id },
-            ) { artist ->
-                var isFocused by remember { mutableStateOf(false) }
-                val backgroundColor by animateColorAsState(
-                    targetValue = if (isFocused) MaterialTheme.colorScheme.surfaceVariant else Color.Transparent,
-                    label = "artist_dialog_focus_bg"
-                )
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier
-                        .height(ListItemHeight)
-                        .fillMaxWidth()
-                        .onFocusChanged { isFocused = it.isFocused }
-                        .focusable()
-                        .clickable {
-                            navController.navigate("artist/${artist.id}")
-                            showSelectArtistDialog = false
-                            onDismiss()
-                        }
-                        .background(backgroundColor)
-                        .padding(horizontal = 12.dp),
-                ) {
-                    Box(
-                        contentAlignment = Alignment.CenterStart,
-                        modifier = Modifier
-                            .fillParentMaxWidth()
-                            .height(ListItemHeight)
-                            .clickable {
-                                showSelectArtistDialog = false
-                                onDismiss()
-                                navController.navigate("artist/${artist.id}")
-                            }
-                            .padding(horizontal = 24.dp),
-                    ) {
-                        Text(
-                            text = artist.name,
-                            style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
-                            maxLines = 1,
-                            overflow = TextOverflow.Ellipsis,
-                        )
-                    }
-                }
-            }
+        ) { artistId ->
+            navController.navigate("artist/$artistId")
+            showSelectArtistDialog = false
+            onDismiss()
         }
     }
 

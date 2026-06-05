@@ -81,6 +81,7 @@ import com.jtech.zemer.constants.ThumbnailCornerRadius
 import com.jtech.zemer.db.entities.Album
 import com.jtech.zemer.extensions.togglePlayPause
 import com.jtech.zemer.playback.queues.LocalAlbumRadio
+import com.jtech.zemer.ui.utils.dpadFocusBorder
 import com.jtech.zemer.ui.component.AutoResizeText
 import com.jtech.zemer.ui.component.FontSizeRange
 import com.jtech.zemer.ui.component.IconButton
@@ -143,52 +144,12 @@ fun AlbumScreen(
         mutableIntStateOf(Download.STATE_STOPPED)
     }
 
-    // Focus state for TopAppBar buttons
-    val isBackButtonFocused = remember { mutableStateOf(false) }
-    val isSelectAllButtonFocused = remember { mutableStateOf(false) }
-    val isMoreButtonFocused = remember { mutableStateOf(false) }
-
-    // Focus state for header buttons
-    val isHeartButtonFocused = remember { mutableStateOf(false) }
-    val isDownloadButtonFocused = remember { mutableStateOf(false) }
-    val isHeaderMenuButtonFocused = remember { mutableStateOf(false) }
-    val isArtistLinkFocused = remember { mutableStateOf(false) }
-
-    // Focus state for track items
+    // Focus state for track items (read by each row's border, written by the row's inner item focus)
     val trackFocusStates = remember { mutableMapOf<String, Boolean>() }
 
     // Focus requesters to skip player
     val backButtonFocusRequester = remember { FocusRequester() }
     val firstHeaderItemFocusRequester = remember { FocusRequester() }
-
-    val backButtonBorderColor = animateColorAsState(
-        targetValue = if (isBackButtonFocused.value) MaterialTheme.colorScheme.primary else Color.Transparent,
-        label = "back_button_focus_border"
-    )
-    val selectAllButtonBorderColor = animateColorAsState(
-        targetValue = if (isSelectAllButtonFocused.value) MaterialTheme.colorScheme.primary else Color.Transparent,
-        label = "select_all_button_focus_border"
-    )
-    val moreButtonBorderColor = animateColorAsState(
-        targetValue = if (isMoreButtonFocused.value) MaterialTheme.colorScheme.primary else Color.Transparent,
-        label = "more_button_focus_border"
-    )
-    animateColorAsState(
-        targetValue = if (isHeartButtonFocused.value) MaterialTheme.colorScheme.primary else Color.Transparent,
-        label = "heart_button_focus_border"
-    )
-    animateColorAsState(
-        targetValue = if (isDownloadButtonFocused.value) MaterialTheme.colorScheme.primary else Color.Transparent,
-        label = "download_button_focus_border"
-    )
-    animateColorAsState(
-        targetValue = if (isHeaderMenuButtonFocused.value) MaterialTheme.colorScheme.primary else Color.Transparent,
-        label = "header_menu_button_focus_border"
-    )
-    animateColorAsState(
-        targetValue = if (isArtistLinkFocused.value) MaterialTheme.colorScheme.primary else Color.Transparent,
-        label = "artist_link_focus_border"
-    )
 
     LaunchedEffect(Unit) {
         firstHeaderItemFocusRequester.requestFocus()
@@ -248,17 +209,10 @@ fun AlbumScreen(
                                 fontSizeRange = FontSizeRange(16.sp, 22.sp),
                             )
 
-                            val artistLinkFocused = remember { mutableStateOf(false) }
-                            val artistLinkBorderColor = animateColorAsState(
-                                targetValue = if (artistLinkFocused.value) MaterialTheme.colorScheme.primary else Color.Transparent,
-                                label = "artist_link_focus_border"
-                            )
                             Box(
                                 modifier = Modifier
                                     .focusRequester(firstHeaderItemFocusRequester)
-                                    .border(3.dp, artistLinkBorderColor.value, MaterialTheme.shapes.extraSmall)
-                                    .focusable()
-                                    .onFocusChanged { artistLinkFocused.value = it.isFocused }
+                                    .dpadFocusBorder(MaterialTheme.colorScheme.primary, MaterialTheme.shapes.extraSmall, 3.dp)
                                     .padding(4.dp)
                             ) {
                                 Text(buildAnnotatedString {
@@ -292,16 +246,9 @@ fun AlbumScreen(
                             }
 
                             Row {
-                                val heartButtonFocused = remember { mutableStateOf(false) }
-                                val heartButtonBorderColor = animateColorAsState(
-                                    targetValue = if (heartButtonFocused.value) MaterialTheme.colorScheme.primary else Color.Transparent,
-                                    label = "heart_button_focus_border"
-                                )
                                 Box(
                                     modifier = Modifier
-                                        .border(3.dp, heartButtonBorderColor.value, MaterialTheme.shapes.extraSmall)
-                                        .focusable()
-                                        .onFocusChanged { heartButtonFocused.value = it.isFocused }
+                                        .dpadFocusBorder(MaterialTheme.colorScheme.primary, MaterialTheme.shapes.extraSmall, 3.dp)
                                 ) {
                                     IconButton(
                                         onClick = {
@@ -334,19 +281,12 @@ fun AlbumScreen(
                                     }
                                 }
 
-                                val downloadButtonFocused = remember { mutableStateOf(false) }
-                                val downloadButtonBorderColor = animateColorAsState(
-                                    targetValue = if (downloadButtonFocused.value) MaterialTheme.colorScheme.primary else Color.Transparent,
-                                    label = "download_button_focus_border"
-                                )
 
                                 when (downloadState) {
                                     Download.STATE_COMPLETED -> {
                                         Box(
                                             modifier = Modifier
-                                                .border(3.dp, downloadButtonBorderColor.value, MaterialTheme.shapes.extraSmall)
-                                                .focusable()
-                                                .onFocusChanged { downloadButtonFocused.value = it.isFocused }
+                                                .dpadFocusBorder(MaterialTheme.colorScheme.primary, MaterialTheme.shapes.extraSmall, 3.dp)
                                         ) {
                                             IconButton(
                                                 onClick = {
@@ -368,9 +308,7 @@ fun AlbumScreen(
                                     Download.STATE_DOWNLOADING -> {
                                         Box(
                                             modifier = Modifier
-                                                .border(3.dp, downloadButtonBorderColor.value, MaterialTheme.shapes.extraSmall)
-                                                .focusable()
-                                                .onFocusChanged { downloadButtonFocused.value = it.isFocused }
+                                                .dpadFocusBorder(MaterialTheme.colorScheme.primary, MaterialTheme.shapes.extraSmall, 3.dp)
                                         ) {
                                             IconButton(
                                                 onClick = {
@@ -392,9 +330,7 @@ fun AlbumScreen(
                                     else -> {
                                         Box(
                                             modifier = Modifier
-                                                .border(3.dp, downloadButtonBorderColor.value, MaterialTheme.shapes.extraSmall)
-                                                .focusable()
-                                                .onFocusChanged { downloadButtonFocused.value = it.isFocused }
+                                                .dpadFocusBorder(MaterialTheme.colorScheme.primary, MaterialTheme.shapes.extraSmall, 3.dp)
                                         ) {
                                             IconButton(
                                                 onClick = {
@@ -412,16 +348,9 @@ fun AlbumScreen(
                                     }
                                 }
 
-                                val headerMenuButtonFocused = remember { mutableStateOf(false) }
-                                val headerMenuButtonBorderColor = animateColorAsState(
-                                    targetValue = if (headerMenuButtonFocused.value) MaterialTheme.colorScheme.primary else Color.Transparent,
-                                    label = "header_menu_button_focus_border"
-                                )
                                 Box(
                                     modifier = Modifier
-                                        .border(3.dp, headerMenuButtonBorderColor.value, MaterialTheme.shapes.extraSmall)
-                                        .focusable()
-                                        .onFocusChanged { headerMenuButtonFocused.value = it.isFocused }
+                                        .dpadFocusBorder(MaterialTheme.colorScheme.primary, MaterialTheme.shapes.extraSmall, 3.dp)
                                 ) {
                                     IconButton(
                                         onClick = {
@@ -638,9 +567,7 @@ fun AlbumScreen(
             Box(
                 modifier = Modifier
                     .focusRequester(backButtonFocusRequester)
-                    .border(3.dp, backButtonBorderColor.value, MaterialTheme.shapes.extraSmall)
-                    .focusable()
-                    .onFocusChanged { isBackButtonFocused.value = it.isFocused }
+                    .dpadFocusBorder(MaterialTheme.colorScheme.primary, MaterialTheme.shapes.extraSmall, 3.dp)
                     .focusProperties { down = firstHeaderItemFocusRequester }
             ) {
                 IconButton(
@@ -671,9 +598,7 @@ fun AlbumScreen(
                 val count = wrappedSongs.count { it.isSelected }
                 Box(
                     modifier = Modifier
-                        .border(3.dp, selectAllButtonBorderColor.value, MaterialTheme.shapes.extraSmall)
-                        .focusable()
-                        .onFocusChanged { isSelectAllButtonFocused.value = it.isFocused }
+                        .dpadFocusBorder(MaterialTheme.colorScheme.primary, MaterialTheme.shapes.extraSmall, 3.dp)
                 ) {
                     IconButton(
                         onClick = {
@@ -695,9 +620,7 @@ fun AlbumScreen(
 
                 Box(
                     modifier = Modifier
-                        .border(3.dp, moreButtonBorderColor.value, MaterialTheme.shapes.extraSmall)
-                        .focusable()
-                        .onFocusChanged { isMoreButtonFocused.value = it.isFocused }
+                        .dpadFocusBorder(MaterialTheme.colorScheme.primary, MaterialTheme.shapes.extraSmall, 3.dp)
                 ) {
                     IconButton(
                         onClick = {

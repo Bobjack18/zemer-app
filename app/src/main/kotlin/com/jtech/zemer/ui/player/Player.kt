@@ -126,6 +126,7 @@ import com.jtech.zemer.constants.UseNewPlayerDesignKey
 import com.jtech.zemer.extensions.togglePlayPause
 import com.jtech.zemer.extensions.toggleRepeatMode
 import com.jtech.zemer.models.MediaMetadata
+import com.jtech.zemer.ui.utils.dpadFocusBorder
 import com.jtech.zemer.ui.component.BottomSheet
 import com.jtech.zemer.ui.component.BottomSheetState
 import com.jtech.zemer.ui.component.DefaultDialog
@@ -552,6 +553,10 @@ fun BottomSheetPlayer(
                 Column(
                     modifier = Modifier.weight(1f)
                 ) {
+                    // Deliberately NOT dpadFocusBorder: this exact order (border -> padding ->
+                    // focusable -> onFocusChanged) is load-bearing. Bundling it broke Compose's
+                    // focus initialization for the whole player surface (bisect-verified on-device:
+                    // no element could take focus, D-pad dead). Same applies to the artist row.
                     val titleFocused = remember { mutableStateOf(false) }
                     val titleBorderColor = animateColorAsState(
                         targetValue = if (titleFocused.value) accentColor else Color.Transparent,
@@ -706,16 +711,6 @@ fun BottomSheetPlayer(
                         topEnd = 50.dp, bottomEnd = 50.dp
                     )
 
-                    val shareFocused = remember { mutableStateOf(false) }
-                    val shareBorderColor = animateColorAsState(
-                        targetValue = if (shareFocused.value) accentColor else Color.Transparent,
-                        label = "share_focus"
-                    )
-                    val favFocused = remember { mutableStateOf(false) }
-                    val favBorderColor = animateColorAsState(
-                        targetValue = if (favFocused.value) accentColor else Color.Transparent,
-                        label = "fav_focus"
-                    )
 
                     Row(
                         horizontalArrangement = Arrangement.spacedBy(6.dp),
@@ -726,9 +721,7 @@ fun BottomSheetPlayer(
                                 .size(42.dp)
                                 .clip(shareShape)
                                 .background(textButtonColor)
-                                .border(3.dp, shareBorderColor.value, shareShape)
-                                .focusable()
-                                .onFocusChanged { shareFocused.value = it.isFocused }
+                                .dpadFocusBorder(accentColor, shareShape, 3.dp)
                                 .clickable {
                                     val intent = Intent().apply {
                                         action = Intent.ACTION_SEND
@@ -756,9 +749,7 @@ fun BottomSheetPlayer(
                                 .size(42.dp)
                                 .clip(favShape)
                                 .background(textButtonColor)
-                                .border(3.dp, favBorderColor.value, favShape)
-                                .focusable()
-                                .onFocusChanged { favFocused.value = it.isFocused }
+                                .dpadFocusBorder(accentColor, favShape, 3.dp)
                                 .clickable {
                                     playerConnection.toggleLike()
                                 }
@@ -781,25 +772,13 @@ fun BottomSheetPlayer(
                         }
                     }
                 } else {
-                    val oldShareFocused = remember { mutableStateOf(false) }
-                    val oldShareBorderColor = animateColorAsState(
-                        targetValue = if (oldShareFocused.value) accentColor else Color.Transparent,
-                        label = "old_share_focus"
-                    )
-                    val oldMenuFocused = remember { mutableStateOf(false) }
-                    val oldMenuBorderColor = animateColorAsState(
-                        targetValue = if (oldMenuFocused.value) accentColor else Color.Transparent,
-                        label = "old_menu_focus"
-                    )
                     Box(
                         modifier =
                         Modifier
                             .size(40.dp)
                             .clip(MaterialTheme.shapes.large)
                             .background(textButtonColor)
-                            .border(3.dp, oldShareBorderColor.value, MaterialTheme.shapes.large)
-                            .focusable()
-                            .onFocusChanged { oldShareFocused.value = it.isFocused }
+                            .dpadFocusBorder(accentColor, MaterialTheme.shapes.large, 3.dp)
                             .clickable {
                                 val intent =
                                     Intent().apply {
@@ -833,9 +812,7 @@ fun BottomSheetPlayer(
                             .size(40.dp)
                             .clip(MaterialTheme.shapes.large)
                             .background(textButtonColor)
-                            .border(3.dp, oldMenuBorderColor.value, MaterialTheme.shapes.large)
-                            .focusable()
-                            .onFocusChanged { oldMenuFocused.value = it.isFocused }
+                            .dpadFocusBorder(accentColor, MaterialTheme.shapes.large, 3.dp)
                             .clickable {
                                 menuState.show {
                                     PlayerMenu(
@@ -991,11 +968,6 @@ fun BottomSheetPlayer(
                         modifier = Modifier.fillMaxWidth().onFocusChanged { buttonRowFocused = it.hasFocus }
                     ) {
 
-                        val skipPrevFocused = remember { mutableStateOf(false) }
-                        val skipPrevBorderColor = animateColorAsState(
-                            targetValue = if (skipPrevFocused.value) accentColor else Color.Transparent,
-                            label = "skip_prev_focus"
-                        )
                         var skipPrevJob by remember { mutableStateOf<Job?>(null) }
 
                         FilledTonalIconButton(
@@ -1011,9 +983,7 @@ fun BottomSheetPlayer(
                             modifier = Modifier
                                 .size(width = sideButtonWidth, height = sideButtonHeight)
                                 .clip(MaterialTheme.shapes.extraLarge)
-                                .border(3.dp, skipPrevBorderColor.value, MaterialTheme.shapes.extraLarge)
-                                .focusable()
-                                .onFocusChanged { skipPrevFocused.value = it.isFocused }
+                                .dpadFocusBorder(accentColor, MaterialTheme.shapes.extraLarge, 3.dp)
                                 .combinedClickable(
                                     onClick = {
                                         skipPrevJob?.cancel()
@@ -1040,11 +1010,6 @@ fun BottomSheetPlayer(
 
                         Spacer(modifier = Modifier.width(16.dp))
 
-                        val playButtonFocused = remember { mutableStateOf(false) }
-                        val playButtonBorderColor = animateColorAsState(
-                            targetValue = if (playButtonFocused.value) accentColor else Color.Transparent,
-                            label = "play_button_focus"
-                        )
                         FilledIconButton(
                             onClick = {
                                 if (playbackState == STATE_ENDED) {
@@ -1061,9 +1026,7 @@ fun BottomSheetPlayer(
                             modifier = Modifier
                                 .size(width = playButtonWidth, height = playButtonHeight)
                                 .clip(MaterialTheme.shapes.extraLarge)
-                                .border(3.dp, playButtonBorderColor.value, MaterialTheme.shapes.extraLarge)
-                                .focusable()
-                                .onFocusChanged { playButtonFocused.value = it.isFocused }
+                                .dpadFocusBorder(accentColor, MaterialTheme.shapes.extraLarge, 3.dp)
                         ) {
                             Icon(
                                 painter = painterResource(
@@ -1080,11 +1043,6 @@ fun BottomSheetPlayer(
 
                         Spacer(modifier = Modifier.width(16.dp))
 
-                        val skipNextFocused = remember { mutableStateOf(false) }
-                        val skipNextBorderColor = animateColorAsState(
-                            targetValue = if (skipNextFocused.value) accentColor else Color.Transparent,
-                            label = "skip_next_focus"
-                        )
                         var skipNextJob by remember { mutableStateOf<Job?>(null) }
 
                         FilledTonalIconButton(
@@ -1100,9 +1058,7 @@ fun BottomSheetPlayer(
                             modifier = Modifier
                                 .size(width = sideButtonWidth, height = sideButtonHeight)
                                 .clip(MaterialTheme.shapes.extraLarge)
-                                .border(3.dp, skipNextBorderColor.value, MaterialTheme.shapes.extraLarge)
-                                .focusable()
-                                .onFocusChanged { skipNextFocused.value = it.isFocused }
+                                .dpadFocusBorder(accentColor, MaterialTheme.shapes.extraLarge, 3.dp)
                                 .combinedClickable(
                                     onClick = {
                                         skipNextJob?.cancel()
@@ -1172,20 +1128,13 @@ fun BottomSheetPlayer(
 
                     Spacer(Modifier.width(8.dp))
 
-                    val landscapePlayFocused = remember { mutableStateOf(false) }
-                    val landscapePlayBorderColor = animateColorAsState(
-                        targetValue = if (landscapePlayFocused.value) accentColor else Color.Transparent,
-                        label = "landscape_play_focus"
-                    )
                     Box(
                         modifier =
                         Modifier
                             .size(72.dp)
                             .clip(RoundedCornerShape(playPauseRoundness))
                             .background(textButtonColor)
-                            .border(3.dp, landscapePlayBorderColor.value, RoundedCornerShape(playPauseRoundness))
-                            .focusable()
-                            .onFocusChanged { landscapePlayFocused.value = it.isFocused }
+                            .dpadFocusBorder(accentColor, RoundedCornerShape(playPauseRoundness), 3.dp)
                             .clickable {
                                 if (playbackState == STATE_ENDED) {
                                     playerConnection.player.seekTo(0, 0)

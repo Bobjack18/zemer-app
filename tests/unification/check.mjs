@@ -97,6 +97,43 @@ check("shared reusable components present", missing.length === 0, missing.length
 const hasOldGroup = FILES.some((f) => f.endsWith("Material3SettingsGroup.kt"));
 check("Material3SettingsGroup.kt stays deleted", !hasOldGroup);
 
+// 7) No hand-rolled D-pad focus border outside the shared layer — custom focusables use
+//    Modifier.dpadFocusBorder (utils/FocusBorder.kt). Shared components own their internal focus
+//    visuals (border + background variants). Documented exceptions:
+//    - AlbumScreen track row (1): border driven by the *inner item's* focus — dpadFocusBorder
+//      would add a second focus target.
+//    - Player title + artist (2): their exact modifier order (border -> padding -> focusable ->
+//      onFocusChanged around clickable children) is load-bearing; bundling into dpadFocusBorder
+//      broke focus initialization for the whole player surface (bisect-verified on-device).
+const FOCUS_BORDER_IDIOM = /animateColorAsState\s*\(\s*targetValue\s*=\s*if\s*\([^)]*[fF]ocused[^)]*\)[^\n]*\n?[^\n]*else\s+Color\.Transparent/g;
+const FOCUS_BORDER_ALLOWLIST = { "screens/AlbumScreen.kt": 1, "player/Player.kt": 2 };
+let strayFocusBorders = [];
+for (const p of FILES) {
+  if (p.includes(`${UI}/component/`) || p.endsWith("utils/FocusBorder.kt")) continue;
+  const rel = p.slice(UI.length + 1);
+  const hits = (read(p).match(FOCUS_BORDER_IDIOM) || []).length;
+  if (hits > (FOCUS_BORDER_ALLOWLIST[rel] ?? 0)) strayFocusBorders.push(`${rel}:${hits}`);
+}
+check("no hand-rolled focus border outside shared layer (use dpadFocusBorder)", strayFocusBorders.length === 0,
+  strayFocusBorders.length ? strayFocusBorders.join(", ") : "0 stray");
+
+// 8) The "which artist?" picker is the single shared SelectArtistDialog — every menu that opens
+//    one calls the component instead of hand-rolling a ListDialog of artist rows.
+const hasSelectArtist = FILES.some((f) => f.endsWith("component/SelectArtistDialog.kt"));
+let unsharedArtistDialogs = [];
+for (const p of FILES) {
+  if (p.includes(`${UI}/component/`)) continue;
+  const src = read(p);
+  let i = src.indexOf("if (showSelectArtistDialog)");
+  while (i !== -1) {
+    if (!/^\s*if \(showSelectArtistDialog\) \{\s*\n\s*SelectArtistDialog\(/.test(src.slice(i, i + 200)))
+      unsharedArtistDialogs.push(p.slice(UI.length + 1));
+    i = src.indexOf("if (showSelectArtistDialog)", i + 1);
+  }
+}
+check("artist picker goes through shared SelectArtistDialog", hasSelectArtist && unsharedArtistDialogs.length === 0,
+  !hasSelectArtist ? "component missing" : unsharedArtistDialogs.length ? "hand-rolled: " + unsharedArtistDialogs.join(", ") : "all call sites shared");
+
 const failed = results.filter((r) => !r.pass).length;
 console.log(`\n=== ${results.length - failed} passed, ${failed} failed ===\n`);
 process.exit(failed ? 1 : 0);

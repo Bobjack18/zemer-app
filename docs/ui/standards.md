@@ -43,6 +43,13 @@ Use these; do not hand-roll equivalents.
   Switch+Row.
 - **Dialogs (`Dialog.kt`):** `DefaultDialog`, `ListDialog`, `TextFieldDialog`, `ActionPromptDialog`,
   `InfoLabel`. Never a raw `AlertDialog`/`BasicAlertDialog`/Card-as-dialog. See "Dialogs" below.
+  The "which artist?" picker is the shared **`SelectArtistDialog`** (`component/SelectArtistDialog.kt`)
+  — menus map their artist models to `SelectableArtist(id, name, thumbnailUrl?)` and handle navigation
+  in `onSelect`; never re-roll the artist `ListDialog`.
+- **Custom focusables:** a bespoke focusable control (not built on the shared components) gets its
+  focus ring via **`Modifier.dpadFocusBorder(color, shape, width)`** (`ui/utils/FocusBorder.kt`) —
+  never a hand-rolled `remember`+`animateColorAsState`+`border`+`focusable`+`onFocusChanged` chain.
+  Two verified exceptions live with explanatory comments (see "D-pad and focus").
 - **App bar:** Material3 `TopAppBar` + the app's `ui/component/IconButton` (which carries a visible
   D-pad focus ring). In-app-bar search uses the shared **`AppBarSearchField`** — never a re-rolled
   transparent `TextField`.
@@ -106,6 +113,14 @@ fun ExampleSettings(navController: NavController, scrollBehavior: TopAppBarScrol
   transport button row is focused so prev/play/next navigation is preserved.
 - Interactive elements are `>= 48dp`; icon-only controls carry a localized `contentDescription`
   (decorative icons pass `null`). The shared `IconButton` shows a primary focus ring.
+- Custom focusables use `Modifier.dpadFocusBorder` (see "Components"). Two verified exceptions keep
+  the raw idiom, with comments at the site and an allowlist in `tests/unification/check.mjs`:
+  - **Player title + artist rows:** their exact modifier order (`border -> padding -> focusable ->
+    onFocusChanged`, wrapping clickable children) is load-bearing — bundling it into the shared
+    modifier broke Compose focus *initialization* for the whole player surface (bisect-verified
+    on-device: no element could take focus until reverted).
+  - **AlbumScreen track rows:** the border reacts to the *inner item's* focus via a shared map;
+    `dpadFocusBorder` owns its own `focusable()` and would add a second focus target per row.
 - Verified by the harness in `tests/dpad/` (adb-driven, hard-data oracles: play/pause, seek, reorder,
   BACK + a per-screen focus-coverage sweep). Every new screen must pass a D-pad-only walkthrough.
 
