@@ -396,7 +396,7 @@ fun AccountSettings(
         if (showLogoutDialog) {
             DefaultDialog(
                 onDismiss = { showLogoutDialog = false },
-                title = { Text("Keep library data?") },
+                title = { Text(stringResource(R.string.keep_library_data_title)) },
                 buttons = {
                     TextButton(
                         onClick = {
@@ -409,7 +409,7 @@ fun AccountSettings(
                             }
                         }
                     ) {
-                        Text("Clear")
+                        Text(stringResource(R.string.clear))
                     }
                     TextButton(
                         onClick = {
@@ -421,11 +421,11 @@ fun AccountSettings(
                             }
                         }
                     ) {
-                        Text("Keep")
+                        Text(stringResource(R.string.keep))
                     }
                 }
             ) {
-                Text("Do you want to keep your downloaded songs, playlists, and library data?")
+                Text(stringResource(R.string.keep_library_data_message))
             }
         }
 

@@ -63,6 +63,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.foundation.layout.width
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -952,7 +953,7 @@ private fun ContentFiltersScreen(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(
-                        text = "Restoring Content Filter Settings",
+                        text = stringResource(R.string.restoring_content_filter_settings),
                         style = MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight.Bold),
                         textAlign = TextAlign.Center,
                         color = MaterialTheme.colorScheme.primary
@@ -962,7 +963,7 @@ private fun ContentFiltersScreen(
                         color = MaterialTheme.colorScheme.primary
                     )
                     Text(
-                        text = "Checking for saved preferences...",
+                        text = stringResource(R.string.checking_for_saved_preferences),
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         textAlign = TextAlign.Center
@@ -975,14 +976,14 @@ private fun ContentFiltersScreen(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(
-                        text = "Restoring Content Filter Settings",
+                        text = stringResource(R.string.restoring_content_filter_settings),
                         style = MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight.Bold),
                         textAlign = TextAlign.Center,
                         color = MaterialTheme.colorScheme.primary
                     )
 
                     Text(
-                        text = "Found your saved preferences",
+                        text = stringResource(R.string.found_your_saved_preferences),
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         textAlign = TextAlign.Center
@@ -1005,26 +1006,26 @@ private fun ContentFiltersScreen(
                         Column(modifier = Modifier.padding(16.dp)) {
                             val config = uiState.restoredConfig
                             Text(
-                                text = "Restored Settings:",
+                                text = stringResource(R.string.restored_settings_label),
                                 style = MaterialTheme.typography.labelLarge.copy(fontWeight = FontWeight.SemiBold),
                                 color = MaterialTheme.colorScheme.onSurface,
                                 modifier = Modifier.padding(bottom = 8.dp)
                             )
 
                             Text(
-                                text = "• Content Filters: Enabled",
+                                text = stringResource(R.string.restored_content_filters_enabled),
                                 style = MaterialTheme.typography.bodyMedium,
                                 color = MaterialTheme.colorScheme.onSurface
                             )
 
                             Text(
-                                text = "• Female Singers: ${if (config?.allowFemaleSingers == true) "Allowed" else "Blocked"}",
+                                text = stringResource(R.string.restored_female_singers, if (config?.allowFemaleSingers == true) stringResource(R.string.allowed) else stringResource(R.string.blocked_state)),
                                 style = MaterialTheme.typography.bodyMedium,
                                 color = MaterialTheme.colorScheme.onSurface
                             )
 
                             Text(
-                                text = "• Videos: ${if (config?.blockVideos == true) "Blocked" else "Allowed"}",
+                                text = stringResource(R.string.restored_videos, if (config?.blockVideos == true) stringResource(R.string.blocked_state) else stringResource(R.string.allowed)),
                                 style = MaterialTheme.typography.bodyMedium,
                                 color = MaterialTheme.colorScheme.onSurface
                             )
@@ -1032,7 +1033,7 @@ private fun ContentFiltersScreen(
                     }
 
                     Text(
-                        text = "Continuing automatically...",
+                        text = stringResource(R.string.continuing_automatically),
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         textAlign = TextAlign.Center
@@ -1046,13 +1047,13 @@ private fun ContentFiltersScreen(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(
-                        text = "Content Filters",
+                        text = stringResource(R.string.onboarding_content_filters),
                         style = MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight.Bold),
                         textAlign = TextAlign.Center,
                         color = MaterialTheme.colorScheme.primary
                     )
                     Text(
-                        text = "Set up your content preferences (optional)",
+                        text = stringResource(R.string.set_up_content_preferences_optional),
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         textAlign = TextAlign.Center
@@ -1195,7 +1196,7 @@ private fun ContentFiltersScreen(
                     showSignInDialog = false
                     signInDelaySeconds = 0
                 },
-                title = { Text("⚠️ Important - Read Carefully") },
+                title = { Text(stringResource(R.string.important_read_carefully)) },
                 buttons = {
                     TextButton(
                         onClick = {
@@ -1203,7 +1204,7 @@ private fun ContentFiltersScreen(
                             signInDelaySeconds = 0
                         }
                     ) {
-                        Text("Cancel")
+                        Text(stringResource(R.string.cancel))
                     }
                     Button(
                         onClick = {
@@ -1222,7 +1223,7 @@ private fun ContentFiltersScreen(
                         },
                         enabled = signInDelaySeconds == 0
                     ) {
-                        Text(if (signInDelaySeconds == 0) "Create Account" else "Please wait...")
+                        Text(if (signInDelaySeconds == 0) stringResource(R.string.create_account) else stringResource(R.string.please_wait_ellipsis))
                     }
                 }
             ) {
@@ -1231,14 +1232,14 @@ private fun ContentFiltersScreen(
                         .fillMaxWidth()
                         .verticalScroll(rememberScrollState())
                 ) {
-                    Text("Create an anonymous account to sync and backup your content filter settings.")
+                    Text(stringResource(R.string.anonymous_account_sync_filter_desc))
                     Spacer(modifier = Modifier.height(8.dp))
-                    Text("This will permanently lock your preferences to prevent accidental changes.", color = MaterialTheme.colorScheme.primary)
+                    Text(stringResource(R.string.permanently_lock_preferences_warning), color = MaterialTheme.colorScheme.primary)
                     Spacer(modifier = Modifier.height(4.dp))
-                    Text("THIS CANNOT BE CHANGED ONCE SET, IT WILL PERSIST CLEARING DATA OR UNINSTALLATION OF THE APP!", color = MaterialTheme.colorScheme.error, fontWeight = FontWeight.Bold)
+                    Text(stringResource(R.string.lock_cannot_be_changed_warning), color = MaterialTheme.colorScheme.error, fontWeight = FontWeight.Bold)
                     if (signInDelaySeconds > 0) {
                         Spacer(modifier = Modifier.height(12.dp))
-                        Text("Please wait $signInDelaySeconds second${if (signInDelaySeconds != 1) "s" else ""} before continuing...", color = MaterialTheme.colorScheme.error)
+                        Text(pluralStringResource(R.plurals.please_wait_seconds_before_continuing, signInDelaySeconds, signInDelaySeconds), color = MaterialTheme.colorScheme.error)
                     }
                 }
             }
@@ -1843,13 +1844,13 @@ private fun BottomNavSetupScreen(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
-                    text = "Navigation Setup",
+                    text = stringResource(R.string.navigation_setup),
                     style = MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight.Bold),
                     textAlign = TextAlign.Center,
                     color = MaterialTheme.colorScheme.primary
                 )
                 Text(
-                    text = "Would you like to enable the bottom navigation bar for quick access to your favorite screens?",
+                    text = stringResource(R.string.enable_bottom_nav_prompt),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     textAlign = TextAlign.Center
@@ -1892,12 +1893,12 @@ private fun BottomNavSetupScreen(
                     ) {
                         Column(modifier = Modifier.weight(1f)) {
                             Text(
-                                text = "Enable Bottom Navigation",
+                                text = stringResource(R.string.enable_bottom_navigation),
                                 style = MaterialTheme.typography.labelLarge.copy(fontWeight = FontWeight.SemiBold),
                                 color = MaterialTheme.colorScheme.onSurface
                             )
                             Text(
-                                text = "Show bottom navigation bar for quick access",
+                                text = stringResource(R.string.enable_bottom_navigation_desc),
                                 style = MaterialTheme.typography.labelSmall,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                                 modifier = Modifier.padding(top = 2.dp)
@@ -1943,12 +1944,12 @@ private fun BottomNavSetupScreen(
                     ) {
                         Column(modifier = Modifier.weight(1f)) {
                             Text(
-                                text = "No thanks",
+                                text = stringResource(R.string.no_thanks),
                                 style = MaterialTheme.typography.labelLarge.copy(fontWeight = FontWeight.SemiBold),
                                 color = MaterialTheme.colorScheme.onSurface
                             )
                             Text(
-                                text = "I can enable it later in appearance settings",
+                                text = stringResource(R.string.enable_later_in_appearance_settings),
                                 style = MaterialTheme.typography.labelSmall,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                                 modifier = Modifier.padding(top = 2.dp)
@@ -1972,7 +1973,7 @@ private fun BottomNavSetupScreen(
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 Text(
-                    text = "You can customize which menu items appear later in appearance settings",
+                    text = stringResource(R.string.customize_menu_items_later_note),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     textAlign = TextAlign.Center,
@@ -2001,7 +2002,7 @@ private fun BottomNavSetupScreen(
                     )
                 ) {
                     Text(
-                        text = "Continue",
+                        text = stringResource(R.string.onboarding_continue),
                         style = MaterialTheme.typography.labelMedium
                     )
                 }
@@ -2011,7 +2012,7 @@ private fun BottomNavSetupScreen(
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Text(
-                        text = "Back",
+                        text = stringResource(R.string.onboarding_back),
                         style = MaterialTheme.typography.labelMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )

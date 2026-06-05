@@ -971,7 +971,7 @@ fun Lyrics(
                                     }
                                     context.startActivity(Intent.createChooser(shareIntent, "Share Lyrics"))
                                 } catch (e: Exception) {
-                                    Toast.makeText(context, "Failed to create image: ${e.message}", Toast.LENGTH_SHORT).show()
+                                    Toast.makeText(context, context.getString(R.string.failed_to_create_image_message, e.message ?: ""), Toast.LENGTH_SHORT).show()
                                 } finally {
                                     showProgressDialog = false
                                 }

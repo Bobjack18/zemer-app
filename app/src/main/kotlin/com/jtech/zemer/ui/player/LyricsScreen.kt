@@ -490,7 +490,7 @@ fun LyricsScreen(
                                                 else -> R.drawable.repeat
                                             }
                                         ),
-                                        contentDescription = "Repeat",
+                                        contentDescription = stringResource(R.string.repeat),
                                         tint = if (repeatMode == Player.REPEAT_MODE_OFF) textBackgroundColor.copy(alpha = 0.4f) else textBackgroundColor,
                                         modifier = Modifier.size(24.dp)
                                     )
@@ -519,7 +519,7 @@ fun LyricsScreen(
                                     ) {
                                         Icon(
                                             painter = painterResource(if (isPlaying) R.drawable.pause else R.drawable.play),
-                                            contentDescription = "Play/Pause",
+                                            contentDescription = stringResource(R.string.play_pause),
                                             tint = iconButtonColor,
                                             modifier = Modifier.size(32.dp)
                                         )
@@ -540,7 +540,7 @@ fun LyricsScreen(
                                 ) {
                                     Icon(
                                         painter = painterResource(R.drawable.shuffle),
-                                        contentDescription = "Shuffle",
+                                        contentDescription = stringResource(R.string.shuffle),
                                         tint = if (shuffleModeEnabled) textBackgroundColor else textBackgroundColor.copy(alpha = 0.4f),
                                         modifier = Modifier.size(24.dp)
                                     )
@@ -732,7 +732,7 @@ fun LyricsScreen(
                                             else -> R.drawable.repeat
                                         }
                                     ),
-                                    contentDescription = "Repeat",
+                                    contentDescription = stringResource(R.string.repeat),
                                     tint = if (repeatMode == Player.REPEAT_MODE_OFF) textBackgroundColor.copy(alpha = 0.4f) else textBackgroundColor,
                                     modifier = Modifier.size(24.dp)
                                 )
@@ -761,7 +761,7 @@ fun LyricsScreen(
                                 ) {
                                     Icon(
                                         painter = painterResource(if (isPlaying) R.drawable.pause else R.drawable.play),
-                                        contentDescription = "Play/Pause",
+                                        contentDescription = stringResource(R.string.play_pause),
                                         tint = iconButtonColor,
                                         modifier = Modifier.size(32.dp)
                                     )
@@ -782,7 +782,7 @@ fun LyricsScreen(
                             ) {
                                 Icon(
                                     painter = painterResource(R.drawable.shuffle),
-                                    contentDescription = "Shuffle",
+                                    contentDescription = stringResource(R.string.shuffle),
                                     tint = if (shuffleModeEnabled) textBackgroundColor else textBackgroundColor.copy(alpha = 0.4f),
                                     modifier = Modifier.size(24.dp)
                                 )

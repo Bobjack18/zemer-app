@@ -314,4 +314,146 @@
     <string name="android_auto_target_playlist_desc">Choose the playlist where songs are saved when using the quick-add button in Android Auto</string>
     <string name="android_auto_target_playlist_auto">Not set</string>
     <string name="android_auto_target_playlist_not_set">No playlist selected. Choose one in Android Auto settings</string>
+
+    <!-- Phase 3 UI string extraction -->
+    <!-- Anonymous / sync account dialogs -->
+    <string name="create_account_and_sync">Create Account &amp; Sync</string>
+    <string name="create_sync_account">Create Sync Account</string>
+    <string name="create_account_and_lock">Create Account &amp; Lock</string>
+    <string name="please_wait_ellipsis">Please wait…</string>
+    <string name="creating_account_locking">Creating account and locking your preferences…</string>
+    <string name="anonymous_account_sync_filter_desc">Create an anonymous account to sync and backup your content filter settings.</string>
+    <string name="permanently_lock_preferences_warning">This will permanently lock your preferences to prevent accidental changes.</string>
+    <string name="lock_cannot_be_changed_warning">THIS CANNOT BE CHANGED ONCE SET, IT WILL PERSIST CLEARING DATA OR UNINSTALLATION OF THE APP!</string>
+    <plurals name="please_wait_seconds_before_continuing">
+        <item quantity="one">Please wait %1$d second before continuing…</item>
+        <item quantity="other">Please wait %1$d seconds before continuing…</item>
+    </plurals>
+    <string name="important_read_carefully">⚠️ Important - Read Carefully</string>
+    <string name="create_account">Create Account</string>
+    <string name="lock_settings">Lock Settings</string>
+    <string name="create_account_to_lock">Create Account to Lock</string>
+
+    <!-- Content filter sync status card -->
+    <string name="content_filter_sync">Content Filter Sync</string>
+    <string name="signed_in">Signed in</string>
+    <string name="not_signed_in">Not signed in</string>
+    <string name="content_filter_auto_restored">Content filter preferences have been automatically restored from your account.</string>
+    <string name="restored_from">Restored from: %1$s</string>
+    <string name="last_synced">Last synced: %1$s</string>
+    <string name="never_synced">Never synced</string>
+    <string name="ready_to_sync">Ready to sync</string>
+    <string name="sync_account_id">ID: %1$s</string>
+    <string name="create_account_to_sync_restore">Create an account to sync your content filter preferences and restore them after app reinstallation.</string>
+
+    <!-- Account settings logout dialog -->
+    <string name="keep_library_data_title">Keep library data?</string>
+    <string name="clear">Clear</string>
+    <string name="keep">Keep</string>
+    <string name="keep_library_data_message">Do you want to keep your downloaded songs, playlists, and library data?</string>
+
+    <!-- Appearance settings -->
+    <string name="display_density">Display Density</string>
+    <string name="custom_display_density">Custom Display Density</string>
+    <string name="density_value_hint">Enter a value between 50% and 120%.\n\nExamples: 85 or 0.85 for 85%</string>
+    <string name="restart_required_density_message">The display density change will take effect after restarting the app. Do you want to restart now?</string>
+
+    <!-- About screen -->
+    <string name="about_version">Version %1$s</string>
+    <string name="about_created_by">Created by Ars18 and TripleU</string>
+    <string name="about_based_on_metrolist">Based on Metrolist by MO AGAMY</string>
+    <string name="github">GitHub</string>
+
+    <!-- Video player -->
+    <string name="video_quality">Video quality</string>
+    <string name="download_video">Download video</string>
+    <string name="choose_a_quality">Choose a quality</string>
+    <string name="loading_available_qualities">Loading available qualities…</string>
+    <string name="playback_speed">Playback speed</string>
+    <string name="speed_normal">1.0x (Normal)</string>
+    <string name="current_quality_auto">Current: Auto</string>
+    <string name="playback_error">Playback error</string>
+    <string name="video_saved_to_movies">Video saved to Movies/Zemer</string>
+    <string name="download_failed_message">Download failed: %1$s</string>
+    <string name="unknown_error">Unknown error</string>
+    <string name="unable_to_start_pip">Unable to start PiP</string>
+    <string name="pip_unavailable_message">PiP unavailable: %1$s</string>
+    <string name="speed">Speed</string>
+    <string name="previous">Previous</string>
+    <string name="next">Next</string>
+    <string name="pause">Pause</string>
+    <string name="quality">Quality</string>
+    <string name="fullscreen">Fullscreen</string>
+
+    <!-- Player / lyrics media controls -->
+    <string name="copied_title">Copied Title</string>
+    <string name="copied_artist">Copied Artist</string>
+    <string name="repeat">Repeat</string>
+    <string name="play_pause">Play/Pause</string>
+
+    <!-- Search bar accessibility -->
+    <string name="suggestions_available">Suggestions available</string>
+
+    <!-- Library mix sync -->
+    <string name="syncing">Syncing…</string>
+    <string name="sync_completed">Sync completed</string>
+    <string name="sync_failed_message">Sync failed: %1$s</string>
+    <string name="fetch_from_youtube_music">Fetch from YouTube Music</string>
+
+    <!-- Login -->
+    <string name="blocked">Blocked</string>
+
+    <!-- Lyrics image -->
+    <string name="failed_to_create_image_message">Failed to create image: %1$s</string>
+
+    <!-- Network required dialog -->
+    <string name="checking_connection">Checking connection…</string>
+    <string name="internet_connection_required">Internet Connection Required</string>
+    <string name="internet_connection_required_message">Please connect to Wi-Fi or mobile data to continue. An internet connection is required to save your preferences and settings.</string>
+
+    <!-- WebView / anonymous auth dialogs -->
+    <string name="signing_in">Signing in…</string>
+    <string name="sync_your_settings">Sync Your Settings</string>
+    <string name="sync_account_webview_desc">Create an anonymous account to sync and backup your preferences across devices. You can link this to a Google account later.</string>
+    <string name="creating_account">Creating account…</string>
+    <string name="sync_account_anon_desc">Create an anonymous account to sync and backup your preferences across devices. No Google account required.</string>
+    <string name="settings_locked_backed_up_note">Your settings will be locked and backed up to prevent accidental changes.</string>
+
+    <!-- Login gate -->
+    <string name="sign_in_to_continue">Sign in to continue</string>
+
+    <!-- About screen -->
+    <string name="app_name_zemer">Zemer</string>
+    <string name="app_tagline">An audio-first YouTube Music experience</string>
+
+    <!-- Appearance settings - bottom nav -->
+    <string name="bottom_navigation_items">Bottom Navigation Items</string>
+    <string name="select_at_least_1_item">Select at least 1 item</string>
+
+    <!-- Onboarding -->
+    <string name="restoring_content_filter_settings">Restoring Content Filter Settings</string>
+    <string name="checking_for_saved_preferences">Checking for saved preferences…</string>
+    <string name="found_your_saved_preferences">Found your saved preferences</string>
+    <string name="restored_settings_label">Restored Settings:</string>
+    <string name="continuing_automatically">Continuing automatically…</string>
+    <string name="onboarding_content_filters">Content Filters</string>
+    <string name="set_up_content_preferences_optional">Set up your content preferences (optional)</string>
+    <string name="restored_content_filters_enabled">• Content Filters: Enabled</string>
+    <string name="restored_female_singers">• Female Singers: %1$s</string>
+    <string name="restored_videos">• Videos: %1$s</string>
+    <string name="allowed">Allowed</string>
+    <string name="blocked_state">Blocked</string>
+    <string name="navigation_setup">Navigation Setup</string>
+    <string name="enable_bottom_nav_prompt">Would you like to enable the bottom navigation bar for quick access to your favorite screens?</string>
+    <string name="enable_bottom_navigation">Enable Bottom Navigation</string>
+    <string name="enable_bottom_navigation_desc">Show bottom navigation bar for quick access</string>
+    <string name="no_thanks">No thanks</string>
+    <string name="enable_later_in_appearance_settings">I can enable it later in appearance settings</string>
+    <string name="customize_menu_items_later_note">You can customize which menu items appear later in appearance settings</string>
+
+    <!-- Loading screen -->
+    <string name="progress_percent">Progress %1$d%%</string>
+
+    <!-- Mini player -->
+    <string name="error_playing">Error playing</string>
 </resources>

@@ -415,7 +415,7 @@ fun ArtistScreen(
                                                 ) {
                                                     Icon(
                                                         painter = painterResource(R.drawable.shuffle),
-                                                        contentDescription = "Shuffle",
+                                                        contentDescription = stringResource(R.string.shuffle),
                                                         tint = MaterialTheme.colorScheme.onPrimary,
                                                         modifier = Modifier.size(20.dp)
                                                     )
@@ -443,7 +443,7 @@ fun ArtistScreen(
                                             ) {
                                                 Icon(
                                                     painter = painterResource(R.drawable.shuffle),
-                                                    contentDescription = "Shuffle",
+                                                    contentDescription = stringResource(R.string.shuffle),
                                                     tint = MaterialTheme.colorScheme.onPrimary,
                                                     modifier = Modifier.size(20.dp)
                                                 )

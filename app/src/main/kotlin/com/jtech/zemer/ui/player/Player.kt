@@ -577,7 +577,7 @@ fun BottomSheetPlayer(
                                             val clip = ClipData.newPlainText("Copied Title", title)
                                             clipboardManager.setPrimaryClip(clip)
                                             Toast
-                                                .makeText(context, "Copied Title", Toast.LENGTH_SHORT)
+                                                .makeText(context, context.getString(R.string.copied_title), Toast.LENGTH_SHORT)
                                                 .show()
                                         }
                                     )
@@ -664,7 +664,7 @@ fun BottomSheetPlayer(
                                             Toast
                                                 .makeText(
                                                     context,
-                                                    "Copied Artist",
+                                                    context.getString(R.string.copied_artist),
                                                     Toast.LENGTH_SHORT
                                                 )
                                                 .show()

@@ -19,8 +19,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.jtech.zemer.R
 import com.jtech.zemer.extensions.isInternetConnected
 import kotlinx.coroutines.delay
 
@@ -60,14 +62,14 @@ fun NetworkRequiredDialog(
             if (isRetrying) {
                 CircularProgressIndicator()
                 Text(
-                    text = "Checking connection...",
+                    text = stringResource(R.string.checking_connection),
                     style = MaterialTheme.typography.bodyMedium,
                     modifier = Modifier.padding(top = 16.dp),
                     textAlign = TextAlign.Center
                 )
             } else {
                 Text(
-                    text = "Internet Connection Required",
+                    text = stringResource(R.string.internet_connection_required),
                     style = MaterialTheme.typography.headlineSmall,
                     textAlign = TextAlign.Center
                 )
@@ -75,7 +77,7 @@ fun NetworkRequiredDialog(
                 Spacer(modifier = Modifier.height(16.dp))
 
                 Text(
-                    text = "Please connect to Wi-Fi or mobile data to continue. An internet connection is required to save your preferences and settings.",
+                    text = stringResource(R.string.internet_connection_required_message),
                     style = MaterialTheme.typography.bodyMedium,
                     textAlign = TextAlign.Center,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
@@ -90,7 +92,7 @@ fun NetworkRequiredDialog(
                     },
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    Text("Retry")
+                    Text(stringResource(R.string.retry))
                 }
             }
         }

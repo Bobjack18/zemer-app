@@ -69,6 +69,7 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.Dp
@@ -76,6 +77,7 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.lerp
 import androidx.compose.ui.util.lerp
+import com.jtech.zemer.R
 import com.jtech.zemer.constants.AppBarHeight
 import kotlin.math.max
 
@@ -258,6 +260,8 @@ private fun SearchBarInputField(
     val textColor = LocalTextStyle.current.color.takeOrElse {
         if (focused) colors.focusedTextColor else colors.unfocusedTextColor
     }
+    val searchContentDescription = stringResource(R.string.search)
+    val suggestionsAvailableDescription = stringResource(R.string.suggestions_available)
 
     Row(
         verticalAlignment = Alignment.CenterVertically,
@@ -322,9 +326,9 @@ private fun SearchBarInputField(
                     }
                 }
                 .semantics {
-                    contentDescription = "Search"
+                    contentDescription = searchContentDescription
                     if (active) {
-                        stateDescription = "Suggestions available"
+                        stateDescription = suggestionsAvailableDescription
                     }
                 },
             enabled = enabled,

@@ -6,7 +6,9 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.window.Dialog
+import com.jtech.zemer.R
 import com.jtech.zemer.ui.theme.AppColors
 
 @Composable
@@ -24,7 +26,7 @@ fun LoadingScreen(
             ) {
 
                 Text(
-                    text = "Progress $value%",
+                    text = stringResource(R.string.progress_percent, value),
                     color = AppColors.onMedia,
                     style = MaterialTheme.typography.headlineSmall,
                 )

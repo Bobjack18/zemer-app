@@ -19,8 +19,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.jtech.zemer.R
 import com.jtech.zemer.auth.WebViewGoogleAuthManager
 import kotlinx.coroutines.launch
 
@@ -57,26 +59,26 @@ fun AnonymousAuthEmailDialog(
             if (isLoading) {
                 CircularProgressIndicator()
                 Text(
-                    text = "Creating account...",
+                    text = stringResource(R.string.creating_account),
                     style = MaterialTheme.typography.bodyMedium,
                     modifier = Modifier.padding(top = 16.dp)
                 )
             } else {
                 Text(
-                    text = "Create Sync Account",
+                    text = stringResource(R.string.create_sync_account),
                     style = MaterialTheme.typography.headlineSmall,
                     textAlign = TextAlign.Center
                 )
 
                 Text(
-                    text = "Create an anonymous account to sync and backup your preferences across devices. No Google account required.",
+                    text = stringResource(R.string.sync_account_anon_desc),
                     style = MaterialTheme.typography.bodyMedium,
                     textAlign = TextAlign.Center,
                     modifier = Modifier.padding(vertical = 8.dp)
                 )
 
                 Text(
-                    text = "Your settings will be locked and backed up to prevent accidental changes.",
+                    text = stringResource(R.string.settings_locked_backed_up_note),
                     style = MaterialTheme.typography.bodyMedium,
                     textAlign = TextAlign.Center
                 )
@@ -105,7 +107,7 @@ fun AnonymousAuthEmailDialog(
                     enabled = !isLoading,
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    Text("Create Account & Sync")
+                    Text(stringResource(R.string.create_account_and_sync))
                 }
 
                 TextButton(
@@ -113,7 +115,7 @@ fun AnonymousAuthEmailDialog(
                     enabled = !isLoading,
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    Text("Cancel")
+                    Text(stringResource(R.string.cancel))
                 }
             }
         }

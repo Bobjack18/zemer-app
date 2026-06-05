@@ -468,14 +468,14 @@ fun VideoPlayerScreen(
                             )
                         )
                     }
-                    Toast.makeText(context, "Video saved to Movies/Zemer", Toast.LENGTH_LONG).show()
+                    Toast.makeText(context, context.getString(R.string.video_saved_to_movies), Toast.LENGTH_LONG).show()
                 } else {
                     error("Failed to save video to MediaStore")
                 }
             } catch (e: Exception) {
                 Toast.makeText(
                     context,
-                    "Download failed: ${e.localizedMessage ?: "Unknown error"}",
+                    context.getString(R.string.download_failed_message, e.localizedMessage ?: context.getString(R.string.unknown_error)),
                     Toast.LENGTH_SHORT
                 ).show()
             }
@@ -514,10 +514,10 @@ fun VideoPlayerScreen(
                 true
             }
             if (!entered) {
-                Toast.makeText(context, "Unable to start PiP", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, context.getString(R.string.unable_to_start_pip), Toast.LENGTH_SHORT).show()
             }
         } catch (e: IllegalStateException) {
-            Toast.makeText(context, "PiP unavailable: ${e.localizedMessage}", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, context.getString(R.string.pip_unavailable_message, e.localizedMessage), Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -606,9 +606,9 @@ fun VideoPlayerScreen(
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.spacedBy(12.dp)
                     ) {
-                        Text(text = loadError ?: "Playback error", color = AppColors.onMedia)
+                        Text(text = loadError ?: stringResource(R.string.playback_error), color = AppColors.onMedia)
                         TextButton(onClick = { reloadKey++ }) {
-                            Text("Retry", color = MaterialTheme.colorScheme.primary)
+                            Text(stringResource(R.string.retry), color = MaterialTheme.colorScheme.primary)
                         }
                     }
                 }
@@ -817,7 +817,7 @@ fun VideoPlayerScreen(
                                                 }) {
                                                     Icon(
                                                         painter = painterResource(R.drawable.download),
-                                                        contentDescription = "Download"
+                                                        contentDescription = stringResource(R.string.action_download)
                                                     )
                                                 }
                                             }
@@ -833,7 +833,7 @@ fun VideoPlayerScreen(
                                                 }) {
                                                     Icon(
                                                         painter = painterResource(R.drawable.ic_video_hd),
-                                                        contentDescription = "Quality"
+                                                        contentDescription = stringResource(R.string.quality)
                                                     )
                                                 }
                                             }
@@ -890,7 +890,7 @@ fun VideoPlayerScreen(
                                         ) {
                                             Icon(
                                                 painter = painterResource(R.drawable.ic_speedometer),
-                                                contentDescription = "Speed"
+                                                contentDescription = stringResource(R.string.speed)
                                             )
                                         }
                                         OutlinedIconButton(
@@ -902,7 +902,7 @@ fun VideoPlayerScreen(
                                         ) {
                                             Icon(
                                                 painter = painterResource(R.drawable.skip_previous),
-                                                contentDescription = "Previous"
+                                                contentDescription = stringResource(R.string.previous)
                                             )
                                         }
                                         OutlinedIconButton(
@@ -914,7 +914,7 @@ fun VideoPlayerScreen(
                                         ) {
                                             Icon(
                                                 painter = painterResource(if (isPlaying) R.drawable.pause else R.drawable.play),
-                                                contentDescription = if (isPlaying) "Pause" else "Play"
+                                                contentDescription = if (isPlaying) stringResource(R.string.pause) else stringResource(R.string.play)
                                             )
                                         }
                                         OutlinedIconButton(
@@ -926,7 +926,7 @@ fun VideoPlayerScreen(
                                         ) {
                                             Icon(
                                                 painter = painterResource(R.drawable.skip_next),
-                                                contentDescription = "Next"
+                                                contentDescription = stringResource(R.string.next)
                                             )
                                         }
                                         OutlinedIconButton(
@@ -938,7 +938,7 @@ fun VideoPlayerScreen(
                                         ) {
                                             Icon(
                                                 painter = painterResource(R.drawable.ic_fullscreen),
-                                                contentDescription = "Fullscreen"
+                                                contentDescription = stringResource(R.string.fullscreen)
                                             )
                                         }
                                     }
@@ -993,9 +993,9 @@ fun VideoPlayerScreen(
                     verticalArrangement = Arrangement.spacedBy(4.dp),
                     modifier = Modifier.padding(horizontal = 24.dp)
                 ) {
-                    Text("Download video", style = MaterialTheme.typography.headlineSmall)
+                    Text(stringResource(R.string.download_video), style = MaterialTheme.typography.headlineSmall)
                     Spacer(modifier = Modifier.height(8.dp))
-                    Text("Choose a quality", style = MaterialTheme.typography.bodyMedium)
+                    Text(stringResource(R.string.choose_a_quality), style = MaterialTheme.typography.bodyMedium)
                 }
                 Spacer(modifier = Modifier.height(8.dp))
             }
@@ -1018,7 +1018,7 @@ fun VideoPlayerScreen(
                 item {
                     // Fallback if qualities not yet loaded
                     Text(
-                        "Loading available qualities...",
+                        stringResource(R.string.loading_available_qualities),
                         style = MaterialTheme.typography.bodySmall,
                         modifier = Modifier.padding(horizontal = 24.dp)
                     )
@@ -1034,7 +1034,7 @@ fun VideoPlayerScreen(
         ) {
             item {
                 Text(
-                    "Playback speed",
+                    stringResource(R.string.playback_speed),
                     style = MaterialTheme.typography.headlineSmall,
                     modifier = Modifier.padding(horizontal = 24.dp)
                 )
@@ -1050,7 +1050,7 @@ fun VideoPlayerScreen(
                         .fillMaxWidth()
                         .padding(horizontal = 24.dp)
                 ) {
-                    Text(if (speed == 1f) "1.0x (Normal)" else "${speed}x")
+                    Text(if (speed == 1f) stringResource(R.string.speed_normal) else "${speed}x")
                 }
             }
         }
@@ -1065,10 +1065,10 @@ fun VideoPlayerScreen(
                     verticalArrangement = Arrangement.spacedBy(8.dp),
                     modifier = Modifier.padding(horizontal = 24.dp)
                 ) {
-                    Text("Video quality", style = MaterialTheme.typography.headlineSmall)
+                    Text(stringResource(R.string.video_quality), style = MaterialTheme.typography.headlineSmall)
                     Text(
-                        text = if (selectedQualityId == "auto") "Current: Auto" else availableQualities.firstOrNull { it.id == selectedQualityId }?.label
-                            ?: "Current: Auto",
+                        text = if (selectedQualityId == "auto") stringResource(R.string.current_quality_auto) else availableQualities.firstOrNull { it.id == selectedQualityId }?.label
+                            ?: stringResource(R.string.current_quality_auto),
                         style = MaterialTheme.typography.labelMedium
                     )
                 }
@@ -1091,7 +1091,7 @@ fun VideoPlayerScreen(
                         .fillMaxWidth()
                         .padding(horizontal = 24.dp)
                 ) {
-                    Text("Auto")
+                    Text(stringResource(R.string.audio_quality_auto))
                 }
             }
             items(availableQualities) { option ->
