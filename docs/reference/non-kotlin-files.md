@@ -1,6 +1,6 @@
 # Non-Kotlin file reference
 
-Every tracked non-Kotlin path outside `docs/` is listed. Text files report line counts; binary files report byte counts; gitlinks are recorded as non-file tracked paths. Total paths: `294`.
+Every tracked non-Kotlin path outside `docs/` is listed. Text files report line counts; binary files report byte counts; gitlinks are recorded as non-file tracked paths. Total paths: `300`.
 
 | Path | Size/status | Type metadata |
 | --- | ---: | --- |
@@ -283,6 +283,11 @@ Every tracked non-Kotlin path outside `docs/` is listed. Text files report line 
 | `tests/clients.mjs` | 69 lines | text `.mjs` |
 | `tests/cred.mjs` | 82 lines | text `.mjs` |
 | `tests/discover-clients.mjs` | 116 lines | text `.mjs` |
+| `tests/dpad/README.md` | 54 lines | text `.md` |
+| `tests/dpad/adb.mjs` | 79 lines | text `.mjs` |
+| `tests/dpad/audit.mjs` | 103 lines | text `.mjs` |
+| `tests/dpad/nav.mjs` | 119 lines | text `.mjs` |
+| `tests/dpad/suite.mjs` | 90 lines | text `.mjs` |
 | `tests/full-stream.mjs` | 87 lines | text `.mjs` |
 | `tests/package-lock.json` | 554 lines | text `.json`; JSON keys `name, lockfileVersion, requires, packages` |
 | `tests/package.json` | 7 lines | text `.json`; JSON keys `dependencies` |
@@ -296,5 +301,6 @@ Every tracked non-Kotlin path outside `docs/` is listed. Text files report line 
 | `tests/results.json` | 222 lines | text `.json` |
 | `tests/retest-web.mjs` | 58 lines | text `.mjs` |
 | `tests/run.mjs` | 181 lines | text `.mjs` |
+| `tests/unification/check.mjs` | 102 lines | text `.mjs` |
 | `tests/web-creator-stream.mjs` | 142 lines | text `.mjs` |
 | `tests/web-remix-stream.mjs` | 277 lines | text `.mjs` |
