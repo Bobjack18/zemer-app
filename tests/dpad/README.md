@@ -43,11 +43,12 @@ Results are written to `results.json`.
 - `nav.mjs` — navigation (drawer, settings taps, the onboarding walker, permission granting).
 - `suite.mjs` — the runner.
 
-## Known finding (the harness earns its keep)
+## Player seek (how the harness drove the fix)
 
-The **audio player seek slider is not D-pad operable** — `oracleSeek` fails: the Material3 `Slider`
-does not acquire D-pad focus in the player layout and never commits a keyboard seek (its
-`onValueChangeFinished` doesn't fire for arrow keys), confirmed with a forced-focus + preview-key
-probe that never received the key. This is a Compose focus-routing issue that needs Android-Studio
-/ instrumented-Compose debugging; it is intentionally **not** "fixed" with extra buttons. The suite
-keeps failing on it until the slider itself is made focusable+seekable.
+The Material3 seek `Slider` cannot acquire D-pad focus in the player layout (proven here: a
+forced-focus + preview-key probe never received a key, and navigation always skipped it — a Compose
+focus-graph limitation, no extra buttons were added). The seek is instead handled at the now-playing
+**surface** level: an `onPreviewKeyEvent` on the controls column scrubs ±5s on Left/Right, gated off
+while the transport button row is focused (so prev/play/next navigation is preserved) — the standard
+Android-TV media pattern. `oracleSeek` verifies it: focus the title (a non-button zone) and assert
+`media_session` `position` advances on RIGHT.

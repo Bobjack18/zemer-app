@@ -73,6 +73,11 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.input.key.Key
+import androidx.compose.ui.input.key.KeyEventType
+import androidx.compose.ui.input.key.key
+import androidx.compose.ui.input.key.onPreviewKeyEvent
+import androidx.compose.ui.input.key.type
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
@@ -217,11 +222,24 @@ fun BottomSheetPlayer(
     var position by rememberSaveable(playbackState) {
         mutableLongStateOf(playerConnection.player.currentPosition)
     }
+    // D-pad scrub: Left/Right seeks the track ±5s anywhere on the now-playing surface, except
+    // while the transport button row is focused (there Left/Right moves between prev/play/next).
+    // The Material seek slider cannot itself hold D-pad focus in this layout, so seek at this level.
+    var buttonRowFocused by remember { mutableStateOf(false) }
     var duration by rememberSaveable(playbackState) {
         mutableLongStateOf(playerConnection.player.duration)
     }
     var sliderPosition by remember {
         mutableStateOf<Long?>(null)
+    }
+    val scrubModifier = Modifier.onPreviewKeyEvent { event ->
+        if (event.type == KeyEventType.KeyDown && !buttonRowFocused && duration != C.TIME_UNSET) {
+            when (event.key) {
+                Key.DirectionRight -> { val t = (position + 5000).coerceIn(0L, duration); playerConnection.player.seekTo(t); position = t; true }
+                Key.DirectionLeft -> { val t = (position - 5000).coerceIn(0L, duration); playerConnection.player.seekTo(t); position = t; true }
+                else -> false
+            }
+        } else false
     }
     var gradientColors by remember {
         mutableStateOf<List<Color>>(emptyList())
@@ -970,7 +988,7 @@ fun BottomSheetPlayer(
                     Row(
                         horizontalArrangement = Arrangement.Center,
                         verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier.fillMaxWidth()
+                        modifier = Modifier.fillMaxWidth().onFocusChanged { buttonRowFocused = it.hasFocus }
                     ) {
 
                         val skipPrevFocused = remember { mutableStateOf(false) }
@@ -1259,7 +1277,8 @@ fun BottomSheetPlayer(
                         Modifier
                             .weight(1f)
                             .fillMaxHeight()
-                            .windowInsetsPadding(WindowInsets.systemBars.only(WindowInsetsSides.Top)),
+                            .windowInsetsPadding(WindowInsets.systemBars.only(WindowInsetsSides.Top))
+                            .then(scrubModifier),
                     ) {
                         mediaMetadata?.let {
                             controlsContent(it)
@@ -1274,7 +1293,8 @@ fun BottomSheetPlayer(
                     modifier =
                     Modifier
                         .windowInsetsPadding(WindowInsets.systemBars.only(WindowInsetsSides.Horizontal))
-                        .padding(bottom = queueSheetState.collapsedBound),
+                        .padding(bottom = queueSheetState.collapsedBound)
+                        .then(scrubModifier),
                 ) {
                     Box(
                         contentAlignment = Alignment.Center,

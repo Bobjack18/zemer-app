@@ -69,9 +69,11 @@ safe(() => {
   sleep(4);
   if (media().state !== "NONE") {
     openPlayer();
-    // top -> title -> artist -> SEEK BAR (depth 3 after the seek-bar focus fix), then play below it
-    log(oracleSeek(() => { key(DOWN); key(DOWN); key(DOWN); }));
-    log(oraclePlayPause(() => { key(DOWN); key(DOWN); key(DOWN); key(DOWN); }));
+    // D-pad scrub: Left/Right seeks ±5s on the now-playing surface (except the button row). Focus the
+    // title (one DOWN from top) — a non-button zone — then RIGHT must advance the playback position.
+    log(oracleSeek(() => { key(DOWN); }));
+    // play button is the transport row: down past title/artist/seek area.
+    log(oraclePlayPause(() => { key(DOWN); key(DOWN); key(DOWN); }));
     auditHere("player");
     log(oracleBack(true)); // collapse player
   } else {
