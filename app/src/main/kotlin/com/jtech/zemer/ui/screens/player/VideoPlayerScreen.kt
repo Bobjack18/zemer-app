@@ -94,6 +94,7 @@ import com.jtech.zemer.R
 import com.jtech.zemer.constants.AudioQuality
 import com.jtech.zemer.constants.BlockVideosKey
 import com.jtech.zemer.db.entities.SongEntity
+import com.jtech.zemer.ui.theme.AppColors
 import com.jtech.zemer.utils.MediaStoreHelper
 import com.jtech.zemer.utils.UrlValidator
 import com.jtech.zemer.utils.VideoLinkBuilder
@@ -583,12 +584,12 @@ fun VideoPlayerScreen(
         navController.popBackStack()
     }
 
-    Scaffold(containerColor = Color.Black) { innerPadding ->
+    Scaffold(containerColor = AppColors.mediaOverlay(1f)) { innerPadding ->
         Box(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
-                .background(Color.Black)
+                .background(AppColors.mediaOverlay(1f))
         ) {
             when {
                 isLoading -> {
@@ -604,7 +605,7 @@ fun VideoPlayerScreen(
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.spacedBy(12.dp)
                     ) {
-                        Text(text = loadError ?: "Playback error", color = Color.White)
+                        Text(text = loadError ?: "Playback error", color = AppColors.onMedia)
                         TextButton(onClick = { reloadKey++ }) {
                             Text("Retry", color = MaterialTheme.colorScheme.primary)
                         }
@@ -619,7 +620,7 @@ fun VideoPlayerScreen(
                             .padding(vertical = if (isInPipMode) 0.dp else 12.dp)
                     ) {
                         Surface(
-                            shape = RoundedCornerShape(12.dp),
+                            shape = MaterialTheme.shapes.small,
                             tonalElevation = 6.dp,
                             color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.2f),
                             modifier = Modifier
@@ -689,7 +690,7 @@ fun VideoPlayerScreen(
                             ) {
                                 Surface(
                                     shape = RectangleShape,
-                                    color = Color.Black.copy(alpha = 0.8f),
+                                    color = AppColors.mediaOverlay(0.8f),
                                     modifier = Modifier
                                         .fillMaxWidth()
                                 ) {
@@ -707,17 +708,17 @@ fun VideoPlayerScreen(
                                             modifier = Modifier
                                                 .size(36.dp)
                                                 .clip(CircleShape)
-                                                .background(Color.White.copy(alpha = 0.08f))
+                                                .background(AppColors.onMedia(0.08f))
                                         ) {
                                             Icon(
                                                 painter = painterResource(R.drawable.arrow_back),
                                                 contentDescription = null,
-                                                tint = Color.White
+                                                tint = AppColors.onMedia
                                             )
                                         }
                                         Text(
                                             text = currentTitle ?: videoId,
-                                            color = Color.White,
+                                            color = AppColors.onMedia,
                                             style = MaterialTheme.typography.titleMedium,
                                             maxLines = 1,
                                             overflow = TextOverflow.Ellipsis,
@@ -732,12 +733,12 @@ fun VideoPlayerScreen(
                                                 modifier = Modifier
                                                     .size(36.dp)
                                                     .clip(CircleShape)
-                                                    .background(Color.White.copy(alpha = 0.08f))
+                                                    .background(AppColors.onMedia(0.08f))
                                             ) {
                                                 Icon(
                                                     painter = painterResource(R.drawable.ic_pip),
                                                     contentDescription = null,
-                                                    tint = Color.White
+                                                    tint = AppColors.onMedia
                                                 )
                                             }
                                         }
@@ -751,12 +752,12 @@ fun VideoPlayerScreen(
                                             modifier = Modifier
                                                 .size(36.dp)
                                                 .clip(CircleShape)
-                                                .background(Color.White.copy(alpha = 0.08f))
+                                                .background(AppColors.onMedia(0.08f))
                                         ) {
                                             Icon(
                                                 painter = painterResource(R.drawable.link),
                                                 contentDescription = null,
-                                                tint = Color.White
+                                                tint = AppColors.onMedia
                                             )
                                         }
                                     }
@@ -786,7 +787,7 @@ fun VideoPlayerScreen(
                                         ) {
                                             Text(
                                                 text = currentTitle ?: videoId,
-                                                color = Color.White,
+                                                color = AppColors.onMedia,
                                                 style = MaterialTheme.typography.titleMedium,
                                                 maxLines = 1,
                                                 overflow = TextOverflow.Ellipsis
@@ -863,12 +864,12 @@ fun VideoPlayerScreen(
                                             color = outlineColor,
                                             shape = RoundedCornerShape(18.dp)
                                         )
-                                        .background(Color.Black.copy(alpha = 0.6f))
+                                        .background(AppColors.mediaOverlay(0.6f))
                                         .padding(horizontal = 12.dp, vertical = 12.dp)
                                 ) {
                                     val buttonColors = IconButtonDefaults.outlinedIconButtonColors(
-                                        contentColor = Color.White,
-                                        containerColor = Color.Black.copy(alpha = 0.35f)
+                                        contentColor = AppColors.onMedia,
+                                        containerColor = AppColors.mediaOverlay(0.35f)
                                     )
                                     val buttonBorder = BorderStroke(1.dp, outlineColor)
 
@@ -884,7 +885,7 @@ fun VideoPlayerScreen(
                                             modifier = Modifier.size(36.dp),
                                             colors = buttonColors,
                                             border = buttonBorder,
-                                            shape = RoundedCornerShape(12.dp)
+                                            shape = MaterialTheme.shapes.small
                                         ) {
                                             Icon(
                                                 painter = painterResource(R.drawable.ic_speedometer),
@@ -932,7 +933,7 @@ fun VideoPlayerScreen(
                                             modifier = Modifier.size(36.dp),
                                             colors = buttonColors,
                                             border = buttonBorder,
-                                            shape = RoundedCornerShape(12.dp)
+                                            shape = MaterialTheme.shapes.small
                                         ) {
                                             Icon(
                                                 painter = painterResource(R.drawable.ic_fullscreen),
@@ -970,8 +971,8 @@ fun VideoPlayerScreen(
                                             .padding(bottom = 4.dp),
                                         horizontalArrangement = Arrangement.SpaceBetween
                                     ) {
-                                        Text(positionText, color = Color.White, style = MaterialTheme.typography.labelSmall)
-                                        Text(durationText, color = Color.White, style = MaterialTheme.typography.labelSmall)
+                                        Text(positionText, color = AppColors.onMedia, style = MaterialTheme.typography.labelSmall)
+                                        Text(durationText, color = AppColors.onMedia, style = MaterialTheme.typography.labelSmall)
                                     }
                                 }
                             }

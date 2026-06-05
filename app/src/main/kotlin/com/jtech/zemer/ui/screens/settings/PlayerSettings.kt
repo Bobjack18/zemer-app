@@ -227,6 +227,7 @@ fun PlayerSettings(
     }
 
     TopAppBar(
+        scrollBehavior = scrollBehavior,
         title = { Text(stringResource(R.string.player_and_audio)) },
         navigationIcon = {
             IconButton(

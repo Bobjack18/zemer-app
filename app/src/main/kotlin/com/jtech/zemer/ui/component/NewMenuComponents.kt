@@ -21,7 +21,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.HorizontalDivider
@@ -42,7 +41,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 
 // Enhanced Action Button - Material 3 Expressive Design
 @Composable
@@ -81,7 +79,7 @@ fun NewActionButton(
         colors = CardDefaults.cardColors(
             containerColor = animatedBackground
         ),
-        shape = RoundedCornerShape(16.dp),
+        shape = MaterialTheme.shapes.medium,
         elevation = CardDefaults.cardElevation(
             defaultElevation = 2.dp
         ),
@@ -153,12 +151,12 @@ fun NewMenuItem(
         supportingContent = supportingContent,
         modifier = modifier
             .padding(horizontal = 4.dp)
-            .clip(RoundedCornerShape(8.dp))
+            .clip(MaterialTheme.shapes.extraSmall)
             .onFocusChanged { isFocused = it.isFocused }
             .focusable()
             .clickable(enabled = enabled) { onClick?.invoke() }
             .background(backgroundColor)
-            .border(width = 1.5.dp, color = borderColor, shape = RoundedCornerShape(8.dp)),
+            .border(width = 1.5.dp, color = borderColor, shape = MaterialTheme.shapes.extraSmall),
         tonalElevation = 0.dp
     )
 }
@@ -172,8 +170,7 @@ fun NewMenuSectionHeader(
     Text(
         text = text,
         style = MaterialTheme.typography.titleMedium.copy(
-            fontWeight = FontWeight.SemiBold,
-            fontSize = 16.sp
+            fontWeight = FontWeight.SemiBold
         ),
         color = MaterialTheme.colorScheme.primary,
         modifier = modifier.padding(horizontal = 20.dp, vertical = 12.dp)

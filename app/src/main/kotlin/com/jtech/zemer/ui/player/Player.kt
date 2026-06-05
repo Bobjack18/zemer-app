@@ -95,7 +95,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.DialogProperties
 import androidx.media3.common.C
 import androidx.media3.common.Player
@@ -133,6 +132,7 @@ import com.jtech.zemer.ui.component.ResizableIconButton
 import com.jtech.zemer.ui.component.rememberBottomSheetState
 import com.jtech.zemer.ui.menu.PlayerMenu
 import com.jtech.zemer.ui.screens.settings.DarkMode
+import com.jtech.zemer.ui.theme.AppColors
 import com.jtech.zemer.ui.theme.PlayerColorExtractor
 import com.jtech.zemer.ui.theme.PlayerSliderColors
 import com.jtech.zemer.ui.utils.ShowMediaInfo
@@ -285,15 +285,15 @@ fun BottomSheetPlayer(
     val TextBackgroundColor =
         when (playerBackground) {
             PlayerBackgroundStyle.DEFAULT -> MaterialTheme.colorScheme.onBackground
-            PlayerBackgroundStyle.BLUR -> Color.White
-            PlayerBackgroundStyle.GRADIENT -> Color.White
+            PlayerBackgroundStyle.BLUR -> AppColors.onMedia
+            PlayerBackgroundStyle.GRADIENT -> AppColors.onMedia
         }
 
     val icBackgroundColor =
         when (playerBackground) {
             PlayerBackgroundStyle.DEFAULT -> MaterialTheme.colorScheme.surface
-            PlayerBackgroundStyle.BLUR -> Color.Black
-            PlayerBackgroundStyle.GRADIENT -> Color.Black
+            PlayerBackgroundStyle.BLUR -> AppColors.mediaOverlay(1f)
+            PlayerBackgroundStyle.GRADIENT -> AppColors.mediaOverlay(1f)
         }
 
     val (textButtonColor, iconButtonColor) = when (playerButtonsStyle) {
@@ -463,7 +463,7 @@ fun BottomSheetPlayer(
                                     Box(
                                         modifier = Modifier
                                             .fillMaxSize()
-                                            .background(Color.Black.copy(alpha = 0.3f))
+                                            .background(AppColors.mediaOverlay(0.3f))
                                     )
                                 }
                             }
@@ -488,7 +488,7 @@ fun BottomSheetPlayer(
                                     arrayOf(
                                         0.0f to colors[0],
                                         0.6f to colors[0].copy(alpha = 0.7f),
-                                        1.0f to Color.Black
+                                        1.0f to AppColors.mediaOverlay(1f)
                                     )
                                 }
                                 Box(
@@ -496,7 +496,7 @@ fun BottomSheetPlayer(
                                         .fillMaxSize()
                                         .alpha(backgroundAlpha)
                                         .background(Brush.verticalGradient(colorStops = gradientColorStops))
-                                        .background(Color.Black.copy(alpha = 0.2f))
+                                        .background(AppColors.mediaOverlay(0.2f))
                                 )
                             }
                         }
@@ -598,7 +598,7 @@ fun BottomSheetPlayer(
                             mediaMetadata.artists.forEachIndexed { index, artist ->
                                 val tag = "artist_${artist.id.orEmpty()}"
                                 pushStringAnnotation(tag = tag, annotation = artist.id.orEmpty())
-                                withStyle(SpanStyle(color = TextBackgroundColor, fontSize = 16.sp)) {
+                                withStyle(SpanStyle(color = TextBackgroundColor, fontSize = MaterialTheme.typography.titleMedium.fontSize)) {
                                     append(artist.name)
                                 }
                                 pop()

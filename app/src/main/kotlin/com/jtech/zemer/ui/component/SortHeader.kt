@@ -21,9 +21,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.jtech.zemer.R
 import com.jtech.zemer.constants.PlaylistSongSortType
 
@@ -67,8 +65,7 @@ inline fun <reified T : Enum<T>> SortHeader(
                     text = {
                         Text(
                             text = stringResource(sortTypeText(type)),
-                            fontSize = 16.sp,
-                            fontWeight = FontWeight.Normal,
+                            style = MaterialTheme.typography.bodyLarge,
                         )
                     },
                     trailingIcon = {

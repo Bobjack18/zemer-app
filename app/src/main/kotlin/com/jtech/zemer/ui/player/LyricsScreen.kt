@@ -27,7 +27,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.windowInsetsPadding
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -85,6 +84,8 @@ import com.jtech.zemer.ui.component.LocalMenuState
 import com.jtech.zemer.ui.component.Lyrics
 import com.jtech.zemer.ui.component.PlayerSliderTrack
 import com.jtech.zemer.ui.menu.LyricsMenu
+import com.jtech.zemer.ui.theme.AppColors
+import com.jtech.zemer.ui.theme.PillShape
 import com.jtech.zemer.ui.theme.PlayerColorExtractor
 import com.jtech.zemer.ui.theme.PlayerSliderColors
 import com.jtech.zemer.utils.makeTimeString
@@ -202,12 +203,12 @@ fun LyricsScreen(
 
     val textBackgroundColor = when (playerBackground) {
         PlayerBackgroundStyle.DEFAULT -> MaterialTheme.colorScheme.onBackground
-        PlayerBackgroundStyle.BLUR, PlayerBackgroundStyle.GRADIENT -> Color.White
+        PlayerBackgroundStyle.BLUR, PlayerBackgroundStyle.GRADIENT -> AppColors.onMedia
     }
 
     val iconButtonColor = when (playerBackground) {
         PlayerBackgroundStyle.DEFAULT -> MaterialTheme.colorScheme.surface
-        PlayerBackgroundStyle.BLUR, PlayerBackgroundStyle.GRADIENT -> Color.Black
+        PlayerBackgroundStyle.BLUR, PlayerBackgroundStyle.GRADIENT -> AppColors.mediaOverlay(1f)
     }
 
     LaunchedEffect(playbackState) {
@@ -249,7 +250,7 @@ fun LyricsScreen(
                             Box(
                                 modifier = Modifier
                                     .fillMaxSize()
-                                    .background(Color.Black.copy(alpha = 0.3f))
+                                    .background(AppColors.mediaOverlay(0.3f))
                             )
                         }
                     }
@@ -273,14 +274,14 @@ fun LyricsScreen(
                                 arrayOf(
                                     0.0f to colors[0],
                                     0.6f to colors[0].copy(alpha = 0.7f),
-                                    1.0f to Color.Black
+                                    1.0f to AppColors.mediaOverlay(1f)
                                 )
                             }
                             Box(
                                 modifier = Modifier
                                     .fillMaxSize()
                                     .background(Brush.verticalGradient(colorStops = gradientColorStops))
-                                    .background(Color.Black.copy(alpha = 0.2f))
+                                    .background(AppColors.mediaOverlay(0.2f))
                             )
                         }
                     }
@@ -294,7 +295,7 @@ fun LyricsScreen(
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
-                        .background(Color.Black.copy(alpha = 0.3f))
+                        .background(AppColors.mediaOverlay(0.3f))
                 )
             }
         }
@@ -512,7 +513,7 @@ fun LyricsScreen(
                                             .size(64.dp)
                                             .background(
                                                 textBackgroundColor,
-                                                shape = RoundedCornerShape(50)
+                                                shape = PillShape
                                             ),
                                         contentAlignment = Alignment.Center
                                     ) {
@@ -754,7 +755,7 @@ fun LyricsScreen(
                                         .size(64.dp)
                                         .background(
                                             textBackgroundColor,
-                                            shape = RoundedCornerShape(50)
+                                            shape = PillShape
                                         ),
                                     contentAlignment = Alignment.Center
                                 ) {

@@ -256,7 +256,7 @@ fun AlbumScreen(
                             Box(
                                 modifier = Modifier
                                     .focusRequester(firstHeaderItemFocusRequester)
-                                    .border(3.dp, artistLinkBorderColor.value, RoundedCornerShape(8.dp))
+                                    .border(3.dp, artistLinkBorderColor.value, MaterialTheme.shapes.extraSmall)
                                     .focusable()
                                     .onFocusChanged { artistLinkFocused.value = it.isFocused }
                                     .padding(4.dp)
@@ -299,7 +299,7 @@ fun AlbumScreen(
                                 )
                                 Box(
                                     modifier = Modifier
-                                        .border(3.dp, heartButtonBorderColor.value, RoundedCornerShape(8.dp))
+                                        .border(3.dp, heartButtonBorderColor.value, MaterialTheme.shapes.extraSmall)
                                         .focusable()
                                         .onFocusChanged { heartButtonFocused.value = it.isFocused }
                                 ) {
@@ -344,7 +344,7 @@ fun AlbumScreen(
                                     Download.STATE_COMPLETED -> {
                                         Box(
                                             modifier = Modifier
-                                                .border(3.dp, downloadButtonBorderColor.value, RoundedCornerShape(8.dp))
+                                                .border(3.dp, downloadButtonBorderColor.value, MaterialTheme.shapes.extraSmall)
                                                 .focusable()
                                                 .onFocusChanged { downloadButtonFocused.value = it.isFocused }
                                         ) {
@@ -368,7 +368,7 @@ fun AlbumScreen(
                                     Download.STATE_DOWNLOADING -> {
                                         Box(
                                             modifier = Modifier
-                                                .border(3.dp, downloadButtonBorderColor.value, RoundedCornerShape(8.dp))
+                                                .border(3.dp, downloadButtonBorderColor.value, MaterialTheme.shapes.extraSmall)
                                                 .focusable()
                                                 .onFocusChanged { downloadButtonFocused.value = it.isFocused }
                                         ) {
@@ -392,7 +392,7 @@ fun AlbumScreen(
                                     else -> {
                                         Box(
                                             modifier = Modifier
-                                                .border(3.dp, downloadButtonBorderColor.value, RoundedCornerShape(8.dp))
+                                                .border(3.dp, downloadButtonBorderColor.value, MaterialTheme.shapes.extraSmall)
                                                 .focusable()
                                                 .onFocusChanged { downloadButtonFocused.value = it.isFocused }
                                         ) {
@@ -419,7 +419,7 @@ fun AlbumScreen(
                                 )
                                 Box(
                                     modifier = Modifier
-                                        .border(3.dp, headerMenuButtonBorderColor.value, RoundedCornerShape(8.dp))
+                                        .border(3.dp, headerMenuButtonBorderColor.value, MaterialTheme.shapes.extraSmall)
                                         .focusable()
                                         .onFocusChanged { headerMenuButtonFocused.value = it.isFocused }
                                 ) {
@@ -509,7 +509,7 @@ fun AlbumScreen(
                         modifier = Modifier
                             .fillMaxWidth()
                             .animateItem()
-                            .border(3.dp, trackBorderColor.value, RoundedCornerShape(8.dp))
+                            .border(3.dp, trackBorderColor.value, MaterialTheme.shapes.extraSmall)
                             .focusable()
                             .onFocusChanged { trackFocusStates[trackId] = it.isFocused }
                     ) {
@@ -638,7 +638,7 @@ fun AlbumScreen(
             Box(
                 modifier = Modifier
                     .focusRequester(backButtonFocusRequester)
-                    .border(3.dp, backButtonBorderColor.value, RoundedCornerShape(8.dp))
+                    .border(3.dp, backButtonBorderColor.value, MaterialTheme.shapes.extraSmall)
                     .focusable()
                     .onFocusChanged { isBackButtonFocused.value = it.isFocused }
                     .focusProperties { down = firstHeaderItemFocusRequester }
@@ -671,7 +671,7 @@ fun AlbumScreen(
                 val count = wrappedSongs.count { it.isSelected }
                 Box(
                     modifier = Modifier
-                        .border(3.dp, selectAllButtonBorderColor.value, RoundedCornerShape(8.dp))
+                        .border(3.dp, selectAllButtonBorderColor.value, MaterialTheme.shapes.extraSmall)
                         .focusable()
                         .onFocusChanged { isSelectAllButtonFocused.value = it.isFocused }
                 ) {
@@ -695,7 +695,7 @@ fun AlbumScreen(
 
                 Box(
                     modifier = Modifier
-                        .border(3.dp, moreButtonBorderColor.value, RoundedCornerShape(8.dp))
+                        .border(3.dp, moreButtonBorderColor.value, MaterialTheme.shapes.extraSmall)
                         .focusable()
                         .onFocusChanged { isMoreButtonFocused.value = it.isFocused }
                 ) {

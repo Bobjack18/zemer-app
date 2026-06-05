@@ -33,6 +33,7 @@ fun IntegrationScreen(
     }
 
     TopAppBar(
+        scrollBehavior = scrollBehavior,
         title = { Text("Integrations") },
         navigationIcon = {
             IconButton(

@@ -33,7 +33,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -62,7 +61,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.foundation.layout.width
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -88,6 +86,7 @@ import com.airbnb.lottie.compose.rememberLottieDynamicProperties
 import com.airbnb.lottie.compose.rememberLottieDynamicProperty
 import com.jtech.zemer.R
 import com.jtech.zemer.constants.DensityScale
+import com.jtech.zemer.ui.theme.AppColors
 import com.jtech.zemer.utils.PermissionHelper
 import com.jtech.zemer.extensions.isInternetConnected
 import androidx.datastore.core.DataStore
@@ -153,7 +152,7 @@ private fun NetworkStatusBanner(
                 else -> MaterialTheme.colorScheme.errorContainer.copy(alpha = 0.3f)
             }
         ),
-        shape = RoundedCornerShape(8.dp)
+        shape = MaterialTheme.shapes.extraSmall
     ) {
         Row(
             modifier = Modifier
@@ -407,7 +406,7 @@ private fun WelcomeScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(48.dp),
-                    shape = RoundedCornerShape(12.dp)
+                    shape = MaterialTheme.shapes.small
                 ) {
                     if (isCheckingNetwork) {
                         CircularProgressIndicator(
@@ -530,12 +529,12 @@ private fun DensityScreen(
                     .border(
                         width = 1.dp,
                         color = MaterialTheme.colorScheme.primary.copy(alpha = 0.3f),
-                        shape = RoundedCornerShape(10.dp)
+                        shape = MaterialTheme.shapes.small
                     ),
                 colors = CardDefaults.cardColors(
                     containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
                 ),
-                shape = RoundedCornerShape(10.dp)
+                shape = MaterialTheme.shapes.small
             ) {
                 Column(modifier = Modifier.padding(4.dp)) {
                     densityOptions.forEach { density ->
@@ -543,7 +542,7 @@ private fun DensityScreen(
                             verticalAlignment = Alignment.CenterVertically,
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .clip(RoundedCornerShape(6.dp))
+                                .clip(MaterialTheme.shapes.extraSmall)
                                 .clickable {
                                     if (density == DensityScale.CUSTOM) {
                                         showCustomDensityDialog = true
@@ -603,7 +602,7 @@ private fun DensityScreen(
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(40.dp),
-                        shape = RoundedCornerShape(8.dp),
+                        shape = MaterialTheme.shapes.extraSmall,
                         colors = ButtonDefaults.buttonColors(
                             containerColor = MaterialTheme.colorScheme.primary
                         )
@@ -623,7 +622,7 @@ private fun DensityScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(40.dp),
-                    shape = RoundedCornerShape(8.dp),
+                    shape = MaterialTheme.shapes.extraSmall,
                     border = BorderStroke(1.dp, if (isConnected && !isCheckingNetwork) MaterialTheme.colorScheme.outline else MaterialTheme.colorScheme.outline.copy(alpha = 0.3f))
                 ) {
                     Text(
@@ -693,7 +692,7 @@ private fun RestartDialog(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.Black.copy(alpha = 0.4f))
+            .background(AppColors.scrim)
             .clickable { onDismiss() },
         contentAlignment = Alignment.Center
     ) {
@@ -701,7 +700,7 @@ private fun RestartDialog(
             modifier = Modifier
                 .fillMaxWidth(0.88f)
                 .padding(20.dp),
-            shape = RoundedCornerShape(16.dp),
+            shape = MaterialTheme.shapes.medium,
             tonalElevation = 6.dp,
             color = MaterialTheme.colorScheme.surface
         ) {
@@ -730,7 +729,7 @@ private fun RestartDialog(
                     Button(
                         onClick = onRestart,
                         modifier = Modifier.padding(start = 8.dp),
-                        shape = RoundedCornerShape(10.dp)
+                        shape = MaterialTheme.shapes.small
                     ) {
                         Text(stringResource(R.string.restart))
                     }
@@ -752,7 +751,7 @@ private fun CustomDensityDialog(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.Black.copy(alpha = 0.4f))
+            .background(AppColors.scrim)
             .clickable { onDismiss() },
         contentAlignment = Alignment.Center
     ) {
@@ -761,7 +760,7 @@ private fun CustomDensityDialog(
                 .fillMaxWidth(0.88f)
                 .padding(20.dp)
                 .clickable(enabled = false) { },
-            shape = RoundedCornerShape(16.dp),
+            shape = MaterialTheme.shapes.medium,
             tonalElevation = 6.dp,
             color = MaterialTheme.colorScheme.surface
         ) {
@@ -808,7 +807,7 @@ private fun CustomDensityDialog(
                         },
                         enabled = !isError && textValue.isNotEmpty(),
                         modifier = Modifier.padding(start = 8.dp),
-                        shape = RoundedCornerShape(10.dp)
+                        shape = MaterialTheme.shapes.small
                     ) {
                         Text(stringResource(R.string.ok))
                     }
@@ -996,12 +995,12 @@ private fun ContentFiltersScreen(
                             .border(
                                 width = 1.5.dp,
                                 color = MaterialTheme.colorScheme.primary.copy(alpha = 0.3f),
-                                shape = RoundedCornerShape(12.dp)
+                                shape = MaterialTheme.shapes.small
                             ),
                         colors = CardDefaults.cardColors(
                             containerColor = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.3f)
                         ),
-                        shape = RoundedCornerShape(12.dp)
+                        shape = MaterialTheme.shapes.small
                     ) {
                         Column(modifier = Modifier.padding(16.dp)) {
                             val config = uiState.restoredConfig
@@ -1085,7 +1084,7 @@ private fun ContentFiltersScreen(
                         .border(
                             width = 1.5.dp,
                             color = MaterialTheme.colorScheme.primary.copy(alpha = 0.3f),
-                            shape = RoundedCornerShape(12.dp)
+                            shape = MaterialTheme.shapes.small
                         ),
                     colors = CardDefaults.cardColors(
                         containerColor = if (authState is com.jtech.zemer.auth.AuthState.SignedIn)
@@ -1093,7 +1092,7 @@ private fun ContentFiltersScreen(
                         else
                             MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
                     ),
-                    shape = RoundedCornerShape(12.dp)
+                    shape = MaterialTheme.shapes.small
                 ) {
                     Column(modifier = Modifier.padding(14.dp)) {
                         Row(
@@ -1264,7 +1263,7 @@ private fun FilterOptionCard(
             .border(
                 width = 1.5.dp,
                 color = MaterialTheme.colorScheme.primary.copy(alpha = 0.3f),
-                shape = RoundedCornerShape(12.dp)
+                shape = MaterialTheme.shapes.small
             ),
         colors = CardDefaults.cardColors(
             containerColor = if (isEnabled)
@@ -1272,7 +1271,7 @@ private fun FilterOptionCard(
             else
                 MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
         ),
-        shape = RoundedCornerShape(12.dp)
+        shape = MaterialTheme.shapes.small
     ) {
         Column(modifier = Modifier.padding(14.dp)) {
             Row(
@@ -1546,7 +1545,7 @@ private fun PermissionsScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(44.dp),
-                    shape = RoundedCornerShape(10.dp),
+                    shape = MaterialTheme.shapes.small,
                     colors = ButtonDefaults.buttonColors(
                         containerColor = MaterialTheme.colorScheme.primary
                     )
@@ -1591,7 +1590,7 @@ private fun PermissionCard(
             .border(
                 width = 1.5.dp,
                 color = MaterialTheme.colorScheme.primary.copy(alpha = 0.3f),
-                shape = RoundedCornerShape(12.dp)
+                shape = MaterialTheme.shapes.small
             ),
         colors = CardDefaults.cardColors(
             containerColor = if (granted)
@@ -1599,7 +1598,7 @@ private fun PermissionCard(
             else
                 MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
         ),
-        shape = RoundedCornerShape(12.dp)
+        shape = MaterialTheme.shapes.small
     ) {
         Column(modifier = Modifier.padding(14.dp)) {
             Row(
@@ -1648,7 +1647,7 @@ private fun PermissionCard(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(38.dp),
-                shape = RoundedCornerShape(9.dp),
+                shape = MaterialTheme.shapes.extraSmall,
                 border = BorderStroke(1.5.dp, MaterialTheme.colorScheme.primary.copy(alpha = 0.7f)),
                 colors = ButtonDefaults.outlinedButtonColors(
                     containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.25f),
@@ -1674,7 +1673,7 @@ private fun LegalOverlay(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.Black.copy(alpha = 0.4f))
+            .background(AppColors.scrim)
             .clickable { onDismiss() },
         contentAlignment = Alignment.Center
     ) {
@@ -1682,7 +1681,7 @@ private fun LegalOverlay(
             modifier = Modifier
                 .fillMaxWidth(0.88f)
                 .padding(20.dp),
-            shape = RoundedCornerShape(16.dp),
+            shape = MaterialTheme.shapes.medium,
             tonalElevation = 6.dp,
             color = MaterialTheme.colorScheme.surface
         ) {
@@ -1707,7 +1706,7 @@ private fun LegalOverlay(
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(42.dp),
-                    shape = RoundedCornerShape(10.dp)
+                    shape = MaterialTheme.shapes.small
                 ) {
                     Text(
                         text = stringResource(R.string.ok),
@@ -1876,7 +1875,7 @@ private fun BottomNavSetupScreen(
                                 MaterialTheme.colorScheme.primary
                             else
                                 MaterialTheme.colorScheme.outline,
-                            shape = RoundedCornerShape(12.dp)
+                            shape = MaterialTheme.shapes.small
                         ),
                     colors = CardDefaults.cardColors(
                         containerColor = if (enableBottomNav)
@@ -1884,7 +1883,7 @@ private fun BottomNavSetupScreen(
                         else
                             MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
                     ),
-                    shape = RoundedCornerShape(12.dp)
+                    shape = MaterialTheme.shapes.small
                 ) {
                     Row(
                         modifier = Modifier
@@ -1927,7 +1926,7 @@ private fun BottomNavSetupScreen(
                                 MaterialTheme.colorScheme.primary
                             else
                                 MaterialTheme.colorScheme.outline,
-                            shape = RoundedCornerShape(12.dp)
+                            shape = MaterialTheme.shapes.small
                         ),
                     colors = CardDefaults.cardColors(
                         containerColor = if (!enableBottomNav)
@@ -1935,7 +1934,7 @@ private fun BottomNavSetupScreen(
                         else
                             MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
                     ),
-                    shape = RoundedCornerShape(12.dp)
+                    shape = MaterialTheme.shapes.small
                 ) {
                     Row(
                         modifier = Modifier
@@ -1999,7 +1998,7 @@ private fun BottomNavSetupScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(44.dp),
-                    shape = RoundedCornerShape(10.dp),
+                    shape = MaterialTheme.shapes.small,
                     colors = ButtonDefaults.buttonColors(
                         containerColor = MaterialTheme.colorScheme.primary
                     )

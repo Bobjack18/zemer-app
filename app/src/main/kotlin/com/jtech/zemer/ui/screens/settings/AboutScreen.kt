@@ -172,6 +172,7 @@ fun AboutScreen(
     }
 
     TopAppBar(
+        scrollBehavior = scrollBehavior,
         title = { Text(stringResource(R.string.about)) },
         navigationIcon = {
             IconButton(

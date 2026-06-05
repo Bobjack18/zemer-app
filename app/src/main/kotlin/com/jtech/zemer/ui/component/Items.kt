@@ -73,7 +73,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.compose.ui.util.fastForEachIndexed
 import androidx.compose.ui.zIndex
 import androidx.media3.common.MediaItem
@@ -99,6 +98,7 @@ import com.jtech.zemer.db.entities.Song
 import com.jtech.zemer.extensions.toMediaItem
 import com.jtech.zemer.models.MediaMetadata
 import com.jtech.zemer.playback.queues.LocalAlbumRadio
+import com.jtech.zemer.ui.theme.AppColors
 import com.jtech.zemer.ui.utils.resize
 import com.jtech.zemer.utils.joinByBullet
 import com.jtech.zemer.utils.makeTimeString
@@ -153,14 +153,14 @@ inline fun ListItem(
             .onFocusChanged { isFocused = it.isFocused }
             .height(ListItemHeight)
             .padding(horizontal = 8.dp)
-            .clip(RoundedCornerShape(8.dp))
+            .clip(MaterialTheme.shapes.extraSmall)
             .background(backgroundColor)
-            .border(width = 1.5.dp, color = borderColor, shape = RoundedCornerShape(8.dp))
+            .border(width = 1.5.dp, color = borderColor, shape = MaterialTheme.shapes.extraSmall)
     ) {
         Box(Modifier.padding(6.dp), contentAlignment = Alignment.Center) { thumbnailContent() }
         Column(Modifier.weight(1f).padding(horizontal = 6.dp)) {
             Text(
-                text = title, fontSize = 14.sp, fontWeight = FontWeight.Bold,
+                text = title, style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold),
                 maxLines = 1, overflow = TextOverflow.Ellipsis
             )
             if (subtitle != null) Row(verticalAlignment = Alignment.CenterVertically) { subtitle() }
@@ -185,7 +185,7 @@ fun ListItem(
     subtitle = {
         badges()
         if (!subtitle.isNullOrEmpty()) {
-            Text(text = subtitle, color = MaterialTheme.colorScheme.secondary, fontSize = 12.sp, maxLines = 1, overflow = TextOverflow.Ellipsis)
+            Text(text = subtitle, color = MaterialTheme.colorScheme.secondary, style = MaterialTheme.typography.bodySmall, maxLines = 1, overflow = TextOverflow.Ellipsis)
         }
     },
     thumbnailContent = thumbnailContent,
@@ -215,9 +215,9 @@ fun GridItem(
         .padding(12.dp)
         .focusable()
         .onFocusChanged { isFocused = it.isFocused }
-        .clip(RoundedCornerShape(12.dp))
+        .clip(MaterialTheme.shapes.small)
         .background(backgroundColor)
-        .border(width = 1.5.dp, color = borderColor, shape = RoundedCornerShape(12.dp))
+        .border(width = 1.5.dp, color = borderColor, shape = MaterialTheme.shapes.small)
 
     Column(
         modifier = if (fillMaxWidth) {
@@ -1147,7 +1147,7 @@ fun ItemThumbnail(
                     .fillMaxSize()
                     .zIndex(1f)
                     .clip(shape)
-                    .background(Color.Black.copy(alpha = 0.5f))
+                    .background(AppColors.mediaOverlay(0.5f))
             ) {
                 Icon(
                     painter = painterResource(R.drawable.done),
@@ -1159,14 +1159,14 @@ fun ItemThumbnail(
         PlayingIndicatorBox(
             isActive = isActive,
             playWhenReady = isPlaying,
-            color = if (albumIndex != null) MaterialTheme.colorScheme.onBackground else Color.White,
+            color = if (albumIndex != null) MaterialTheme.colorScheme.onBackground else AppColors.onMedia,
             modifier = Modifier
                 .fillMaxSize()
                 .background(
                     color = if (albumIndex != null)
                         Color.Transparent
                     else
-                        Color.Black.copy(alpha = ActiveBoxAlpha),
+                        AppColors.mediaOverlay(ActiveBoxAlpha),
                     shape = shape
                 )
         )
@@ -1210,18 +1210,18 @@ fun LocalThumbnail(
                 contentAlignment = Alignment.Center,
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(Color.Black.copy(alpha = 0.4f), shape)
+                    .background(AppColors.mediaOverlay(0.4f), shape)
             ) {
                 if (isPlaying) {
                     PlayingIndicator(
-                        color = Color.White,
+                        color = AppColors.onMedia,
                         modifier = Modifier.height(24.dp)
                     )
                 } else {
                     Icon(
                         painter = painterResource(R.drawable.play),
                         contentDescription = null,
-                        tint = Color.White
+                        tint = AppColors.onMedia
                     )
                 }
             }
@@ -1241,12 +1241,12 @@ fun LocalThumbnail(
                     modifier = Modifier
                         .size(36.dp)
                         .clip(CircleShape)
-                        .background(Color.Black.copy(alpha = 0.6f))
+                        .background(AppColors.mediaOverlay(0.6f))
                 ) {
                     Icon(
                         painter = painterResource(R.drawable.play),
                         contentDescription = null,
-                        tint = Color.White
+                        tint = AppColors.onMedia
                     )
                 }
             }
@@ -1266,12 +1266,12 @@ fun LocalThumbnail(
                     modifier = Modifier
                         .size(36.dp)
                         .clip(CircleShape)
-                        .background(Color.Black.copy(alpha = ActiveBoxAlpha))
+                        .background(AppColors.mediaOverlay(ActiveBoxAlpha))
                 ) {
                     Icon(
                         painter = painterResource(R.drawable.play),
                         contentDescription = null,
-                        tint = Color.White
+                        tint = AppColors.onMedia
                     )
                 }
             }
@@ -1361,12 +1361,12 @@ fun BoxScope.OverlayPlayButton(
             modifier = Modifier
                 .size(36.dp)
                 .clip(CircleShape)
-                .background(Color.Black.copy(alpha = ActiveBoxAlpha))
+                .background(AppColors.mediaOverlay(ActiveBoxAlpha))
         ) {
             Icon(
                 painter = painterResource(R.drawable.play),
                 contentDescription = null,
-                tint = Color.White,
+                tint = AppColors.onMedia,
                 modifier = Modifier.size(20.dp)
             )
         }
@@ -1392,14 +1392,14 @@ fun BoxScope.OverlayEditButton(
             modifier = Modifier
                 .size(36.dp)
                 .clip(CircleShape)
-                .background(Color.Black.copy(alpha = ActiveBoxAlpha))
+                .background(AppColors.mediaOverlay(ActiveBoxAlpha))
                 .padding(0.dp)
                 .clickable(onClick = onClick)
         ) {
             Icon(
                 painter = painterResource(R.drawable.edit),
                 contentDescription = null,
-                tint = Color.White,
+                tint = AppColors.onMedia,
                 modifier = Modifier.size(20.dp)
             )
         }
@@ -1424,13 +1424,13 @@ fun BoxScope.AlbumPlayButton(
             modifier = Modifier
                 .size(36.dp)
                 .clip(CircleShape)
-                .background(Color.Black.copy(alpha = ActiveBoxAlpha))
+                .background(AppColors.mediaOverlay(ActiveBoxAlpha))
                 .clickable(onClick = onClick)
         ) {
             Icon(
                 painter = painterResource(R.drawable.play),
                 contentDescription = null,
-                tint = Color.White
+                tint = AppColors.onMedia
             )
         }
     }

@@ -189,6 +189,7 @@ fun PrivacySettings(
     }
 
     TopAppBar(
+        scrollBehavior = scrollBehavior,
         title = { Text(stringResource(R.string.privacy)) },
         navigationIcon = {
             IconButton(

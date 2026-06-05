@@ -72,6 +72,7 @@ fun GeneralSettings(
     }
 
     TopAppBar(
+        scrollBehavior = scrollBehavior,
         title = { Text(stringResource(R.string.links)) },
         navigationIcon = {
             IconButton(

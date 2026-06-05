@@ -4,16 +4,13 @@ import android.os.Build
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -29,13 +26,14 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.google.firebase.auth.FirebaseAuth
 import com.jtech.zemer.LocalPlayerAwareWindowInsets
 import com.jtech.zemer.R
-import com.jtech.zemer.ui.component.Material3SettingsGroup
-import com.jtech.zemer.ui.component.Material3SettingsItem
+import com.jtech.zemer.ui.component.IconButton
+import com.jtech.zemer.ui.component.PreferenceEntry
+import com.jtech.zemer.ui.component.PreferenceGroupTitle
+import com.jtech.zemer.ui.utils.backToMain
 
 data class SettingItem(
     val id: String,
@@ -206,7 +204,10 @@ fun SettingsScreen(
         TopAppBar(
             title = { Text(stringResource(R.string.settings)) },
             navigationIcon = {
-                IconButton(onClick = { navController.navigateUp() }) {
+                IconButton(
+                    onClick = navController::navigateUp,
+                    onLongClick = navController::backToMain,
+                ) {
                     Icon(
                         painter = painterResource(R.drawable.arrow_back),
                         contentDescription = null
@@ -221,10 +222,8 @@ fun SettingsScreen(
             Modifier
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState())
-                .padding(horizontal = 16.dp)
                 .padding(bottom = paddingValues.calculateBottomPadding())
         ) {
-            Spacer(modifier = Modifier.height(8.dp))
             val sections = allSettings.groupBy { it.section }
             // Fixed section order; "Android Auto" sits right after "Player & Content" (matches Metrolist).
             val sectionOrder = listOf(
@@ -239,25 +238,27 @@ fun SettingsScreen(
                 sections.keys.filterNot { it in sectionOrder }
             orderedSectionTitles.forEach { sectionTitle ->
                 val items = sections[sectionTitle] ?: return@forEach
-                Material3SettingsGroup(
-                    title = sectionTitle,
-                    items = items.map { setting ->
-                        Material3SettingsItem(
-                            icon = painterResource(setting.icon),
-                            title = { Text(setting.title) },
-                            description = { Text(setting.description) },
-                            onClick = {
-                                if (setting.route != null) {
-                                    navController.navigate(setting.route)
-                                } else if (setting.id == "logout") {
-                                    FirebaseAuth.getInstance().signOut()
-                                    Toast.makeText(context, R.string.action_logout, Toast.LENGTH_SHORT).show()
-                                }
+                PreferenceGroupTitle(title = sectionTitle)
+                items.forEach { setting ->
+                    PreferenceEntry(
+                        icon = {
+                            Icon(
+                                painter = painterResource(setting.icon),
+                                contentDescription = null
+                            )
+                        },
+                        title = { Text(setting.title) },
+                        description = setting.description,
+                        onClick = {
+                            if (setting.route != null) {
+                                navController.navigate(setting.route)
+                            } else if (setting.id == "logout") {
+                                FirebaseAuth.getInstance().signOut()
+                                Toast.makeText(context, R.string.action_logout, Toast.LENGTH_SHORT).show()
                             }
-                        )
-                    }
-                )
-                Spacer(modifier = Modifier.height(16.dp))
+                        }
+                    )
+                }
             }
         }
     }

@@ -2,12 +2,12 @@ package com.jtech.zemer.ui.menu
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import com.jtech.zemer.ui.theme.AppColors
 
 @Composable
 fun LoadingScreen(
@@ -25,8 +25,8 @@ fun LoadingScreen(
 
                 Text(
                     text = "Progress $value%",
-                    color = Color.White,
-                    fontSize = 26.sp,
+                    color = AppColors.onMedia,
+                    style = MaterialTheme.typography.headlineSmall,
                 )
 
             }

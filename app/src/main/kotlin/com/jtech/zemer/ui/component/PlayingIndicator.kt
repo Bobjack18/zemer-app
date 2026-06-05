@@ -26,6 +26,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.jtech.zemer.R
 import com.jtech.zemer.constants.ThumbnailCornerRadius
+import com.jtech.zemer.ui.theme.AppColors
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlin.random.Random
@@ -85,7 +86,7 @@ fun PlayingIndicatorBox(
     modifier: Modifier = Modifier,
     isActive: Boolean,
     playWhenReady: Boolean,
-    color: Color = Color.White,
+    color: Color = AppColors.onMedia,
 ) {
     AnimatedVisibility(
         visible = isActive,

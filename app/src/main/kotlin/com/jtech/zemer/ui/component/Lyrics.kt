@@ -40,7 +40,6 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.BasicAlertDialog
 import androidx.compose.material3.Button
@@ -110,6 +109,8 @@ import com.jtech.zemer.ui.component.shimmer.ShimmerHost
 import com.jtech.zemer.ui.component.shimmer.TextPlaceholder
 import com.jtech.zemer.ui.screens.settings.DarkMode
 import com.jtech.zemer.ui.screens.settings.LyricsPosition
+import com.jtech.zemer.ui.theme.AppColors
+import com.jtech.zemer.ui.theme.PillShape
 import com.jtech.zemer.ui.utils.fadingEdge
 import com.jtech.zemer.utils.ComposeToImage
 import com.jtech.zemer.utils.rememberEnumPreference
@@ -400,7 +401,7 @@ fun Lyrics(
             ) {
                 Text(
                     text = stringResource(R.string.lyrics_not_found),
-                    fontSize = 20.sp,
+                    style = MaterialTheme.typography.titleLarge,
                     color = MaterialTheme.colorScheme.secondary,
                     textAlign = TextAlign.Center,
                     fontWeight = FontWeight.Bold,
@@ -471,7 +472,7 @@ fun Lyrics(
                     val isSelected = selectedIndices.contains(index)
                     val itemModifier = Modifier
                         .fillMaxWidth()
-                        .clip(RoundedCornerShape(8.dp)) // Clip for background
+                        .clip(MaterialTheme.shapes.extraSmall) // Clip for background
                         .combinedClickable(
                             enabled = true,
                             onClick = {
@@ -573,7 +574,7 @@ fun Lyrics(
                     ) {
                         Text(
                             text = item.text,
-                            fontSize = 24.sp, // Uniform size for all lines matching latest enh version
+                            style = MaterialTheme.typography.headlineSmall, // Uniform size for all lines matching latest enh version
                             color = if (index == displayedCurrentLineIndex && isSynced) {
                                 textColor // Full color for active line
                             } else {
@@ -612,7 +613,7 @@ fun Lyrics(
                             modifier = Modifier
                                 .size(48.dp) // Larger for better touch target
                                 .background(
-                                    color = Color.Black.copy(alpha = 0.3f),
+                                    color = AppColors.mediaOverlay(0.3f),
                                     shape = CircleShape
                                 )
                                 .clickable {
@@ -624,7 +625,7 @@ fun Lyrics(
                             Icon(
                                 painter = painterResource(id = R.drawable.close),
                                 contentDescription = stringResource(R.string.cancel),
-                                tint = Color.White,
+                                tint = AppColors.onMedia,
                                 modifier = Modifier.size(20.dp)
                             )
                         }
@@ -634,10 +635,10 @@ fun Lyrics(
                             modifier = Modifier
                                 .background(
                                     color = if (selectedIndices.isNotEmpty())
-                                        Color.White.copy(alpha = 0.9f) // White background when active
+                                        AppColors.onMedia(0.9f) // White background when active
                                     else
-                                        Color.White.copy(alpha = 0.5f), // Lighter white when inactive
-                                    shape = RoundedCornerShape(24.dp)
+                                        AppColors.onMedia(0.5f), // Lighter white when inactive
+                                    shape = PillShape
                                 )
                                 .clickable(enabled = selectedIndices.isNotEmpty()) {
                                     if (selectedIndices.isNotEmpty()) {
@@ -716,7 +717,7 @@ fun Lyrics(
                     Text(
                         text = stringResource(R.string.share_lyrics),
                         fontWeight = FontWeight.Bold,
-                        fontSize = 20.sp,
+                        style = MaterialTheme.typography.titleLarge,
                         color = MaterialTheme.colorScheme.onSurface
                     )
                     Spacer(modifier = Modifier.height(16.dp))
@@ -755,7 +756,7 @@ fun Lyrics(
                         Spacer(modifier = Modifier.width(12.dp))
                         Text(
                             text = stringResource(R.string.share_as_text),
-                            fontSize = 16.sp,
+                            style = MaterialTheme.typography.bodyLarge,
                             color = MaterialTheme.colorScheme.onSurface
                         )
                     }
@@ -780,7 +781,7 @@ fun Lyrics(
                         Spacer(modifier = Modifier.width(12.dp))
                         Text(
                             text = stringResource(R.string.share_as_image),
-                            fontSize = 16.sp,
+                            style = MaterialTheme.typography.bodyLarge,
                             color = MaterialTheme.colorScheme.onSurface
                         )
                     }
@@ -793,7 +794,7 @@ fun Lyrics(
                     ) {
                         Text(
                             text = stringResource(R.string.cancel),
-                            fontSize = 16.sp,
+                            style = MaterialTheme.typography.bodyLarge,
                             color = MaterialTheme.colorScheme.error,
                             fontWeight = FontWeight.Medium,
                             modifier = Modifier
@@ -865,7 +866,7 @@ fun Lyrics(
 
         BasicAlertDialog(onDismissRequest = { showColorPickerDialog = false }) {
             Card(
-                shape = RoundedCornerShape(20.dp),
+                shape = MaterialTheme.shapes.large,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(20.dp)
@@ -908,12 +909,12 @@ fun Lyrics(
                             Box(
                                 modifier = Modifier
                                     .size(32.dp)
-                                    .background(color, shape = RoundedCornerShape(8.dp))
+                                    .background(color, shape = MaterialTheme.shapes.extraSmall)
                                     .clickable { previewBackgroundColor = color }
                                     .border(
                                         2.dp,
                                         if (previewBackgroundColor == color) MaterialTheme.colorScheme.primary else Color.Transparent,
-                                        RoundedCornerShape(8.dp)
+                                        MaterialTheme.shapes.extraSmall
                                     )
                             )
                         }
@@ -925,12 +926,12 @@ fun Lyrics(
                             Box(
                                 modifier = Modifier
                                     .size(32.dp)
-                                    .background(color, shape = RoundedCornerShape(8.dp))
+                                    .background(color, shape = MaterialTheme.shapes.extraSmall)
                                     .clickable { previewTextColor = color }
                                     .border(
                                         2.dp,
                                         if (previewTextColor == color) MaterialTheme.colorScheme.primary else Color.Transparent,
-                                        RoundedCornerShape(8.dp)
+                                        MaterialTheme.shapes.extraSmall
                                     )
                             )
                         }
@@ -942,12 +943,12 @@ fun Lyrics(
                             Box(
                                 modifier = Modifier
                                     .size(32.dp)
-                                    .background(color, shape = RoundedCornerShape(8.dp))
+                                    .background(color, shape = MaterialTheme.shapes.extraSmall)
                                     .clickable { previewSecondaryTextColor = color }
                                     .border(
                                         2.dp,
                                         if (previewSecondaryTextColor == color) MaterialTheme.colorScheme.primary else Color.Transparent,
-                                        RoundedCornerShape(8.dp)
+                                        MaterialTheme.shapes.extraSmall
                                     )
                             )
                         }

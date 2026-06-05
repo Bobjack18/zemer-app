@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -44,6 +43,7 @@ import com.jtech.zemer.constants.StreamSourceWebRemixKey
 import com.jtech.zemer.ui.component.IconButton
 import com.jtech.zemer.ui.component.PreferenceGroupTitle
 import com.jtech.zemer.ui.component.SwitchPreference
+import com.jtech.zemer.ui.theme.PillShape
 import com.jtech.zemer.ui.utils.backToMain
 import com.jtech.zemer.utils.rememberPreference
 
@@ -105,7 +105,7 @@ fun StreamSourceSettings(
             ) {
                 streamOrder.forEach { name ->
                     Surface(
-                        shape = RoundedCornerShape(50),
+                        shape = PillShape,
                         color = MaterialTheme.colorScheme.secondaryContainer,
                     ) {
                         Text(

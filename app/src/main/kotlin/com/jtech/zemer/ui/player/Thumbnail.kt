@@ -46,7 +46,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -58,7 +57,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.compose.ui.util.fastForEach
 import androidx.media3.common.C
 import androidx.media3.common.Player
@@ -72,6 +70,7 @@ import com.jtech.zemer.constants.PlayerHorizontalPadding
 import com.jtech.zemer.constants.SeekExtraSeconds
 import com.jtech.zemer.constants.SwipeThumbnailKey
 import com.jtech.zemer.constants.ThumbnailCornerRadius
+import com.jtech.zemer.ui.theme.AppColors
 import com.jtech.zemer.utils.rememberEnumPreference
 import com.jtech.zemer.utils.rememberPreference
 import kotlinx.coroutines.delay
@@ -107,8 +106,8 @@ fun Thumbnail(
     
     val textBackgroundColor = when (playerBackground) {
         PlayerBackgroundStyle.DEFAULT -> MaterialTheme.colorScheme.onBackground
-        PlayerBackgroundStyle.BLUR -> Color.White
-        PlayerBackgroundStyle.GRADIENT -> Color.White
+        PlayerBackgroundStyle.BLUR -> AppColors.onMedia
+        PlayerBackgroundStyle.GRADIENT -> AppColors.onMedia
     }
     
     // Grid state
@@ -384,12 +383,12 @@ fun Thumbnail(
         ) {
             Text(
                 text = seekDirection,
-                color = Color.White,
-                fontSize = 16.sp,
+                color = AppColors.onMedia,
+                style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold,
                 textAlign = TextAlign.Center,
                 modifier = Modifier
-                    .background(Color.Black.copy(alpha = 0.7f), RoundedCornerShape(8.dp))
+                    .background(AppColors.mediaOverlay(0.7f), MaterialTheme.shapes.extraSmall)
                     .padding(8.dp)
             )
         }

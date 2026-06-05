@@ -69,7 +69,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.media3.common.PlaybackException
 import androidx.media3.common.Player
 import coil3.compose.AsyncImage
@@ -83,6 +82,7 @@ import com.jtech.zemer.constants.UseNewMiniPlayerDesignKey
 import com.jtech.zemer.db.entities.ArtistEntity
 import com.jtech.zemer.extensions.togglePlayPause
 import com.jtech.zemer.models.MediaMetadata
+import com.jtech.zemer.ui.theme.AppColors
 import com.jtech.zemer.utils.rememberPreference
 import kotlinx.coroutines.launch
 import kotlin.math.absoluteValue
@@ -371,7 +371,7 @@ private fun NewMiniPlayer(
                             modifier = Modifier
                                 .fillMaxSize()
                                 .background(
-                                    color = Color.Black.copy(alpha = overlayAlpha),
+                                    color = AppColors.mediaOverlay(overlayAlpha),
                                     shape = CircleShape
                                 )
                         )
@@ -390,7 +390,7 @@ private fun NewMiniPlayer(
                                     }
                                 ),
                                 contentDescription = null,
-                                tint = Color.White,
+                                tint = AppColors.onMedia,
                                 modifier = Modifier.size(20.dp)
                             )
                         }
@@ -413,7 +413,7 @@ private fun NewMiniPlayer(
                             Text(
                                 text = title,
                                 color = MaterialTheme.colorScheme.onSurface,
-                                fontSize = 14.sp,
+                                style = MaterialTheme.typography.bodyMedium,
                                 fontWeight = FontWeight.Medium,
                                 maxLines = 1,
                                 overflow = TextOverflow.Ellipsis,
@@ -430,7 +430,7 @@ private fun NewMiniPlayer(
                                 Text(
                                     text = artists,
                                     color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f),
-                                    fontSize = 12.sp,
+                                    style = MaterialTheme.typography.bodySmall,
                                     maxLines = 1,
                                     overflow = TextOverflow.Ellipsis,
                                     modifier = Modifier.basicMarquee(iterations = 1, initialDelayMillis = 3000, velocity = 30.dp),
@@ -447,7 +447,7 @@ private fun NewMiniPlayer(
                             Text(
                                 text = "Error playing",
                                 color = MaterialTheme.colorScheme.error,
-                                fontSize = 10.sp,
+                                style = MaterialTheme.typography.labelSmall,
                                 maxLines = 1,
                                 overflow = TextOverflow.Ellipsis,
                             )
@@ -845,7 +845,7 @@ private fun LegacyMiniMediaInfo(
                     Modifier
                         .fillMaxSize()
                         .background(
-                            color = if (pureBlack) Color.Black else Color.Black.copy(alpha = 0.6f),
+                            color = if (pureBlack) AppColors.mediaOverlay(1f) else AppColors.mediaOverlay(0.6f),
                             shape = RoundedCornerShape(ThumbnailCornerRadius),
                         ),
                 ) {
@@ -872,7 +872,7 @@ private fun LegacyMiniMediaInfo(
                 Text(
                     text = title,
                     color = MaterialTheme.colorScheme.onSurface,
-                    fontSize = 16.sp,
+                    style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
@@ -889,7 +889,7 @@ private fun LegacyMiniMediaInfo(
                     Text(
                         text = artists,
                         color = MaterialTheme.colorScheme.secondary,
-                        fontSize = 12.sp,
+                        style = MaterialTheme.typography.bodySmall,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
                     )

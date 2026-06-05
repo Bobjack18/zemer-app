@@ -390,6 +390,7 @@ fun StorageSettings(
     }
 
     TopAppBar(
+        scrollBehavior = scrollBehavior,
         title = { Text(stringResource(R.string.storage)) },
         navigationIcon = {
             IconButton(

@@ -28,7 +28,6 @@ import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.AssistChipDefaults
 import androidx.compose.material3.DropdownMenu
@@ -90,7 +89,7 @@ fun <E> ChipsRow(
                     containerColor = containerColor,
                 ),
                 onClick = { onValueUpdate(value) },
-                shape = RoundedCornerShape(16.dp),
+                shape = MaterialTheme.shapes.medium,
                 border = null,
                 modifier = (if (index == 0 && firstChipFocusRequester != null) {
                     Modifier.focusRequester(firstChipFocusRequester)
@@ -103,7 +102,7 @@ fun <E> ChipsRow(
                 })
                     .onFocusChanged { isFocused = it.isFocused }
                     .focusable()
-                    .border(width = 1.5.dp, color = borderColor, shape = RoundedCornerShape(16.dp))
+                    .border(width = 1.5.dp, color = borderColor, shape = MaterialTheme.shapes.medium)
             )
 
             Spacer(Modifier.width(8.dp))
@@ -168,7 +167,7 @@ fun <Int> ChoiceChipsRow(
                         modifier = Modifier.graphicsLayer(rotationZ = rotationAnimation),
                     )
                 },
-                shape = RoundedCornerShape(16.dp),
+                shape = MaterialTheme.shapes.medium,
                 border = null,
                 colors = AssistChipDefaults.assistChipColors(
                     containerColor = containerColor,
@@ -177,7 +176,7 @@ fun <Int> ChoiceChipsRow(
                 modifier = Modifier
                     .onFocusChanged { isFocused = it.isFocused }
                     .focusable()
-                    .border(width = 1.5.dp, color = borderColor, shape = RoundedCornerShape(16.dp))
+                    .border(width = 1.5.dp, color = borderColor, shape = MaterialTheme.shapes.medium)
             )
 
             AnimatedVisibility(
@@ -233,12 +232,12 @@ fun <Int> ChoiceChipsRow(
                             containerColor = containerColor,
                         ),
                         onClick = { onValueUpdate(value) },
-                        shape = RoundedCornerShape(16.dp),
+                        shape = MaterialTheme.shapes.medium,
                         border = null,
                         modifier = Modifier
                             .onFocusChanged { isFocused = it.isFocused }
                             .focusable()
-                            .border(width = 1.5.dp, color = borderColor, shape = RoundedCornerShape(16.dp))
+                            .border(width = 1.5.dp, color = borderColor, shape = MaterialTheme.shapes.medium)
                     )
                 }
             }

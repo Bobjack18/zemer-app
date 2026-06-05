@@ -147,6 +147,7 @@ fun BackupAndRestore(
     }
 
     TopAppBar(
+        scrollBehavior = scrollBehavior,
         title = { Text(stringResource(R.string.backup_restore)) },
         navigationIcon = {
             IconButton(

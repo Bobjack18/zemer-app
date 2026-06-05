@@ -465,6 +465,7 @@ fun ContentSettings(
     }
 
     TopAppBar(
+        scrollBehavior = scrollBehavior,
         title = { Text(stringResource(R.string.content)) },
         navigationIcon = {
             IconButton(
