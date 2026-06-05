@@ -104,3 +104,6 @@ tests/node_modules/
 
 # Transient OAuth device-flow artifacts (tests)
 tests/_oauth_*.json
+
+# Local UI working blueprint (not committed; see docs/ui/standards.md)
+docs/ui/unification-plan.md

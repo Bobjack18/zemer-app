@@ -1,33 +1,60 @@
-# UI standards and rules
+# UI standards (hard rules)
 
-How to build UI in this app so new screens look and behave like the existing ones. These are the
-conventions the codebase already follows; match them rather than inventing parallel patterns. All
-UI is Jetpack Compose + Material 3.
+The single source of truth for building UI in this app. These are rules, not suggestions; new code
+must comply and existing code is being migrated to comply. All UI is Jetpack Compose on
+**Material 3 Expressive** (`material3 1.4.0`). Enforced by review, the checklists at the end, and
+`scripts/ui-audit.sh`.
 
-## 1. Reuse before building
+## Principles
 
-- Look in `app/src/main/kotlin/com/jtech/zemer/ui/component/` first. There are ready components for
-  settings rows (`Preference.kt`), dialogs (`Dialog.kt`, `*Dialog.kt`), bottom sheets
-  (`BottomSheet*.kt`), menus (`GridMenu.kt`, `NewMenuComponents.kt`), list items (`Items.kt`),
-  icon buttons (`IconButton.kt`), chips (`ChipsRow.kt`), placeholders (`EmptyPlaceholder.kt`,
-  `AppStateViews.kt`), and more.
-- Do not introduce a second component that duplicates one of these. (For example, settings rows use
-  the `Preference.kt` widgets below — do not add a parallel "settings group" widget set.)
+- **Material 3 Expressive, exclusively.** The app root is `MaterialExpressiveTheme`. Never Material 2
+  (`androidx.compose.material.*` components/theme). The Material Icons library is allowed.
+- **D-pad first.** Every screen, dialog, sheet, and menu must be 100% navigable AND operable with a
+  directional pad (D-pad + center + back) - TV, Android Auto, switch/keyboard. No action is
+  touch-only. Permanent and non-negotiable.
+- **Expressive but tasteful.** Spring motion, shape morph, and `MaterialShapes` for hero/selection
+  moments; settings, lists, and dialogs stay calm and legible. Beautiful = cohesive, not loud.
+- **Tokens over magic numbers.** Every size, gap, radius, motion spec, and color resolves to a token.
+- **One canonical component.** Reuse `ui/component/` before building; never a parallel widget set.
+- **Theme-driven.** Color from `colorScheme`, type from `typography`, shape from `shapes`/`MaterialShapes`,
+  motion from `motionScheme`.
 
-## 2. Settings screens
+## Foundations (tokens)
 
-Every settings screen is a `@Composable fun XxxSettings(navController: NavController,
-scrollBehavior: TopAppBarScrollBehavior)` annotated `@OptIn(ExperimentalMaterial3Api::class)`.
+- **Theme:** app root is `MaterialExpressiveTheme(colorScheme, motionScheme = MotionScheme.expressive(), shapes, typography)`. Keep dynamic color + `ColorScheme.pureBlack()` (the only AMOLED path).
+- **Color:** `MaterialTheme.colorScheme` roles only. Media/video/art overlays use `AppColors`
+  (`scrim`/`onMedia`/`mediaOverlay`). No `Color(0x...)` or named `Color.*` outside `ui/theme/`.
+- **Typography:** `MaterialTheme.typography.*` roles (`.copy()` for weight/color only). No literal
+  `fontSize`. Exempt: `LyricsImageCard` (fixed-size share bitmap).
+- **Shape:** `MaterialTheme.shapes` (`extraSmall..extraLarge`) + a `pill`; `MaterialShapes` for accents.
+  No `RoundedCornerShape(N.dp)` literals.
+- **Spacing/size:** `Dimens` tokens (`space1..space8` = 4/8/12/16/24/32; `ScreenPaddingH=16`,
+  `IconSize=24`, `MinTouchTarget=48`). No bare `.dp` outside the token defs.
+- **Motion:** `MaterialTheme.motionScheme` spring specs (`spatialSpec`/`effectsSpec`) for transitions.
+  No millisecond literals.
 
-Skeleton:
+## Components
+
+Use these; do not hand-roll equivalents.
+
+- **Settings rows (`Preference.kt`):** `PreferenceGroupTitle`, `PreferenceEntry`, `SwitchPreference`,
+  `EditTextPreference`, `SliderPreference`, `SelectPreference` (row that opens a `ListDialog`).
+  `InfoCard`/`StatusRow` for rich status. Never `Material3SettingsGroup` (removed) or a hand-rolled
+  Switch+Row.
+- **Dialogs (`Dialog.kt`):** `DefaultDialog`, `ListDialog`, `TextFieldDialog`, `ActionPromptDialog`,
+  `InfoLabel`. Never a raw `AlertDialog`/`BasicAlertDialog`/Card-as-dialog. See "Dialogs" below.
+- **Expressive variants:** `LoadingIndicator`/wavy progress over plain spinners; the expressive +
+  wavy `Slider`; `ButtonGroup`/`SplitButton`; `FloatingActionButtonMenu`.
+- **App bar:** Material3 `TopAppBar` + the app's `ui/component/IconButton`.
+- **Lists/items:** `Items.kt`, `ChipsRow`. **States:** `EmptyPlaceholder`, `AppStateViews`,
+  `shimmer/ShimmerHost`.
+
+## Screen skeleton
 
 ```kotlin
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ExampleSettings(
-    navController: NavController,
-    scrollBehavior: TopAppBarScrollBehavior,
-) {
+fun ExampleSettings(navController: NavController, scrollBehavior: TopAppBarScrollBehavior) {
     val (enabled, onEnabledChange) = rememberPreference(ExampleKey, defaultValue = true)
 
     Column(
@@ -36,7 +63,6 @@ fun ExampleSettings(
             .verticalScroll(rememberScrollState()),
     ) {
         PreferenceGroupTitle(title = stringResource(R.string.example_group))
-
         SwitchPreference(
             title = { Text(stringResource(R.string.example_toggle)) },
             description = stringResource(R.string.example_toggle_desc),
@@ -49,10 +75,7 @@ fun ExampleSettings(
     TopAppBar(
         title = { Text(stringResource(R.string.example_title)) },
         navigationIcon = {
-            IconButton(
-                onClick = navController::navigateUp,
-                onLongClick = navController::backToMain,
-            ) {
+            IconButton(onClick = navController::navigateUp, onLongClick = navController::backToMain) {
                 Icon(painterResource(R.drawable.arrow_back), contentDescription = null)
             }
         },
@@ -61,90 +84,79 @@ fun ExampleSettings(
 }
 ```
 
-Rules:
-
-- Body is a scrollable `Column` (`verticalScroll(rememberScrollState())`) padded with
-  `windowInsetsPadding(LocalPlayerAwareWindowInsets.current)`. Use a `LazyColumn` instead only when
-  the screen contains a dynamic or reorderable list (see section 6) — never nest a `LazyColumn`
-  inside a `verticalScroll` `Column`.
-- The `TopAppBar` is emitted after the body (it draws over the top) and is given the passed
-  `scrollBehavior`. Its back button is the app's `com.jtech.zemer.ui.component.IconButton` with
+- Signature is `(navController: NavController, scrollBehavior: TopAppBarScrollBehavior)`; the file name
+  matches the function name (`XxxSettings`/`XxxScreen`).
+- Body is the scroll `Column` above, or a single `LazyColumn` when a dynamic/reorderable list is
+  present. No nested scrollables, no `Scaffold`, no extra padding wrappers.
+- The `TopAppBar` MUST get `scrollBehavior`. Back button MUST be the app `IconButton` with both
   `onClick = navController::navigateUp` and `onLongClick = navController::backToMain`.
-- Group separation comes from `PreferenceGroupTitle` (it has its own 16dp padding). Do not insert
-  arbitrary `Spacer` heights between groups.
+- Group spacing comes only from `PreferenceGroupTitle`. No magic-number `Spacer`s.
 
-## 3. Settings widgets (`ui/component/Preference.kt`)
+## D-pad and focus (first-class)
 
-Use these; do not hand-roll equivalents.
+- Every interactive element is `focusable()` (or focusable via `clickable`) with a clear, consistent
+  focus state (the `PreferenceEntry` focus background + border is the baseline).
+- Focus order follows visual order (`focusGroup()`/`focusProperties` where needed). No focus traps.
+- Each screen requests a sensible initial focus (the `firstFocus`/`backFocus` `FocusRequester` pattern).
+- Focusing an off-screen item scrolls it into view.
+- Every touch-only gesture has a D-pad equivalent (reorder via focus + center/long-press, drag-seek via
+  D-pad left/right, swipe actions via a focusable control).
+- Interactive elements are `>= 48dp`; icon-only controls carry a localized `contentDescription`
+  (decorative icons pass `null`).
 
-| Component | Use for |
-| --- | --- |
-| `PreferenceGroupTitle(title)` | Section header. Renders an uppercase `labelLarge` in `primary`. |
-| `PreferenceEntry(title, description?, icon?, trailingContent?, onClick?, isEnabled?)` | Generic clickable row; the base for everything below. Use directly when you need a custom trailing control (e.g. a drag handle + switch) or a row that opens a dialog. |
-| `SwitchPreference(title, description?, icon?, checked, onCheckedChange, isEnabled?)` | Boolean toggle row. The thumb shows `check`/`close` icons automatically. |
-| `EditTextPreference(...)` | Inline text field preference. |
-| `SliderPreference(...)` | Numeric slider preference. |
+## Dialogs (beautiful + unified)
 
-- `title` is `@Composable () -> Unit` (usually `{ Text(stringResource(...)) }`); `description` is a
-  plain `String?`; `icon` is `{ Icon(painterResource(R.drawable.x), null) }`.
-- A row that opens a chooser is a `PreferenceEntry` whose `description` shows the current value and
-  whose `onClick` sets a `showDialog` state (see section 7).
+Always via the `Dialog.kt` helpers. One look, one structure, one motion.
 
-## 4. Preferences and state
+- Structure (top to bottom): optional centered hero icon -> title (`headlineSmall`, `onSurface`) ->
+  supporting text (`bodyMedium`, `onSurfaceVariant`) -> content -> actions row.
+- Surface: `shapes.extraLarge`, `surfaceContainerHigh` tonal background, 24dp content padding,
+  constrained max width, respects insets.
+- Actions: text buttons, end-aligned, max 2-3. Affirmative in `confirmButton`, cancel/negative in
+  `dismissButton`. Destructive affirmative uses `colorScheme.error`.
+- Long or "pick one of N" content scrolls; selection uses `ListDialog` via `SelectPreference` - never a
+  hand-rolled radio column.
+- Motion: expressive spring (scale + fade) from `motionScheme`.
+- D-pad: takes focus when shown, fully traversable, center activates, back dismisses; the *safe* action
+  is default-focused (cancel for destructive dialogs).
+- All text localized; no duplicated dialog content across screens (one component).
 
-- Read/write DataStore preferences with `rememberPreference(key, defaultValue)`; it returns a
-  `(value, setter)` pair.
-- Declare keys in `com.jtech.zemer.constants.PreferenceKeys` (`booleanPreferencesKey`,
-  `stringPreferencesKey`, etc.).
-- If a default-off feature must behave as off when the key is unset, gate the consumer on
-  `!= true`, not `== false` (an unset key reads as null).
-- Persist on discrete actions (a toggle) or at the end of a continuous gesture (a drag), not on
-  every intermediate frame. Keep a local working copy for in-progress gestures and write once when
-  it settles.
+## Strings
 
-## 5. Strings (localization)
+- All user-facing text via `stringResource(R.string.x)`. No hardcoded literals.
+- New strings go in `app/src/main/res/values/metrolist_strings.xml`. Never `strings.xml` (upstream;
+  headed "do not add new features here").
 
-- Add every new user-facing string to `app/src/main/res/values/metrolist_strings.xml`.
-- Never add strings to `app/src/main/res/values/strings.xml` — it is upstream InnerTune strings and
-  is headed `Do not add new features here`.
-- No hardcoded user-facing text in Kotlin; always `stringResource(R.string.x)`. Technical
-  identifiers shown verbatim (client names, etc.) may be literals.
+## The rules (quick reference)
 
-## 6. Lists and reordering
+- R0 Material 3 Expressive only; `MaterialExpressiveTheme`; no Material 2.
+- R1 Screen `(navController, scrollBehavior)`, `@OptIn(ExperimentalMaterial3Api)`, file name = function.
+- R2 `TopAppBar` receives `scrollBehavior`.
+- R3 Back button = app `IconButton` + `onLongClick = backToMain`.
+- R4 Body = scroll `Column` or single `LazyColumn`; no nested scrollables/`Scaffold`/extra padding.
+- R5 Group spacing only from `PreferenceGroupTitle`; no magic `Spacer`s.
+- R6 Settings rows = `Preference.kt` widgets only.
+- R7 Dialogs via `Dialog.kt` + the Dialogs structure above.
+- R8 Text via `stringResource`; new strings in `metrolist_strings.xml`.
+- R9 Color/type/shape/motion/size from theme tokens; no raw literals outside `ui/theme/`.
+- R10 D-pad complete: reachable + operable, visible focus, logical order, scroll-into-view, no traps,
+  initial focus.
+- R11 No touch-only actions; dialogs/sheets/menus fully D-pad operable.
+- R12 Interactive `>= 48dp`; icon-only controls carry a `contentDescription`.
 
-- Static content: a `Column` (see section 2).
-- Dynamic or long content: a `LazyColumn` that is the screen's single scroll container. Put the
-  non-list parts in `item { }` blocks and the list in `items(...) { }` so there is exactly one
-  scrollable. Do not give a `LazyColumn` a hardcoded pixel height to embed it in a `Column`.
-- Reordering uses `sh.calvin.reorderable` (`rememberReorderableLazyListState`, `ReorderableItem`,
-  `longPressDraggableHandle`). Map moves by stable item `key`, not lazy index, and persist the new
-  order in the handle's `onDragStopped`.
+## Checklists
 
-## 7. Dialogs
+New screen: R1 signature + file name; R2 scrollBehavior; R3 back button; R4 body; R5 spacing;
+`Preference.kt` rows; all strings localized in `metrolist_strings.xml`; D-pad-only walkthrough passes;
+build green + `ui-audit.sh` clean.
 
-- Use Material 3 `AlertDialog` (or the app's `Dialog.kt` helpers).
-- `confirmButton` is the affirmative action; `dismissButton` is Cancel. A pick-and-close list puts
-  its Cancel in `dismissButton` (and may leave `confirmButton` empty), not in `confirmButton`.
+New component: lives in `ui/component/`; tokens only (R9); focusable + visible focus + `>= 48dp` (R10,
+R12); has a `contentDescription` path for icon-only use; no parallel duplicate.
 
-## 8. Theme and color
+New dialog: built from a `Dialog.kt` helper (R7); follows the Dialogs structure; spring motion;
+D-pad-operable with the safe default focus; localized.
 
-- Colors come from `MaterialTheme.colorScheme` roles; never hardcode hex. Common usage in this app:
-  - `primary` — group titles, emphasis.
-  - `onSurfaceVariant` — secondary/hint text, inactive icons.
-  - `secondaryContainer` / `onSecondaryContainer` — chips and soft pills.
-  - `surface` / `surfaceVariant` — backgrounds and subtle containers.
-- Typography comes from `MaterialTheme.typography` (`Type.kt`); do not set raw font sizes. Hints and
-  secondary text are `bodyMedium`/`bodySmall` in `onSurfaceVariant`.
-- Theme setup lives in `ui/theme/` (`Theme.kt`, `Type.kt`); dynamic/player colors in
-  `PlayerColorExtractor.kt`.
+## Documentation
 
-## 9. Icons
-
-- Vector drawables in `app/src/main/res/drawable/`, referenced with `painterResource(R.drawable.x)`.
-- Switch thumbs use `check`/`close`; the back arrow is `arrow_back`. Reuse existing drawables before
-  adding new ones.
-
-## 10. Documentation
-
-- No emojis or decorative symbols anywhere in `docs/` — ASCII only. (Arrows like `->` over a glyph.)
-- Keep this file in sync when a shared UI convention changes.
+No emojis or decorative symbols anywhere under `docs/` - ASCII only (use `->` over a glyph). Keep this
+file in sync when a shared convention changes.
