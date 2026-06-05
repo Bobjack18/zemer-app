@@ -868,7 +868,7 @@ fun Queue(
                                     ) {
                                         Icon(
                                             painter = painterResource(R.drawable.playlist_play),
-                                            contentDescription = null,
+                                            contentDescription = stringResource(R.string.play_all),
                                         )
                                     }
                                     IconButton(
@@ -881,7 +881,7 @@ fun Queue(
                                     ) {
                                         Icon(
                                             painter = painterResource(R.drawable.queue_music),
-                                            contentDescription = null,
+                                            contentDescription = stringResource(R.string.add_to_queue),
                                         )
                                     }
                                 },
@@ -1006,7 +1006,7 @@ fun Queue(
                     ) {
                         Icon(
                             painter = painterResource(R.drawable.close),
-                            contentDescription = null,
+                            contentDescription = stringResource(R.string.close),
                         )
                     }
                     Text(
@@ -1037,7 +1037,9 @@ fun Queue(
                                     R.drawable.select_all
                                 },
                             ),
-                            contentDescription = null,
+                            contentDescription = stringResource(
+                                if (count == mutableQueueWindows.size) R.string.deselect_all else R.string.select_all
+                            ),
                         )
                     }
 
@@ -1058,7 +1060,7 @@ fun Queue(
                     ) {
                         Icon(
                             painter = painterResource(R.drawable.more_vert),
-                            contentDescription = null,
+                            contentDescription = stringResource(R.string.more_options),
                             tint = LocalContentColor.current,
                         )
                     }
@@ -1113,7 +1115,7 @@ fun Queue(
             ) {
                 Icon(
                     painter = painterResource(R.drawable.shuffle),
-                    contentDescription = null,
+                    contentDescription = stringResource(R.string.shuffle),
                     modifier = Modifier.alpha(if (shuffleModeEnabled) 1f else 0.5f),
                 )
             }
@@ -1137,7 +1139,7 @@ fun Queue(
                             else -> throw IllegalStateException()
                         },
                     ),
-                    contentDescription = null,
+                    contentDescription = stringResource(R.string.repeat),
                     modifier = Modifier.alpha(if (repeatMode == Player.REPEAT_MODE_OFF) 0.5f else 1f),
                 )
             }

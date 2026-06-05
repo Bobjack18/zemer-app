@@ -196,7 +196,7 @@ fun LibraryAlbumsScreen(
                             LibraryViewType.GRID -> R.drawable.grid_view
                         },
                     ),
-                    contentDescription = null,
+                    contentDescription = stringResource(R.string.change_view_type),
                 )
             }
         }

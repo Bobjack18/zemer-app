@@ -191,7 +191,7 @@ fun LibrarySongsScreen(
                         ) {
                             Icon(
                                 painter = painterResource(R.drawable.close),
-                                contentDescription = null,
+                                contentDescription = stringResource(R.string.close),
                             )
                         }
                         Text(
@@ -209,7 +209,7 @@ fun LibrarySongsScreen(
                         ) {
                             Icon(
                                 painter = painterResource(if (count == wrappedSongs.size) R.drawable.deselect else R.drawable.select_all),
-                                contentDescription = null,
+                                contentDescription = stringResource(if (count == wrappedSongs.size) R.string.deselect_all else R.string.select_all),
                             )
                         }
 
@@ -227,7 +227,7 @@ fun LibrarySongsScreen(
                         ) {
                             Icon(
                                 painter = painterResource(R.drawable.more_vert),
-                                contentDescription = null,
+                                contentDescription = stringResource(R.string.more_options),
                             )
                         }
                     } else {
@@ -296,7 +296,7 @@ fun LibrarySongsScreen(
                         ) {
                             Icon(
                                 painter = painterResource(R.drawable.more_vert),
-                                contentDescription = null,
+                                contentDescription = stringResource(R.string.more_options),
                             )
                         }
                     },

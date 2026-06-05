@@ -348,7 +348,7 @@ fun AutoPlaylistScreen(
                                                     ) {
                                                         Icon(
                                                             painter = painterResource(R.drawable.offline),
-                                                            contentDescription = null,
+                                                            contentDescription = stringResource(R.string.offline),
                                                         )
                                                     }
                                                 }
@@ -380,7 +380,7 @@ fun AutoPlaylistScreen(
                                                     ) {
                                                         Icon(
                                                             painter = painterResource(R.drawable.download),
-                                                            contentDescription = null,
+                                                            contentDescription = stringResource(R.string.action_download),
                                                         )
                                                     }
                                                 }
@@ -395,7 +395,7 @@ fun AutoPlaylistScreen(
                                             ) {
                                                 Icon(
                                                     painter = painterResource(R.drawable.queue_music),
-                                                    contentDescription = null,
+                                                    contentDescription = stringResource(R.string.add_to_queue),
                                                 )
                                             }
                                         }
@@ -497,7 +497,7 @@ fun AutoPlaylistScreen(
                             ) {
                                 Icon(
                                     painter = painterResource(R.drawable.more_vert),
-                                    contentDescription = null,
+                                    contentDescription = stringResource(R.string.more_options),
                                 )
                             }
                         },
@@ -619,7 +619,7 @@ fun AutoPlaylistScreen(
                         painter = painterResource(
                             if (selection) R.drawable.close else R.drawable.arrow_back
                         ),
-                        contentDescription = null
+                        contentDescription = stringResource(if (selection) R.string.close else R.string.back_button_desc)
                     )
                 }
             },
@@ -639,7 +639,7 @@ fun AutoPlaylistScreen(
                             painter = painterResource(
                                 if (count == wrappedSongs.size) R.drawable.deselect else R.drawable.select_all
                             ),
-                            contentDescription = null
+                            contentDescription = stringResource(if (count == wrappedSongs.size) R.string.deselect_all else R.string.select_all)
                         )
                     }
 
@@ -657,7 +657,7 @@ fun AutoPlaylistScreen(
                     ) {
                         Icon(
                             painter = painterResource(R.drawable.more_vert),
-                            contentDescription = null
+                            contentDescription = stringResource(R.string.more_options)
                         )
                     }
                 } else if (!isSearching) {
@@ -666,7 +666,7 @@ fun AutoPlaylistScreen(
                     ) {
                         Icon(
                             painter = painterResource(R.drawable.search),
-                            contentDescription = null
+                            contentDescription = stringResource(R.string.search)
                         )
                     }
                 }

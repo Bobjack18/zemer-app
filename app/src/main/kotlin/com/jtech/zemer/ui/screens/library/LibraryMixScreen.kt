@@ -341,7 +341,7 @@ fun LibraryMixScreen(
                             LibraryViewType.GRID -> R.drawable.grid_view
                         },
                     ),
-                    contentDescription = null,
+                    contentDescription = stringResource(R.string.change_view_type),
                 )
             }
         }
@@ -469,7 +469,7 @@ fun LibraryMixScreen(
                                         ) {
                                             Icon(
                                                 painter = painterResource(R.drawable.more_vert),
-                                                contentDescription = null,
+                                                contentDescription = stringResource(R.string.more_options),
                                             )
                                         }
                                     },
@@ -512,7 +512,7 @@ fun LibraryMixScreen(
                                         ) {
                                             Icon(
                                                 painter = painterResource(R.drawable.more_vert),
-                                                contentDescription = null,
+                                                contentDescription = stringResource(R.string.more_options),
                                             )
                                         }
                                     },
@@ -557,7 +557,7 @@ fun LibraryMixScreen(
                                         ) {
                                             Icon(
                                                 painter = painterResource(R.drawable.more_vert),
-                                                contentDescription = null,
+                                                contentDescription = stringResource(R.string.more_options),
                                             )
                                         }
                                     },

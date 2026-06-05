@@ -498,7 +498,7 @@ fun LyricsScreen(
                                 IconButton(onClick = { player.seekToPrevious() }, modifier = Modifier.size(48.dp)) {
                                     Icon(
                                         painter = painterResource(R.drawable.skip_previous),
-                                        contentDescription = null,
+                                        contentDescription = stringResource(R.string.previous),
                                         tint = textBackgroundColor,
                                         modifier = Modifier.size(28.dp)
                                     )
@@ -529,7 +529,7 @@ fun LyricsScreen(
                                 IconButton(onClick = { player.seekToNext() }, modifier = Modifier.size(48.dp)) {
                                     Icon(
                                         painter = painterResource(R.drawable.skip_next),
-                                        contentDescription = null,
+                                        contentDescription = stringResource(R.string.next),
                                         tint = textBackgroundColor,
                                         modifier = Modifier.size(28.dp)
                                     )
@@ -740,7 +740,7 @@ fun LyricsScreen(
                             IconButton(onClick = { player.seekToPrevious() }, modifier = Modifier.size(48.dp)) {
                                 Icon(
                                     painter = painterResource(R.drawable.skip_previous),
-                                    contentDescription = null,
+                                    contentDescription = stringResource(R.string.previous),
                                     tint = textBackgroundColor,
                                     modifier = Modifier.size(28.dp)
                                 )
@@ -771,7 +771,7 @@ fun LyricsScreen(
                             IconButton(onClick = { player.seekToNext() }, modifier = Modifier.size(48.dp)) {
                                 Icon(
                                     painter = painterResource(R.drawable.skip_next),
-                                    contentDescription = null,
+                                    contentDescription = stringResource(R.string.next),
                                     tint = textBackgroundColor,
                                     modifier = Modifier.size(28.dp)
                                 )

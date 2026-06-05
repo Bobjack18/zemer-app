@@ -17,6 +17,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
 import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
@@ -57,7 +58,7 @@ fun LibraryArtistListItem(
         ) {
             Icon(
                 painter = painterResource(R.drawable.more_vert),
-                contentDescription = null
+                contentDescription = stringResource(R.string.more_options)
             )
         }
     },
@@ -118,7 +119,7 @@ fun WhitelistedArtistListItem(
         ) {
             Icon(
                 painter = painterResource(R.drawable.more_vert),
-                contentDescription = null
+                contentDescription = stringResource(R.string.more_options)
             )
         }
     },
@@ -237,7 +238,7 @@ fun LibraryAlbumListItem(
         ) {
             Icon(
                 painter = painterResource(R.drawable.more_vert),
-                contentDescription = null
+                contentDescription = stringResource(R.string.more_options)
             )
         }
     },
@@ -334,7 +335,7 @@ fun LibraryPlaylistListItem(
         ) {
             Icon(
                 painter = painterResource(R.drawable.more_vert),
-                contentDescription = null
+                contentDescription = stringResource(R.string.more_options)
             )
         }
     },

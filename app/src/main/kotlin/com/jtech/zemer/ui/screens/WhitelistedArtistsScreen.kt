@@ -176,7 +176,7 @@ fun WhitelistedArtistsScreen(
                     IconButton(onClick = { viewModel.searchQuery.value = "" }) {
                         Icon(
                             painter = painterResource(R.drawable.close),
-                            contentDescription = null,
+                            contentDescription = stringResource(R.string.close),
                             tint = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
@@ -239,7 +239,7 @@ fun WhitelistedArtistsScreen(
                             LibraryViewType.GRID -> R.drawable.grid_view
                         },
                     ),
-                    contentDescription = null,
+                    contentDescription = stringResource(R.string.change_view_type),
                 )
             }
         }

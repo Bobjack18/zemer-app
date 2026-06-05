@@ -278,7 +278,9 @@ fun AlbumMenu(
                 Icon(
                     painter = painterResource(if (album.album.bookmarkedAt != null) R.drawable.favorite else R.drawable.favorite_border),
                     tint = if (album.album.bookmarkedAt != null) MaterialTheme.colorScheme.error else LocalContentColor.current,
-                    contentDescription = null,
+                    contentDescription = stringResource(
+                        if (album.album.bookmarkedAt != null) R.string.action_remove_like else R.string.action_like
+                    ),
                 )
             }
         },

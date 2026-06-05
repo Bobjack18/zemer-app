@@ -173,7 +173,9 @@ fun YouTubePlaylistMenu(
                     Icon(
                         painter = painterResource(if (dbPlaylist?.playlist?.bookmarkedAt != null) R.drawable.favorite else R.drawable.favorite_border),
                         tint = if (dbPlaylist?.playlist?.bookmarkedAt != null) MaterialTheme.colorScheme.error else LocalContentColor.current,
-                        contentDescription = null
+                        contentDescription = stringResource(
+                            if (dbPlaylist?.playlist?.bookmarkedAt != null) R.string.action_remove_like else R.string.action_like
+                        )
                     )
                 }
             }

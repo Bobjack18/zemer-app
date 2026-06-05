@@ -123,7 +123,7 @@ fun ContributeScreen(
                     ) {
                         Icon(
                             painter = painterResource(R.drawable.arrow_back),
-                            contentDescription = null
+                            contentDescription = stringResource(R.string.back_button_desc)
                         )
                     }
                 },

@@ -106,6 +106,8 @@ fun SongMenu(
     navController: NavController,
     playlistSong: PlaylistSong? = null,
     playlistBrowseId: String? = null,
+    onMoveUp: (() -> Unit)? = null,
+    onMoveDown: (() -> Unit)? = null,
     onDismiss: () -> Unit,
     isFromCache: Boolean = false,
 ) {
@@ -430,7 +432,9 @@ fun SongMenu(
                 Icon(
                     painter = painterResource(if (song.song.liked) R.drawable.favorite else R.drawable.favorite_border),
                     tint = if (song.song.liked) MaterialTheme.colorScheme.error else LocalContentColor.current,
-                    contentDescription = null,
+                    contentDescription = stringResource(
+                        if (song.song.liked) R.string.action_remove_like else R.string.action_like
+                    ),
                 )
             }
         },
@@ -585,6 +589,40 @@ fun SongMenu(
                     }
                 }
             )
+        }
+        if (onMoveUp != null) {
+            item {
+                ListItem(
+                    headlineContent = { Text(text = stringResource(R.string.move_up)) },
+                    leadingContent = {
+                        Icon(
+                            painter = painterResource(R.drawable.arrow_upward),
+                            contentDescription = null,
+                        )
+                    },
+                    modifier = Modifier.clickable {
+                        onMoveUp()
+                        onDismiss()
+                    }
+                )
+            }
+        }
+        if (onMoveDown != null) {
+            item {
+                ListItem(
+                    headlineContent = { Text(text = stringResource(R.string.move_down)) },
+                    leadingContent = {
+                        Icon(
+                            painter = painterResource(R.drawable.arrow_downward),
+                            contentDescription = null,
+                        )
+                    },
+                    modifier = Modifier.clickable {
+                        onMoveDown()
+                        onDismiss()
+                    }
+                )
+            }
         }
         item {
             ListItem(

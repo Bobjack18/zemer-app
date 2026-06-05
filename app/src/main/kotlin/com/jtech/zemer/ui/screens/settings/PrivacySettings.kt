@@ -198,7 +198,7 @@ fun PrivacySettings(
             ) {
                 Icon(
                     painterResource(R.drawable.arrow_back),
-                    contentDescription = null,
+                    contentDescription = stringResource(R.string.back_button_desc),
                     modifier = Modifier
                         .focusRequester(backFocus)
                         .focusProperties { down = firstFocus }

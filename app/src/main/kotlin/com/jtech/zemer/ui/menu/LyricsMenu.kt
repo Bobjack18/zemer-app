@@ -281,7 +281,7 @@ fun LyricsMenu(
                     ) {
                         Icon(
                             painter = painterResource(if (index == expandedItemIndex) R.drawable.expand_less else R.drawable.expand_more),
-                            contentDescription = null,
+                            contentDescription = stringResource(R.string.collapse),
                         )
                     }
                 }

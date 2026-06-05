@@ -426,6 +426,30 @@ fun LocalPlaylistScreen(
         }
     }
 
+    // D-pad reorder path (parity with the touch drag handle): mirrors the drag-end commit.
+    val moveSong: (Int, Int) -> Unit = { from, to ->
+        if (from != to && from in mutableSongs.indices && to in mutableSongs.indices) {
+            mutableSongs.move(from, to)
+            database.transaction {
+                move(viewModel.playlistId, from, to)
+            }
+            if (viewModel.playlist.value?.playlist?.browseId != null) {
+                viewModel.viewModelScope.launch(Dispatchers.IO) {
+                    val playlistSongMap = database.playlistSongMaps(viewModel.playlistId, 0)
+                    val successorIndex = if (from > to) to else to + 1
+                    val successorSetVideoId = playlistSongMap.getOrNull(successorIndex)?.setVideoId
+                    playlistSongMap.getOrNull(from)?.setVideoId?.let { setVideoId ->
+                        YouTube.moveSongPlaylist(
+                            viewModel.playlist.value?.playlist?.browseId!!,
+                            setVideoId,
+                            successorSetVideoId
+                        )
+                    }
+                }
+            }
+        }
+    }
+
     val showTopBarTitle by remember {
         derivedStateOf {
             lazyListState.firstVisibleItemIndex > 0
@@ -493,7 +517,7 @@ fun LocalPlaylistScreen(
                                 ) {
                                     Icon(
                                         painter = painterResource(if (locked) R.drawable.lock else R.drawable.lock_open),
-                                        contentDescription = null,
+                                        contentDescription = stringResource(if (locked) R.string.unlock_queue else R.string.lock_queue),
                                     )
                                 }
                             }
@@ -571,6 +595,12 @@ fun LocalPlaylistScreen(
                                                     playlistSong = song,
                                                     playlistBrowseId = playlist?.playlist?.browseId,
                                                     navController = navController,
+                                                    onMoveUp = if (sortType == PlaylistSongSortType.CUSTOM && !locked && !isSearching && editable && index > 0) {
+                                                        { moveSong(index, index - 1) }
+                                                    } else null,
+                                                    onMoveDown = if (sortType == PlaylistSongSortType.CUSTOM && !locked && !isSearching && editable && index < mutableSongs.lastIndex) {
+                                                        { moveSong(index, index + 1) }
+                                                    } else null,
                                                     onDismiss = menuState::dismiss,
                                                 )
                                             }
@@ -578,7 +608,7 @@ fun LocalPlaylistScreen(
                                     ) {
                                         Icon(
                                             painter = painterResource(R.drawable.more_vert),
-                                            contentDescription = null,
+                                            contentDescription = stringResource(R.string.more_options),
                                         )
                                     }
 
@@ -705,7 +735,7 @@ fun LocalPlaylistScreen(
                                     ) {
                                         Icon(
                                             painter = painterResource(R.drawable.more_vert),
-                                            contentDescription = null,
+                                            contentDescription = stringResource(R.string.more_options),
                                         )
                                     }
                                     if (sortType == PlaylistSongSortType.CUSTOM && !locked && !selection && !isSearching && editable) {
@@ -841,7 +871,7 @@ fun LocalPlaylistScreen(
                         painter = painterResource(
                             if (selection) R.drawable.close else R.drawable.arrow_back
                         ),
-                        contentDescription = null
+                        contentDescription = stringResource(if (selection) R.string.close else R.string.back_button_desc)
                     )
                 }
             },
@@ -861,7 +891,7 @@ fun LocalPlaylistScreen(
                             painter = painterResource(
                                 if (count == wrappedSongs.size) R.drawable.deselect else R.drawable.select_all
                             ),
-                            contentDescription = null
+                            contentDescription = stringResource(if (count == wrappedSongs.size) R.string.deselect_all else R.string.select_all)
                         )
                     }
 
@@ -884,7 +914,7 @@ fun LocalPlaylistScreen(
                     ) {
                         Icon(
                             painter = painterResource(R.drawable.more_vert),
-                            contentDescription = null
+                            contentDescription = stringResource(R.string.more_options)
                         )
                     }
                 } else if (!isSearching) {
@@ -893,7 +923,7 @@ fun LocalPlaylistScreen(
                     ) {
                         Icon(
                             painter = painterResource(R.drawable.search),
-                            contentDescription = null
+                            contentDescription = stringResource(R.string.search)
                         )
                     }
                 }
@@ -1301,7 +1331,7 @@ fun LocalPlaylistHeader(
                         ) {
                             Icon(
                                 painter = painterResource(R.drawable.delete),
-                                contentDescription = null,
+                                contentDescription = stringResource(R.string.delete),
                                 modifier = Modifier.size(24.dp)
                             )
                         }
@@ -1316,7 +1346,7 @@ fun LocalPlaylistHeader(
                         ) {
                             Icon(
                                 painter = painterResource(if (liked) R.drawable.favorite else R.drawable.favorite_border),
-                                contentDescription = null,
+                                contentDescription = stringResource(if (liked) R.string.action_remove_like else R.string.action_like),
                                 tint = if (liked) MaterialTheme.colorScheme.error else LocalContentColor.current,
                                 modifier = Modifier.size(24.dp)
                             )
@@ -1330,7 +1360,7 @@ fun LocalPlaylistHeader(
                         ) {
                             Icon(
                                 painter = painterResource(R.drawable.edit),
-                                contentDescription = null,
+                                contentDescription = stringResource(R.string.edit),
                                 modifier = Modifier.size(24.dp)
                             )
                         }
@@ -1374,7 +1404,7 @@ fun LocalPlaylistHeader(
                         ) {
                             Icon(
                                 painter = painterResource(R.drawable.sync),
-                                contentDescription = null,
+                                contentDescription = stringResource(R.string.action_sync),
                                 modifier = Modifier.size(24.dp)
                             )
                         }
@@ -1388,7 +1418,7 @@ fun LocalPlaylistHeader(
                             ) {
                                 Icon(
                                     painter = painterResource(R.drawable.offline),
-                                    contentDescription = null,
+                                    contentDescription = stringResource(R.string.offline),
                                     modifier = Modifier.size(24.dp)
                                 )
                             }
@@ -1423,7 +1453,7 @@ fun LocalPlaylistHeader(
                             ) {
                                 Icon(
                                     painter = painterResource(R.drawable.download),
-                                    contentDescription = null,
+                                    contentDescription = stringResource(R.string.action_download),
                                     modifier = Modifier.size(24.dp)
                                 )
                             }
@@ -1440,7 +1470,7 @@ fun LocalPlaylistHeader(
                     ) {
                         Icon(
                             painter = painterResource(R.drawable.queue_music),
-                            contentDescription = null,
+                            contentDescription = stringResource(R.string.add_to_queue),
                             modifier = Modifier.size(24.dp)
                         )
                     }

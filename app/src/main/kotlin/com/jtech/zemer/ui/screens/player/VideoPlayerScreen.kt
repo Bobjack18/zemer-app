@@ -24,7 +24,13 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.input.key.KeyEventType
+import androidx.compose.ui.input.key.onPreviewKeyEvent
+import androidx.compose.ui.input.key.type
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -585,12 +591,25 @@ fun VideoPlayerScreen(
         navController.popBackStack()
     }
 
+    // Keep playback controls reachable by D-pad: any key reveals them and resets the hide timer,
+    // and focus parks on the root while they are hidden so a key can always summon them back.
+    val rootFocusRequester = remember { FocusRequester() }
+    LaunchedEffect(showControls) {
+        if (!showControls) runCatching { rootFocusRequester.requestFocus() }
+    }
+
     Scaffold(containerColor = AppColors.mediaOverlay(1f)) { innerPadding ->
         Box(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
                 .background(AppColors.mediaOverlay(1f))
+                .focusRequester(rootFocusRequester)
+                .focusable()
+                .onPreviewKeyEvent { event ->
+                    if (event.type == KeyEventType.KeyDown) markInteraction()
+                    false
+                }
         ) {
             when {
                 isLoading -> {

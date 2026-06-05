@@ -351,11 +351,13 @@ fun YouTubeSongMenu(
                     }  
                 },  
             ) {  
-                Icon(  
-                    painter = painterResource(if (librarySong?.song?.liked == true) R.drawable.favorite else R.drawable.favorite_border),  
-                    tint = if (librarySong?.song?.liked == true) MaterialTheme.colorScheme.error else LocalContentColor.current,  
-                    contentDescription = null,  
-                )  
+                Icon(
+                    painter = painterResource(if (librarySong?.song?.liked == true) R.drawable.favorite else R.drawable.favorite_border),
+                    tint = if (librarySong?.song?.liked == true) MaterialTheme.colorScheme.error else LocalContentColor.current,
+                    contentDescription = stringResource(
+                        if (librarySong?.song?.liked == true) R.string.action_remove_like else R.string.action_like
+                    ),
+                )
             }  
         },  
     )  

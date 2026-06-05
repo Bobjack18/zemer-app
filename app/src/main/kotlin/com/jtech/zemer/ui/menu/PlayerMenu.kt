@@ -714,7 +714,7 @@ fun <T> ValueAdjuster(
         ) {
             Icon(
                 painter = painterResource(R.drawable.remove),
-                contentDescription = null,
+                contentDescription = stringResource(R.string.decrease),
             )
         }
 
@@ -733,7 +733,7 @@ fun <T> ValueAdjuster(
         ) {
             Icon(
                 painter = painterResource(R.drawable.add),
-                contentDescription = null,
+                contentDescription = stringResource(R.string.increase),
             )
         }
     }

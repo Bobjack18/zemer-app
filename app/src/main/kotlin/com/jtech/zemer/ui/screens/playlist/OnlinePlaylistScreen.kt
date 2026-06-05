@@ -374,7 +374,7 @@ fun OnlinePlaylistScreen(
                                                         painter = painterResource(
                                                             if (dbPlaylist?.playlist?.bookmarkedAt != null) R.drawable.favorite else R.drawable.favorite_border
                                                         ),
-                                                        contentDescription = null,
+                                                        contentDescription = stringResource(if (dbPlaylist?.playlist?.bookmarkedAt != null) R.string.action_remove_like else R.string.action_like),
                                                         tint = if (dbPlaylist?.playlist?.bookmarkedAt != null) MaterialTheme.colorScheme.error else LocalContentColor.current
                                                     )
                                                 }
@@ -396,7 +396,7 @@ fun OnlinePlaylistScreen(
                                             ) {
                                                 Icon(
                                                     painter = painterResource(R.drawable.more_vert),
-                                                    contentDescription = null,
+                                                    contentDescription = stringResource(R.string.more_options),
                                                 )
                                             }
                                         }
@@ -502,7 +502,7 @@ fun OnlinePlaylistScreen(
                                 ) {
                                     Icon(
                                         painter = painterResource(R.drawable.more_vert),
-                                        contentDescription = null,
+                                        contentDescription = stringResource(R.string.more_options),
                                     )
                                 }
                             },
@@ -663,7 +663,7 @@ fun OnlinePlaylistScreen(
                         painter = painterResource(
                             if (selection) R.drawable.close else R.drawable.arrow_back
                         ),
-                        contentDescription = null
+                        contentDescription = stringResource(if (selection) R.string.close else R.string.back_button_desc)
                     )
                 }
             },
@@ -683,7 +683,7 @@ fun OnlinePlaylistScreen(
                             painter = painterResource(
                                 if (count == wrappedSongs.size) R.drawable.deselect else R.drawable.select_all
                             ),
-                            contentDescription = null
+                            contentDescription = stringResource(if (count == wrappedSongs.size) R.string.deselect_all else R.string.select_all)
                         )
                     }
                     IconButton(
@@ -701,7 +701,7 @@ fun OnlinePlaylistScreen(
                     ) {
                         Icon(
                             painter = painterResource(R.drawable.more_vert),
-                            contentDescription = null
+                            contentDescription = stringResource(R.string.more_options)
                         )
                     }
                 } else {
@@ -711,7 +711,7 @@ fun OnlinePlaylistScreen(
                         ) {
                             Icon(
                                 painter = painterResource(R.drawable.search),
-                                contentDescription = null
+                                contentDescription = stringResource(R.string.search)
                             )
                         }
                     }

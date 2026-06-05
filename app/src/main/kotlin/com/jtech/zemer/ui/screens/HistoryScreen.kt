@@ -251,7 +251,7 @@ fun HistoryScreen(
                                 ) {
                                     Icon(
                                         painter = painterResource(R.drawable.more_vert),
-                                        contentDescription = null
+                                        contentDescription = stringResource(R.string.more_options)
                                     )
                                 }
                             },
@@ -326,7 +326,7 @@ fun HistoryScreen(
                                 ) {
                                     Icon(
                                         painter = painterResource(R.drawable.more_vert),
-                                        contentDescription = null
+                                        contentDescription = stringResource(R.string.more_options)
                                     )
                                 }
                             },
@@ -461,7 +461,7 @@ fun HistoryScreen(
                     painter = painterResource(
                         if (selection) R.drawable.close else R.drawable.arrow_back
                     ),
-                    contentDescription = null
+                    contentDescription = stringResource(if (selection) R.string.close else R.string.back_button_desc)
                 )
             }
         },
@@ -481,7 +481,7 @@ fun HistoryScreen(
                         painter = painterResource(
                             if (count == allWrappedItems.size) R.drawable.deselect else R.drawable.select_all
                         ),
-                        contentDescription = null
+                        contentDescription = stringResource(if (count == allWrappedItems.size) R.string.deselect_all else R.string.select_all)
                     )
                 }
                 IconButton(
@@ -500,7 +500,7 @@ fun HistoryScreen(
                 ) {
                     Icon(
                         painter = painterResource(R.drawable.more_vert),
-                        contentDescription = null
+                        contentDescription = stringResource(R.string.more_options)
                     )
                 }
             } else if (!isSearching) {
@@ -509,7 +509,7 @@ fun HistoryScreen(
                 ) {
                     Icon(
                         painter = painterResource(R.drawable.search),
-                        contentDescription = null
+                        contentDescription = stringResource(R.string.search)
                     )
                 }
             }

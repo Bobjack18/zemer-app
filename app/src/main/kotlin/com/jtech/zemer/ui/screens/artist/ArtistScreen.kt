@@ -498,7 +498,7 @@ fun ArtistScreen(
                                     ) {
                                         Icon(
                                             painter = painterResource(R.drawable.more_vert),
-                                            contentDescription = null,
+                                            contentDescription = stringResource(R.string.more_options),
                                         )
                                     }
                                 },
@@ -658,7 +658,7 @@ fun ArtistScreen(
                                         ) {
                                             Icon(
                                                 painter = painterResource(R.drawable.more_vert),
-                                                contentDescription = null,
+                                                contentDescription = stringResource(R.string.more_options),
                                             )
                                         }
                                     },
@@ -823,7 +823,7 @@ fun ArtistScreen(
             ) {
                 Icon(
                     painterResource(R.drawable.arrow_back),
-                    contentDescription = null,
+                    contentDescription = stringResource(R.string.back_button_desc),
                     modifier = Modifier
                         .focusRequester(backFocus)
                         .focusProperties { down = firstFocus }
@@ -843,7 +843,7 @@ fun ArtistScreen(
             ) {
                 Icon(
                     painterResource(R.drawable.link),
-                    contentDescription = null,
+                    contentDescription = stringResource(R.string.copy_link),
                 )
             }
         },

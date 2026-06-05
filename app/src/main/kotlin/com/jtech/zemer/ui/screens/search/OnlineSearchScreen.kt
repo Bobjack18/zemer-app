@@ -54,6 +54,7 @@ import androidx.compose.ui.input.key.onKeyEvent
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextOverflow
@@ -254,7 +255,7 @@ fun OnlineSearchScreen(
                     ) {
                         Icon(
                             painter = painterResource(R.drawable.more_vert),
-                            contentDescription = null
+                            contentDescription = stringResource(R.string.more_options)
                         )
                     }
                 },
@@ -440,7 +441,7 @@ fun SuggestionItem(
             ) {
                 Icon(
                     painter = painterResource(R.drawable.close),
-                    contentDescription = null,
+                    contentDescription = stringResource(R.string.close),
                 )
             }
         }
@@ -451,7 +452,7 @@ fun SuggestionItem(
         ) {
             Icon(
                 painter = painterResource(R.drawable.arrow_top_left),
-                contentDescription = null,
+                contentDescription = stringResource(R.string.use_suggestion),
             )
         }
     }

@@ -125,6 +125,14 @@ fun AndroidAutoSettings(
         onSectionsChange(serializeSections(sections))
     }
 
+    // D-pad reorder path (parity with the touch drag handle): mirrors the drag-end commit.
+    fun moveSection(from: Int, to: Int) {
+        if (from != to && from in sections.indices && to in sections.indices) {
+            sections = sections.toMutableList().apply { add(to, removeAt(from)) }
+            onSectionsChange(serializeSections(sections))
+        }
+    }
+
     val lazyListState = rememberLazyListState()
     val reorderableState = rememberReorderableLazyListState(lazyListState) { from, to ->
         val fromIdx = sections.indexOfFirst { it.first.id == from.key }
@@ -169,7 +177,28 @@ fun AndroidAutoSettings(
                     icon = { Icon(painterResource(section.iconRes()), contentDescription = null) },
                     title = { Text(section.label()) },
                     trailingContent = {
+                        val idx = sections.indexOfFirst { it.first.id == section.id }
                         Row(verticalAlignment = Alignment.CenterVertically) {
+                            IconButton(
+                                onClick = { moveSection(idx, idx - 1) },
+                                onLongClick = { },
+                                enabled = idx > 0,
+                            ) {
+                                Icon(
+                                    painter = painterResource(R.drawable.arrow_upward),
+                                    contentDescription = stringResource(R.string.move_up),
+                                )
+                            }
+                            IconButton(
+                                onClick = { moveSection(idx, idx + 1) },
+                                onLongClick = { },
+                                enabled = idx >= 0 && idx < sections.lastIndex,
+                            ) {
+                                Icon(
+                                    painter = painterResource(R.drawable.arrow_downward),
+                                    contentDescription = stringResource(R.string.move_down),
+                                )
+                            }
                             Icon(
                                 painter = painterResource(R.drawable.drag_handle),
                                 contentDescription = null,
@@ -253,7 +282,7 @@ fun AndroidAutoSettings(
                 onClick = navController::navigateUp,
                 onLongClick = navController::backToMain,
             ) {
-                Icon(painterResource(R.drawable.arrow_back), contentDescription = null)
+                Icon(painterResource(R.drawable.arrow_back), contentDescription = stringResource(R.string.back_button_desc))
             }
         },
         scrollBehavior = scrollBehavior,
