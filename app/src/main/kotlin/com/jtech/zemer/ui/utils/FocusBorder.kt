@@ -35,3 +35,23 @@ fun Modifier.dpadFocusBorder(
         .onFocusChanged { focused = it.isFocused }
         .focusable()
 }
+
+/**
+ * Visual-only sibling of [dpadFocusBorder] for elements that are ALREADY focusable (Material
+ * buttons, `clickable` rows): draws the same animated focus border while focus is on the element
+ * or any of its children (`hasFocus`), but adds NO `focusable()` of its own — so it never creates
+ * a second D-pad stop around an inner control.
+ */
+fun Modifier.dpadFocusRing(
+    color: Color,
+    shape: Shape,
+    width: Dp = 3.dp,
+): Modifier = composed {
+    var focused by remember { mutableStateOf(false) }
+    val borderColor by animateColorAsState(
+        targetValue = if (focused) color else Color.Transparent,
+        label = "dpad_focus_ring",
+    )
+    onFocusChanged { focused = it.hasFocus }
+        .border(width, borderColor, shape)
+}

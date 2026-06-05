@@ -99,14 +99,13 @@ check("Material3SettingsGroup.kt stays deleted", !hasOldGroup);
 
 // 7) No hand-rolled D-pad focus border outside the shared layer — custom focusables use
 //    Modifier.dpadFocusBorder (utils/FocusBorder.kt). Shared components own their internal focus
-//    visuals (border + background variants). Documented exceptions:
-//    - AlbumScreen track row (1): border driven by the *inner item's* focus — dpadFocusBorder
-//      would add a second focus target.
+//    visuals (border + background variants). dpadFocusRing (visual-only, hasFocus-driven) is the
+//    variant for already-focusable controls (Material buttons, clickable rows). Documented exception:
 //    - Player title + artist (2): their exact modifier order (border -> padding -> focusable ->
 //      onFocusChanged around clickable children) is load-bearing; bundling into dpadFocusBorder
 //      broke focus initialization for the whole player surface (bisect-verified on-device).
 const FOCUS_BORDER_IDIOM = /animateColorAsState\s*\(\s*targetValue\s*=\s*if\s*\([^)]*[fF]ocused[^)]*\)[^\n]*\n?[^\n]*else\s+Color\.Transparent/g;
-const FOCUS_BORDER_ALLOWLIST = { "screens/AlbumScreen.kt": 1, "player/Player.kt": 2 };
+const FOCUS_BORDER_ALLOWLIST = { "player/Player.kt": 2 };
 let strayFocusBorders = [];
 for (const p of FILES) {
   if (p.includes(`${UI}/component/`) || p.endsWith("utils/FocusBorder.kt")) continue;

@@ -24,6 +24,7 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.background
+import androidx.compose.foundation.focusGroup
 import androidx.compose.foundation.focusable
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
@@ -1759,7 +1760,13 @@ class MainActivity : ComponentActivity() {
                                         .weight(1f)
                                         .focusRequester(contentFocusRequester)
                                         .focusProperties { up = topPlayFocusRequester }
-                                        .focusable()
+                                        // focusGroup, NOT focusable(): a focusable here is a
+                                        // full-screen invisible focus target that traps D-pad focus
+                                        // (focus lands on it with zero visual feedback and the real
+                                        // screen content is skipped). As a group, requesting
+                                        // contentFocusRequester forwards focus to the screen's first
+                                        // focusable child instead.
+                                        .focusGroup()
                                 ) {
                                     // NavHost with animations
                                     NavHost(

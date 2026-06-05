@@ -5,6 +5,7 @@ import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.Arrangement
@@ -81,7 +82,9 @@ import com.jtech.zemer.constants.ThumbnailCornerRadius
 import com.jtech.zemer.db.entities.Album
 import com.jtech.zemer.extensions.togglePlayPause
 import com.jtech.zemer.playback.queues.LocalAlbumRadio
-import com.jtech.zemer.ui.utils.dpadFocusBorder
+import com.jtech.zemer.ui.component.SelectArtistDialog
+import com.jtech.zemer.ui.component.SelectableArtist
+import com.jtech.zemer.ui.utils.dpadFocusRing
 import com.jtech.zemer.ui.component.AutoResizeText
 import com.jtech.zemer.ui.component.FontSizeRange
 import com.jtech.zemer.ui.component.IconButton
@@ -143,9 +146,6 @@ fun AlbumScreen(
     var downloadState by remember {
         mutableIntStateOf(Download.STATE_STOPPED)
     }
-
-    // Focus state for track items (read by each row's border, written by the row's inner item focus)
-    val trackFocusStates = remember { mutableMapOf<String, Boolean>() }
 
     // Focus requesters to skip player
     val backButtonFocusRequester = remember { FocusRequester() }
@@ -209,10 +209,28 @@ fun AlbumScreen(
                                 fontSizeRange = FontSizeRange(16.sp, 22.sp),
                             )
 
+                            var showSelectArtistDialog by remember { mutableStateOf(false) }
+                            if (showSelectArtistDialog) {
+                                SelectArtistDialog(
+                                    artists = albumWithSongs.artists.map { SelectableArtist(it.id, it.name, it.thumbnailUrl) },
+                                    onDismiss = { showSelectArtistDialog = false },
+                                ) { artistId ->
+                                    navController.navigate("artist/$artistId")
+                                    showSelectArtistDialog = false
+                                }
+                            }
                             Box(
                                 modifier = Modifier
                                     .focusRequester(firstHeaderItemFocusRequester)
-                                    .dpadFocusBorder(MaterialTheme.colorScheme.primary, MaterialTheme.shapes.extraSmall, 3.dp)
+                                    .dpadFocusRing(MaterialTheme.colorScheme.primary, MaterialTheme.shapes.extraSmall, 2.dp)
+                                    .clickable {
+                                        val artists = albumWithSongs.artists
+                                        if (artists.size == 1) {
+                                            navController.navigate("artist/${artists.first().id}")
+                                        } else {
+                                            showSelectArtistDialog = true
+                                        }
+                                    }
                                     .padding(4.dp)
                             ) {
                                 Text(buildAnnotatedString {
@@ -246,11 +264,9 @@ fun AlbumScreen(
                             }
 
                             Row {
-                                Box(
-                                    modifier = Modifier
-                                        .dpadFocusBorder(MaterialTheme.colorScheme.primary, MaterialTheme.shapes.extraSmall, 3.dp)
-                                ) {
+                                Box {
                                     IconButton(
+                                        modifier = Modifier.dpadFocusRing(MaterialTheme.colorScheme.primary, MaterialTheme.shapes.extraSmall),
                                         onClick = {
                                             database.query {
                                                 update(albumWithSongs.album.toggleLike())
@@ -284,11 +300,9 @@ fun AlbumScreen(
 
                                 when (downloadState) {
                                     Download.STATE_COMPLETED -> {
-                                        Box(
-                                            modifier = Modifier
-                                                .dpadFocusBorder(MaterialTheme.colorScheme.primary, MaterialTheme.shapes.extraSmall, 3.dp)
-                                        ) {
+                                        Box {
                                             IconButton(
+                                                modifier = Modifier.dpadFocusRing(MaterialTheme.colorScheme.primary, MaterialTheme.shapes.extraSmall),
                                                 onClick = {
                                                     albumWithSongs.songs.forEach { song ->
                                                         coroutineScope.launch {
@@ -306,11 +320,9 @@ fun AlbumScreen(
                                     }
 
                                     Download.STATE_DOWNLOADING -> {
-                                        Box(
-                                            modifier = Modifier
-                                                .dpadFocusBorder(MaterialTheme.colorScheme.primary, MaterialTheme.shapes.extraSmall, 3.dp)
-                                        ) {
+                                        Box {
                                             IconButton(
+                                                modifier = Modifier.dpadFocusRing(MaterialTheme.colorScheme.primary, MaterialTheme.shapes.extraSmall),
                                                 onClick = {
                                                     albumWithSongs.songs.forEach { song ->
                                                         coroutineScope.launch {
@@ -328,11 +340,9 @@ fun AlbumScreen(
                                     }
 
                                     else -> {
-                                        Box(
-                                            modifier = Modifier
-                                                .dpadFocusBorder(MaterialTheme.colorScheme.primary, MaterialTheme.shapes.extraSmall, 3.dp)
-                                        ) {
+                                        Box {
                                             IconButton(
+                                                modifier = Modifier.dpadFocusRing(MaterialTheme.colorScheme.primary, MaterialTheme.shapes.extraSmall),
                                                 onClick = {
                                                     albumWithSongs.songs.forEach { song ->
                                                         downloadUtil.downloadToMediaStore(song)
@@ -348,11 +358,9 @@ fun AlbumScreen(
                                     }
                                 }
 
-                                Box(
-                                    modifier = Modifier
-                                        .dpadFocusBorder(MaterialTheme.colorScheme.primary, MaterialTheme.shapes.extraSmall, 3.dp)
-                                ) {
+                                Box {
                                     IconButton(
+                                        modifier = Modifier.dpadFocusRing(MaterialTheme.colorScheme.primary, MaterialTheme.shapes.extraSmall),
                                         onClick = {
                                             menuState.show {
                                                 AlbumMenu(
@@ -387,7 +395,9 @@ fun AlbumScreen(
                                 )
                             },
                             contentPadding = ButtonDefaults.ButtonWithIconContentPadding,
-                            modifier = Modifier.weight(1f),
+                            modifier = Modifier.weight(1f)
+                                .dpadFocusRing(MaterialTheme.colorScheme.primary, MaterialTheme.shapes.extraLarge)
+                                .padding(3.dp),
                         ) {
                             Icon(
                                 painter = painterResource(R.drawable.play),
@@ -408,7 +418,8 @@ fun AlbumScreen(
                                 )
                             },
                             contentPadding = ButtonDefaults.ButtonWithIconContentPadding,
-                            modifier = Modifier.weight(1f),
+                            modifier = Modifier.weight(1f)
+                                .dpadFocusRing(MaterialTheme.colorScheme.primary, MaterialTheme.shapes.extraLarge),
                         ) {
                             Icon(
                                 painter = painterResource(R.drawable.shuffle),
@@ -427,20 +438,11 @@ fun AlbumScreen(
                     items = wrappedSongs,
                     key = { _, song -> song.item.id },
                 ) { index, songWrapper ->
-                    val trackId = songWrapper.item.id
-                    val isTrackFocused = trackFocusStates[trackId] ?: false
-                    val trackBorderColor = animateColorAsState(
-                        targetValue = if (isTrackFocused) MaterialTheme.colorScheme.primary else Color.Transparent,
-                        label = "track_${trackId}_focus_border"
-                    )
-
                     Box(
                         modifier = Modifier
                             .fillMaxWidth()
                             .animateItem()
-                            .border(3.dp, trackBorderColor.value, MaterialTheme.shapes.extraSmall)
-                            .focusable()
-                            .onFocusChanged { trackFocusStates[trackId] = it.isFocused }
+                            .dpadFocusRing(MaterialTheme.colorScheme.primary, MaterialTheme.shapes.extraSmall)
                     ) {
                         SongListItem(
                             song = songWrapper.item,
@@ -567,10 +569,10 @@ fun AlbumScreen(
             Box(
                 modifier = Modifier
                     .focusRequester(backButtonFocusRequester)
-                    .dpadFocusBorder(MaterialTheme.colorScheme.primary, MaterialTheme.shapes.extraSmall, 3.dp)
                     .focusProperties { down = firstHeaderItemFocusRequester }
             ) {
                 IconButton(
+                    modifier = Modifier.dpadFocusRing(MaterialTheme.colorScheme.primary, MaterialTheme.shapes.extraSmall),
                     onClick = {
                         if (selection) {
                             selection = false
@@ -596,11 +598,9 @@ fun AlbumScreen(
         actions = {
             if (selection) {
                 val count = wrappedSongs.count { it.isSelected }
-                Box(
-                    modifier = Modifier
-                        .dpadFocusBorder(MaterialTheme.colorScheme.primary, MaterialTheme.shapes.extraSmall, 3.dp)
-                ) {
+                Box {
                     IconButton(
+                        modifier = Modifier.dpadFocusRing(MaterialTheme.colorScheme.primary, MaterialTheme.shapes.extraSmall),
                         onClick = {
                             if (count == wrappedSongs.size) {
                                 wrappedSongs.forEach { it.isSelected = false }
@@ -618,11 +618,9 @@ fun AlbumScreen(
                     }
                 }
 
-                Box(
-                    modifier = Modifier
-                        .dpadFocusBorder(MaterialTheme.colorScheme.primary, MaterialTheme.shapes.extraSmall, 3.dp)
-                ) {
+                Box {
                     IconButton(
+                        modifier = Modifier.dpadFocusRing(MaterialTheme.colorScheme.primary, MaterialTheme.shapes.extraSmall),
                         onClick = {
                             menuState.show {
                                 SelectionSongMenu(

@@ -75,6 +75,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import com.jtech.zemer.ui.utils.dpadFocusRing
 import com.jtech.zemer.viewmodels.OnboardingViewModel
 import com.airbnb.lottie.LottieProperty
 import com.airbnb.lottie.compose.LottieAnimation
@@ -359,46 +360,53 @@ private fun WelcomeScreen(
                     .fillMaxWidth()
                     .padding(bottom = 12.dp)
             ) {
+                // The agree row is one focus stop; the legal links live OUTSIDE it as siblings —
+                // focusables nested inside a focusable row are unreachable by D-pad beam search.
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(12.dp),
                     modifier = Modifier
                         .fillMaxWidth()
+                        .dpadFocusRing(MaterialTheme.colorScheme.primary, MaterialTheme.shapes.small)
                         .clickable { agreed = !agreed }
+                        .padding(6.dp)
                 ) {
                     Checkbox(checked = agreed, onCheckedChange = { agreed = it })
-                    Column(
-                        modifier = Modifier.weight(1f),
-                        verticalArrangement = Arrangement.spacedBy(6.dp)
-                    ) {
-                        Text(
-                            text = stringResource(R.string.onboarding_agree_label),
-                            style = MaterialTheme.typography.bodySmall.copy(fontWeight = FontWeight.Medium),
-                            color = MaterialTheme.colorScheme.onSurface
-                        )
-                        Row(
-                            horizontalArrangement = Arrangement.spacedBy(12.dp),
-                            modifier = Modifier.padding(top = 2.dp)
-                        ) {
-                            Text(
-                                text = stringResource(R.string.onboarding_view_tos),
-                                color = MaterialTheme.colorScheme.primary,
-                                style = MaterialTheme.typography.labelSmall,
-                                modifier = Modifier.clickable { legal = LegalKind.TOS }
-                            )
-                            Text(
-                                text = "•",
-                                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                                style = MaterialTheme.typography.labelSmall
-                            )
-                            Text(
-                                text = stringResource(R.string.onboarding_view_privacy),
-                                color = MaterialTheme.colorScheme.primary,
-                                style = MaterialTheme.typography.labelSmall,
-                                modifier = Modifier.clickable { legal = LegalKind.PRIVACY }
-                            )
-                        }
-                    }
+                    Text(
+                        text = stringResource(R.string.onboarding_agree_label),
+                        style = MaterialTheme.typography.bodySmall.copy(fontWeight = FontWeight.Medium),
+                        color = MaterialTheme.colorScheme.onSurface,
+                        modifier = Modifier.weight(1f)
+                    )
+                }
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(12.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.padding(start = 66.dp)
+                ) {
+                    Text(
+                        text = stringResource(R.string.onboarding_view_tos),
+                        color = MaterialTheme.colorScheme.primary,
+                        style = MaterialTheme.typography.labelSmall,
+                        modifier = Modifier
+                            .dpadFocusRing(MaterialTheme.colorScheme.primary, MaterialTheme.shapes.extraSmall, 2.dp)
+                            .clickable { legal = LegalKind.TOS }
+                            .padding(2.dp)
+                    )
+                    Text(
+                        text = "•",
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        style = MaterialTheme.typography.labelSmall
+                    )
+                    Text(
+                        text = stringResource(R.string.onboarding_view_privacy),
+                        color = MaterialTheme.colorScheme.primary,
+                        style = MaterialTheme.typography.labelSmall,
+                        modifier = Modifier
+                            .dpadFocusRing(MaterialTheme.colorScheme.primary, MaterialTheme.shapes.extraSmall, 2.dp)
+                            .clickable { legal = LegalKind.PRIVACY }
+                            .padding(2.dp)
+                    )
                 }
 
                 Button(
@@ -406,7 +414,9 @@ private fun WelcomeScreen(
                     enabled = agreed && isConnected && !isCheckingNetwork,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(48.dp),
+                        .height(48.dp)
+                        .dpadFocusRing(MaterialTheme.colorScheme.primary, MaterialTheme.shapes.small)
+                        .padding(3.dp),
                     shape = MaterialTheme.shapes.small
                 ) {
                     if (isCheckingNetwork) {
@@ -602,7 +612,9 @@ private fun DensityScreen(
                         enabled = isConnected && !isCheckingNetwork,
                         modifier = Modifier
                             .fillMaxWidth()
-                            .height(40.dp),
+                            .height(40.dp)
+                            .dpadFocusRing(MaterialTheme.colorScheme.primary, MaterialTheme.shapes.extraSmall)
+                            .padding(3.dp),
                         shape = MaterialTheme.shapes.extraSmall,
                         colors = ButtonDefaults.buttonColors(
                             containerColor = MaterialTheme.colorScheme.primary
@@ -622,7 +634,8 @@ private fun DensityScreen(
                     enabled = isConnected && !isCheckingNetwork,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(40.dp),
+                        .height(40.dp)
+                        .dpadFocusRing(MaterialTheme.colorScheme.primary, MaterialTheme.shapes.extraSmall),
                     shape = MaterialTheme.shapes.extraSmall,
                     border = BorderStroke(1.dp, if (isConnected && !isCheckingNetwork) MaterialTheme.colorScheme.outline else MaterialTheme.colorScheme.outline.copy(alpha = 0.3f))
                 ) {
@@ -651,6 +664,7 @@ private fun DensityScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(32.dp)
+                        .dpadFocusRing(MaterialTheme.colorScheme.primary, MaterialTheme.shapes.extraSmall)
                 ) {
                     Text(
                         text = stringResource(R.string.onboarding_back),
@@ -1142,7 +1156,8 @@ private fun ContentFiltersScreen(
                             Spacer(Modifier.height(10.dp))
                             OutlinedButton(
                                 onClick = { showSignInDialog = true },
-                                modifier = Modifier.fillMaxWidth().height(38.dp),
+                                modifier = Modifier.fillMaxWidth().height(38.dp)
+                                    .dpadFocusRing(MaterialTheme.colorScheme.primary, MaterialTheme.shapes.small),
                                 border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary),
                                 colors = ButtonDefaults.outlinedButtonColors(
                                     contentColor = MaterialTheme.colorScheme.primary
@@ -1164,7 +1179,8 @@ private fun ContentFiltersScreen(
                 ) {
                     OutlinedButton(
                         onClick = onBack,
-                        modifier = Modifier.weight(1f).height(40.dp),
+                        modifier = Modifier.weight(1f).height(40.dp)
+                            .dpadFocusRing(MaterialTheme.colorScheme.primary, MaterialTheme.shapes.small),
                         border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline),
                         colors = ButtonDefaults.outlinedButtonColors(
                             contentColor = MaterialTheme.colorScheme.onSurface
@@ -1176,7 +1192,9 @@ private fun ContentFiltersScreen(
                     Button(
                         onClick = { onSkip() },
                         enabled = isConnected && !isCheckingNetwork,
-                        modifier = Modifier.weight(2f).height(40.dp),
+                        modifier = Modifier.weight(2f).height(40.dp)
+                            .dpadFocusRing(MaterialTheme.colorScheme.primary, MaterialTheme.shapes.small)
+                            .padding(3.dp),
                         colors = ButtonDefaults.buttonColors(
                             containerColor = MaterialTheme.colorScheme.primary
                         )
@@ -1258,6 +1276,7 @@ private fun FilterOptionCard(
     Card(
         modifier = Modifier
             .fillMaxWidth()
+            .dpadFocusRing(MaterialTheme.colorScheme.primary, MaterialTheme.shapes.small)
             .border(
                 width = 1.5.dp,
                 color = MaterialTheme.colorScheme.primary.copy(alpha = 0.3f),
@@ -1542,7 +1561,9 @@ private fun PermissionsScreen(
                     enabled = requiredGranted,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(44.dp),
+                        .height(44.dp)
+                        .dpadFocusRing(MaterialTheme.colorScheme.primary, MaterialTheme.shapes.small)
+                        .padding(3.dp),
                     shape = MaterialTheme.shapes.small,
                     colors = ButtonDefaults.buttonColors(
                         containerColor = MaterialTheme.colorScheme.primary
@@ -1557,6 +1578,7 @@ private fun PermissionsScreen(
                 TextButton(
                     onClick = onBack,
                     modifier = Modifier.fillMaxWidth()
+                        .dpadFocusRing(MaterialTheme.colorScheme.primary, MaterialTheme.shapes.small)
                 ) {
                     Text(
                         text = stringResource(R.string.onboarding_back),
@@ -1585,6 +1607,7 @@ private fun PermissionCard(
     Card(
         modifier = Modifier
             .fillMaxWidth()
+            .dpadFocusRing(MaterialTheme.colorScheme.primary, MaterialTheme.shapes.small)
             .border(
                 width = 1.5.dp,
                 color = MaterialTheme.colorScheme.primary.copy(alpha = 0.3f),
@@ -1668,50 +1691,27 @@ private fun LegalOverlay(
     body: String,
     onDismiss: () -> Unit,
 ) {
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(AppColors.scrim)
-            .clickable { onDismiss() },
-        contentAlignment = Alignment.Center
-    ) {
-        Surface(
-            modifier = Modifier
-                .fillMaxWidth(0.88f)
-                .padding(20.dp),
-            shape = MaterialTheme.shapes.medium,
-            tonalElevation = 6.dp,
-            color = MaterialTheme.colorScheme.surface
-        ) {
-            Column(
-                modifier = Modifier
-                    .padding(20.dp)
-                    .verticalScroll(rememberScrollState()),
-                verticalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
-                Text(
-                    text = title,
-                    style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
-                    color = MaterialTheme.colorScheme.primary
-                )
-                Text(
-                    text = body,
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-                Button(
-                    onClick = onDismiss,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(42.dp),
-                    shape = MaterialTheme.shapes.small
-                ) {
-                    Text(
-                        text = stringResource(R.string.ok),
-                        style = MaterialTheme.typography.labelMedium
-                    )
-                }
+    // A real Dialog (not a scrim Box): the dialog window takes D-pad focus, OK is reachable,
+    // and hardware BACK dismisses — the old overlay left focus trapped on the page behind it.
+    DefaultDialog(
+        onDismiss = onDismiss,
+        title = { Text(title) },
+        buttons = {
+            TextButton(onClick = onDismiss) {
+                Text(stringResource(R.string.ok))
             }
+        },
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .verticalScroll(rememberScrollState())
+        ) {
+            Text(
+                text = body,
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
         }
     }
 }
@@ -1995,7 +1995,9 @@ private fun BottomNavSetupScreen(
                     },
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(44.dp),
+                        .height(44.dp)
+                        .dpadFocusRing(MaterialTheme.colorScheme.primary, MaterialTheme.shapes.small)
+                        .padding(3.dp),
                     shape = MaterialTheme.shapes.small,
                     colors = ButtonDefaults.buttonColors(
                         containerColor = MaterialTheme.colorScheme.primary
@@ -2010,6 +2012,7 @@ private fun BottomNavSetupScreen(
                 TextButton(
                     onClick = onBack,
                     modifier = Modifier.fillMaxWidth()
+                        .dpadFocusRing(MaterialTheme.colorScheme.primary, MaterialTheme.shapes.small)
                 ) {
                     Text(
                         text = stringResource(R.string.onboarding_back),

@@ -301,6 +301,6 @@ Every tracked non-Kotlin path outside `docs/` is listed. Text files report line 
 | `tests/results.json` | 222 lines | text `.json` |
 | `tests/retest-web.mjs` | 58 lines | text `.mjs` |
 | `tests/run.mjs` | 181 lines | text `.mjs` |
-| `tests/unification/check.mjs` | 139 lines | text `.mjs` |
+| `tests/unification/check.mjs` | 138 lines | text `.mjs` |
 | `tests/web-creator-stream.mjs` | 142 lines | text `.mjs` |
 | `tests/web-remix-stream.mjs` | 277 lines | text `.mjs` |

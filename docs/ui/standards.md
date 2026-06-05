@@ -49,7 +49,12 @@ Use these; do not hand-roll equivalents.
 - **Custom focusables:** a bespoke focusable control (not built on the shared components) gets its
   focus ring via **`Modifier.dpadFocusBorder(color, shape, width)`** (`ui/utils/FocusBorder.kt`) —
   never a hand-rolled `remember`+`animateColorAsState`+`border`+`focusable`+`onFocusChanged` chain.
-  Two verified exceptions live with explanatory comments (see "D-pad and focus").
+  For controls that are ALREADY focusable (Material buttons, `clickable` rows/cards), use the
+  visual-only **`Modifier.dpadFocusRing(color, shape, width)`** — it observes `hasFocus` (self or
+  descendants) and adds no second focus stop. On a filled button, follow the ring with `.padding(3.dp)`
+  so it reads against the fill. A ring on a container lights up when any child focuses (e.g. a card
+  whose only focusable is its inner `Switch`). Verified exceptions live with explanatory comments
+  (see "D-pad and focus").
 - **App bar:** Material3 `TopAppBar` + the app's `ui/component/IconButton` (which carries a visible
   D-pad focus ring). In-app-bar search uses the shared **`AppBarSearchField`** — never a re-rolled
   transparent `TextField`.
@@ -113,14 +118,28 @@ fun ExampleSettings(navController: NavController, scrollBehavior: TopAppBarScrol
   transport button row is focused so prev/play/next navigation is preserved.
 - Interactive elements are `>= 48dp`; icon-only controls carry a localized `contentDescription`
   (decorative icons pass `null`). The shared `IconButton` shows a primary focus ring.
-- Custom focusables use `Modifier.dpadFocusBorder` (see "Components"). Two verified exceptions keep
-  the raw idiom, with comments at the site and an allowlist in `tests/unification/check.mjs`:
+- Custom focusables use `Modifier.dpadFocusBorder`; already-focusable controls use
+  `Modifier.dpadFocusRing` (see "Components"). One verified exception keeps the raw idiom, with
+  comments at the site and an allowlist in `tests/unification/check.mjs`:
   - **Player title + artist rows:** their exact modifier order (`border -> padding -> focusable ->
     onFocusChanged`, wrapping clickable children) is load-bearing — bundling it into the shared
     modifier broke Compose focus *initialization* for the whole player surface (bisect-verified
     on-device: no element could take focus until reverted).
-  - **AlbumScreen track rows:** the border reacts to the *inner item's* focus via a shared map;
-    `dpadFocusBorder` owns its own `focusable()` and would add a second focus target per row.
+- **Never wrap a clickable control in a `focusable()` decoration box** — that creates a focus stop
+  where CENTER does nothing (the box is not clickable) plus a ringless stop on the control. Put a
+  `dpadFocusRing` on the control itself instead (the old AlbumScreen wrapper-box pattern was this
+  bug: ring stop with dead CENTER, then a working but invisible stop).
+- **Never nest focusables inside a focusable row** — D-pad beam search cannot enter a focused
+  node's own rectangle, so inner links/buttons become unreachable. Hoist them out as siblings
+  (onboarding's Terms/Privacy links were unreachable until restructured).
+- **Containers are focus groups, not focus targets.** A full-screen `focusable()` wrapper (the old
+  NavHost content box) is an invisible focus trap: focus lands on it with zero feedback and real
+  content is skipped. Use `focusGroup()` + `focusRequester` — requesting focus then enters the
+  group's first focusable child.
+- `focusRequester`/`focusProperties` must sit BEFORE the modifier that owns the focus target
+  (`dpadFocusBorder`, `clickable`, `focusable`) — placed after it, the mapping silently binds to
+  nothing. Ancestor `focusProperties`/`focusRequester` apply to descendant targets, so a plain
+  wrapper `Box(Modifier.focusRequester(x).focusProperties { ... })` around a button is valid.
 - Verified by the harness in `tests/dpad/` (adb-driven, hard-data oracles: play/pause, seek, reorder,
   BACK + a per-screen focus-coverage sweep). Every new screen must pass a D-pad-only walkthrough.
 
@@ -138,7 +157,9 @@ Always via the `Dialog.kt` helpers. One look, one structure, one motion.
   hand-rolled radio column.
 - Motion: enter/exit via the shared `Motion` spec (scale + fade).
 - D-pad: takes focus when shown, fully traversable, center activates, back dismisses; the *safe* action
-  is default-focused (cancel for destructive dialogs).
+  is default-focused (cancel for destructive dialogs). A scrim `Box` overlay does NOT do this — focus
+  stays trapped on the page behind it (onboarding's legal overlay had an unreachable OK until it became
+  a `DefaultDialog`). Always use the `Dialog.kt` helpers, which present a real dialog window.
 - All text localized; no duplicated dialog content across screens (one component).
 
 ## Strings

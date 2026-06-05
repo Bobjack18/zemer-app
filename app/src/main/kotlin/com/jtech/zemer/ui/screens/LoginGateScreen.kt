@@ -36,6 +36,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.jtech.zemer.ui.utils.dpadFocusRing
 import com.jtech.zemer.R
 import com.jtech.zemer.constants.AccountChannelHandleKey
 import com.jtech.zemer.constants.AccountEmailKey
@@ -131,7 +132,9 @@ fun LoginGateScreen(
                     },
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(48.dp),
+                        .height(48.dp)
+                        .dpadFocusRing(MaterialTheme.colorScheme.primary, MaterialTheme.shapes.extraLarge)
+                        .padding(3.dp),
                     colors = ButtonDefaults.buttonColors(
                         containerColor = MaterialTheme.colorScheme.primary
                     )
@@ -228,6 +231,7 @@ fun LoginGateScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(48.dp)
+                        .dpadFocusRing(MaterialTheme.colorScheme.primary, MaterialTheme.shapes.extraLarge)
                 ) {
                     if (isAnonymousLoading) {
                         CircularProgressIndicator(
