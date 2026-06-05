@@ -92,12 +92,26 @@ fun IconButton(
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
     content: @Composable () -> Unit,
 ) {
+    // Clear, consistent D-pad focus state for every icon button (R10): a primary-coloured
+    // ring + subtle fill so focus is always visible without a touchscreen.
+    val isFocused = remember { mutableStateOf(false) }
+    val borderColor = animateColorAsState(
+        targetValue = if (isFocused.value) MaterialTheme.colorScheme.primary else Color.Transparent,
+        label = "icon_button_focus_border"
+    )
+    val bgColor = animateColorAsState(
+        targetValue = if (isFocused.value) MaterialTheme.colorScheme.primary.copy(alpha = 0.2f)
+        else colors.containerColor,
+        label = "icon_button_focus_bg"
+    )
     Box(
         modifier = modifier
             .minimumInteractiveComponentSize()
             .sizeIn(minWidth = 48.dp, minHeight = 48.dp)
             .clip(CircleShape)
-            .background(color = colors.containerColor)
+            .background(color = bgColor.value)
+            .border(3.dp, borderColor.value, CircleShape)
+            .onFocusChanged { isFocused.value = it.isFocused }
             .combinedClickable(
                 onClick = onClick,
                 onLongClick = onLongClick,
