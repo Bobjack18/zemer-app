@@ -259,11 +259,68 @@ def rewrite_repo_map():
         fh.write("".join(head) + inventory)
 
 
+# ---------- docs/ui/README.md inventory ----------
+UI_DIR = "app/src/main/kotlin/com/jtech/zemer/ui"
+
+
+def ui_files():
+    regular, _ = tracked()
+    return [p for p in regular if p.startswith(UI_DIR + "/") and p.endswith(".kt")]
+
+
+def composable_names(stripped):
+    """Names of @Composable functions, in source order (receiver dropped: fun Box.X -> X)."""
+    out = []
+    for m in re.finditer(r"\bfun\s+(?:<[^>]*>\s*)?(?:[\w<>]+\.)?([A-Za-z_]\w*)\s*\(", stripped):
+        window = stripped[max(0, m.start() - 200):m.start()]
+        # the annotation must not belong to an earlier declaration in the window
+        cut = max(window.rfind("\nfun "), window.rfind("\n}"))
+        if "@Composable" in window[cut + 1:]:
+            out.append(m.group(1))
+    return out
+
+
+def gen_ui_inventory():
+    files = ui_files()
+    comp = ["## Composable inventory", "",
+            "| File | Lines | Composable declarations found |", "| --- | ---: | --- |"]
+    inv = ["## UI Kotlin file inventory", "",
+           "| File | Lines | Key declarations |", "| --- | ---: | --- |"]
+    for p in files:
+        raw = read_bytes(p)
+        nr = nr_lines(raw)
+        stripped = strip_kotlin(raw.decode("utf-8", "replace"))
+        names = composable_names(stripped)
+        if names:
+            comp.append(f"| `{p}` | {nr} | {', '.join(names)} |")
+        decls = declarations(stripped)
+        more = len(decls) - 12
+        dstr = ", ".join(decls[:12]) + (f", … +{more} more" if more > 0 else "")
+        inv.append(f"| `{p}` | {nr} | {dstr} |")
+    return "\n".join(comp) + "\n\n" + "\n".join(inv) + "\n"
+
+
+def rewrite_ui_readme():
+    """Regenerate the two code-derived inventory tables of docs/ui/README.md in place.
+
+    The curated prose above '## Composable inventory' (stack facts, screen model, the
+    route table whose routes are non-literal constants, and the screen groups) is preserved.
+    """
+    path = os.path.join(ROOT, "docs/ui/README.md")
+    head = []
+    for line in open(path, encoding="utf-8"):
+        if line.startswith("## Composable inventory"):
+            break
+        head.append(line)
+    open(path, "w", encoding="utf-8").write("".join(head) + gen_ui_inventory())
+
+
 def main():
     open(os.path.join(ROOT, "docs/reference/kotlin-files.md"), "w", encoding="utf-8").write(gen_kotlin_md())
     open(os.path.join(ROOT, "docs/reference/non-kotlin-files.md"), "w", encoding="utf-8").write(gen_non_kotlin_md())
     rewrite_repo_map()
-    print("Regenerated: repository-map.md, reference/kotlin-files.md, reference/non-kotlin-files.md")
+    rewrite_ui_readme()
+    print("Regenerated: repository-map.md, reference/kotlin-files.md, reference/non-kotlin-files.md, ui/README.md")
 
 
 if __name__ == "__main__":

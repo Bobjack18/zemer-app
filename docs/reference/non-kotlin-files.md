@@ -1,12 +1,12 @@
 # Non-Kotlin file reference
 
-Every tracked non-Kotlin path outside `docs/` is listed. Text files report line counts; binary files report byte counts; gitlinks are recorded as non-file tracked paths. Total paths: `292`.
+Every tracked non-Kotlin path outside `docs/` is listed. Text files report line counts; binary files report byte counts; gitlinks are recorded as non-file tracked paths. Total paths: `294`.
 
 | Path | Size/status | Type metadata |
 | --- | ---: | --- |
 | `.github/workflows/player-monitor.yml` | 131 lines | text `.yml` |
 | `.github/workflows/release-build.yml` | 123 lines | text `.yml` |
-| `.gitignore` | 106 lines | text `[none]` |
+| `.gitignore` | 109 lines | text `[none]` |
 | `.gitmodules` | 6 lines | text `[none]` |
 | `LICENSE` | 674 lines | text `[none]` |
 | `README.md` | 11 lines | text `.md` |
@@ -48,7 +48,7 @@ Every tracked non-Kotlin path outside `docs/` is listed. Text files report line 
 | `app/schemas/com.jtech.zemer.db.InternalDatabase/9.json` | 840 lines | text `.json`; JSON keys `formatVersion, database` |
 | `app/src/debug/res/values/app_name.xml` | 4 lines | text `.xml`; XML root `resources` |
 | `app/src/debug/res/xml-v25/shortcuts.xml` | 23 lines | text `.xml`; XML root `shortcuts` |
-| `app/src/main/AndroidManifest.xml` | 264 lines | text `.xml`; XML root `manifest` |
+| `app/src/main/AndroidManifest.xml` | 265 lines | text `.xml`; XML root `manifest` |
 | `app/src/main/assets/solver/astring.js` | 3 lines | text `.js` |
 | `app/src/main/assets/solver/meriyah.js` | 9210 lines | text `.js` |
 | `app/src/main/assets/solver/yt.solver.core.js` | 603 lines | text `.js` |
@@ -113,6 +113,7 @@ Every tracked non-Kotlin path outside `docs/` is listed. Text files report line 
 | `app/src/main/res/drawable/history.xml` | 9 lines | text `.xml`; XML root `vector` |
 | `app/src/main/res/drawable/home_filled.xml` | 10 lines | text `.xml`; XML root `vector` |
 | `app/src/main/res/drawable/home_outlined.xml` | 13 lines | text `.xml`; XML root `vector` |
+| `app/src/main/res/drawable/ic_android_auto.xml` | 22 lines | text `.xml`; XML root `vector` |
 | `app/src/main/res/drawable/ic_fullscreen.xml` | 9 lines | text `.xml`; XML root `vector` |
 | `app/src/main/res/drawable/ic_launcher_background.xml` | 74 lines | text `.xml`; XML root `vector` |
 | `app/src/main/res/drawable/ic_launcher_background_v31.xml` | 8 lines | text `.xml`; XML root `shape` |
@@ -242,8 +243,8 @@ Every tracked non-Kotlin path outside `docs/` is listed. Text files report line 
 | `app/src/main/res/values/app_name.xml` | 4 lines | text `.xml`; XML root `resources` |
 | `app/src/main/res/values/colors.xml` | 9 lines | text `.xml`; XML root `resources` |
 | `app/src/main/res/values/ic_launcher_background.xml` | 6 lines | text `.xml`; XML root `resources` |
-| `app/src/main/res/values/metrolist_strings.xml` | 303 lines | text `.xml`; XML root `resources` |
-| `app/src/main/res/values/strings.xml` | 560 lines | text `.xml`; XML root `resources` |
+| `app/src/main/res/values/metrolist_strings.xml` | 682 lines | text `.xml`; XML root `resources` |
+| `app/src/main/res/values/strings.xml` | 381 lines | text `.xml`; XML root `resources` |
 | `app/src/main/res/values/styles.xml` | 14 lines | text `.xml`; XML root `resources` |
 | `app/src/main/res/values/values.xml` | 8 lines | text `.xml`; XML root `resources` |
 | `app/src/main/res/xml-v25/shortcuts.xml` | 23 lines | text `.xml`; XML root `shortcuts` |
@@ -269,6 +270,7 @@ Every tracked non-Kotlin path outside `docs/` is listed. Text files report line 
 | `lrclib/.gitignore` | 1 lines | text `[none]` |
 | `lrclib/build.gradle.kts` | 16 lines | text `.kts`; plugins `kotlin.serialization, jvm` |
 | `scripts/telegram-chats.sh` | 38 lines | text `.sh` |
+| `scripts/ui-audit.sh` | 63 lines | text `.sh` |
 | `settings.gradle.kts` | 56 lines | text `.kts`; plugins `org.gradle.toolchains.foojay-resolver-convention` |
 | `simpmusic/build.gradle.kts` | 15 lines | text `.kts`; plugins `kotlin.serialization, jvm` |
 | `tests/INVESTIGATION.md` | 269 lines | text `.md` |
