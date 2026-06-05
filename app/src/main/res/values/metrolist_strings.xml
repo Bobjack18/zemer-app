@@ -670,6 +670,7 @@
     <string name="search_error_title">Search is having trouble</string>
     <string name="search_empty_title">No results</string>
     <string name="search_retry">Search again</string>
+    <string name="search_landing_hint">Search for songs, albums, artists and playlists</string>
 
     <!-- Library setup -->
     <string name="setting_up_library_title">Setting up your library…</string>

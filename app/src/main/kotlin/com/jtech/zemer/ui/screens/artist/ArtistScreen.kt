@@ -63,6 +63,7 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusProperties
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
@@ -196,7 +197,7 @@ fun ArtistScreen(
                         Box(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .aspectRatio(1.1f),
+                                .aspectRatio(1f),
                         ) {
                             Spacer(
                                 modifier = Modifier
@@ -281,9 +282,12 @@ fun ArtistScreen(
                                 AsyncImage(
                                     model = thumbnail.resize(1200, 1200),
                                     contentDescription = null,
+                                    // Crop to the square hero canvas: the name/buttons block below is
+                                    // anchored assuming the art paints this tall. Without the crop,
+                                    // wide channel art paints short and leaves a dead gap above the name.
+                                    contentScale = ContentScale.Crop,
                                     modifier = Modifier
-                                        .fillMaxWidth()
-                                        .align(Alignment.TopCenter)
+                                        .fillMaxSize()
                                         .fadingEdge(
                                             bottom = 200.dp,
                                         ),

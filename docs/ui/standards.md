@@ -153,6 +153,9 @@ Always via the `Dialog.kt` helpers. One look, one structure, one motion.
   `Row` of thumbnail + text + menu. Context menus open via `GridMenu` / `NewMenuComponents`.
 - Cards and containers use a `MaterialTheme.shapes` token and a `surfaceContainer*` tonal color; rich
   status blocks use `InfoCard` / `StatusRow`, not a one-off `Card`.
+- Full-bleed hero/header artwork (artist page, etc.) fills its canvas with `ContentScale.Crop` so the
+  painted height never depends on the artwork's intrinsic ratio — content anchored below a hero must
+  not gain a dead gap when the art is wide/short (the layout math assumes the canvas height).
 - Chips use `ChipsRow` (filter/sort). A standalone chip uses `MaterialTheme.shapes` / `PillShape`.
 - Bottom sheets use `BottomSheet` / `BottomSheetMenu` / `BottomSheetPage`; never build a sheet from
   scratch. Sheets are D-pad operable and dismissable (R11).
@@ -161,7 +164,9 @@ Always via the `Dialog.kt` helpers. One look, one structure, one motion.
 
 Every list or content surface handles three states with the shared components:
 - Loading: `shimmer/ShimmerHost` placeholders for content that will fill in (not a bare spinner).
-- Empty: `EmptyPlaceholder` (icon + message + optional action).
+- Empty: `EmptyPlaceholder` (icon + message + optional action). This includes *landing* states —
+  a screen that opens with nothing to show yet (e.g. the search landing before any query/history)
+  shows an `EmptyPlaceholder` hint, never a blank page.
 - Error: `AppStateViews` (message + retry). Always offer a retry path.
 
 Transient feedback is a snackbar/Toast with a localized string - never a hardcoded literal.

@@ -69,6 +69,7 @@ import com.jtech.zemer.extensions.togglePlayPause
 import com.jtech.zemer.models.toMediaMetadata
 import com.jtech.zemer.playback.queues.YouTubeQueue
 import com.jtech.zemer.ui.component.LocalMenuState
+import com.jtech.zemer.ui.component.EmptyPlaceholder
 import com.jtech.zemer.ui.component.SearchBarIconOffsetX
 import com.jtech.zemer.ui.component.YouTubeListItem
 import com.jtech.zemer.ui.menu.YouTubeAlbumMenu
@@ -367,6 +368,18 @@ fun OnlineSearchScreen(
                     }
                     .animateItem()
             )
+        }
+
+        // Landing state: nothing typed and nothing to suggest — show the standard empty placeholder
+        // instead of a blank page (query guard keeps it from flashing while suggestions debounce).
+        if (query.isEmpty() && viewState.history.isEmpty() && viewState.suggestions.isEmpty() && viewState.items.isEmpty()) {
+            item(key = "empty_placeholder") {
+                EmptyPlaceholder(
+                    icon = R.drawable.search,
+                    text = stringResource(R.string.search_landing_hint),
+                    modifier = Modifier.animateItem(),
+                )
+            }
         }
     }
 }

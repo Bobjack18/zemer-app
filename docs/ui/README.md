@@ -162,7 +162,7 @@
 | `app/src/main/kotlin/com/jtech/zemer/ui/screens/YouTubeBrowseScreen.kt` | 285 | YouTubeBrowseScreen |
 | `app/src/main/kotlin/com/jtech/zemer/ui/screens/artist/ArtistAlbumsScreen.kt` | 158 | ArtistAlbumsScreen |
 | `app/src/main/kotlin/com/jtech/zemer/ui/screens/artist/ArtistItemsScreen.kt` | 330 | ArtistItemsScreen |
-| `app/src/main/kotlin/com/jtech/zemer/ui/screens/artist/ArtistScreen.kt` | 856 | ArtistScreen |
+| `app/src/main/kotlin/com/jtech/zemer/ui/screens/artist/ArtistScreen.kt` | 860 | ArtistScreen |
 | `app/src/main/kotlin/com/jtech/zemer/ui/screens/artist/ArtistSongsScreen.kt` | 212 | ArtistSongsScreen |
 | `app/src/main/kotlin/com/jtech/zemer/ui/screens/library/LibraryAlbumsScreen.kt` | 323 | LibraryAlbumsScreen |
 | `app/src/main/kotlin/com/jtech/zemer/ui/screens/library/LibraryArtistsScreen.kt` | 301 | LibraryArtistsScreen |
@@ -180,7 +180,7 @@
 | `app/src/main/kotlin/com/jtech/zemer/ui/screens/playlist/OnlinePlaylistScreen.kt` | 709 | OnlinePlaylistScreen |
 | `app/src/main/kotlin/com/jtech/zemer/ui/screens/playlist/TopPlaylistScreen.kt` | 610 | TopPlaylistScreen |
 | `app/src/main/kotlin/com/jtech/zemer/ui/screens/search/OnlineSearchResult.kt` | 441 | OnlineSearchResult |
-| `app/src/main/kotlin/com/jtech/zemer/ui/screens/search/OnlineSearchScreen.kt` | 459 | OnlineSearchScreen, SuggestionItem |
+| `app/src/main/kotlin/com/jtech/zemer/ui/screens/search/OnlineSearchScreen.kt` | 472 | OnlineSearchScreen, SuggestionItem |
 | `app/src/main/kotlin/com/jtech/zemer/ui/screens/settings/AboutScreen.kt` | 192 | AboutScreen |
 | `app/src/main/kotlin/com/jtech/zemer/ui/screens/settings/AccountSettings.kt` | 451 | AccountSettings |
 | `app/src/main/kotlin/com/jtech/zemer/ui/screens/settings/AndroidAutoSettings.kt` | 290 | label, AndroidAutoSettings |
@@ -290,7 +290,7 @@
 | `app/src/main/kotlin/com/jtech/zemer/ui/screens/YouTubeBrowseScreen.kt` | 285 | fun YouTubeBrowseScreen, val menuState, val database, val haptic, val playerConnection, val isPlaying, val mediaMetadata, val browseResult, val coroutineScope, val horizontalLazyGridItemWidthFactor, val lazyGridState, val snapLayoutInfoProvider |
 | `app/src/main/kotlin/com/jtech/zemer/ui/screens/artist/ArtistAlbumsScreen.kt` | 158 | fun ArtistAlbumsScreen, val menuState, val playerConnection, val isPlaying, val mediaMetadata, val artist, val albums, val coroutineScope, val lazyGridState, var inSelectMode, val selection, val onExitSelectionMode, … +1 more |
 | `app/src/main/kotlin/com/jtech/zemer/ui/screens/artist/ArtistItemsScreen.kt` | 330 | fun ArtistItemsScreen, val menuState, val database, val haptic, val playerConnection, val isPlaying, val mediaMetadata, val lazyListState, val lazyGridState, val coroutineScope, val blockVideos, val _, … +7 more |
-| `app/src/main/kotlin/com/jtech/zemer/ui/screens/artist/ArtistScreen.kt` | 856 | fun ArtistScreen, val context, val database, val menuState, val haptic, val coroutineScope, val playerConnection, val isPlaying, val mediaMetadata, val artistPage, val isLoadingArtist, val libraryArtist, … +33 more |
+| `app/src/main/kotlin/com/jtech/zemer/ui/screens/artist/ArtistScreen.kt` | 860 | fun ArtistScreen, val context, val database, val menuState, val haptic, val coroutineScope, val playerConnection, val isPlaying, val mediaMetadata, val artistPage, val isLoadingArtist, val libraryArtist, … +33 more |
 | `app/src/main/kotlin/com/jtech/zemer/ui/screens/artist/ArtistSongsScreen.kt` | 212 | fun ArtistSongsScreen, val context, val menuState, val haptic, val playerConnection, val isPlaying, val mediaMetadata, val sortType, val onSortTypeChange, val sortDescending, val onSortDescendingChange, val artist, … +2 more |
 | `app/src/main/kotlin/com/jtech/zemer/ui/screens/library/LibraryAlbumsScreen.kt` | 323 | fun LibraryAlbumsScreen, val menuState, val playerConnection, val isPlaying, val mediaMetadata, var viewType, var filter, val sortType, val onSortTypeChange, val sortDescending, val onSortDescendingChange, val gridItemSize, … +12 more |
 | `app/src/main/kotlin/com/jtech/zemer/ui/screens/library/LibraryArtistsScreen.kt` | 301 | fun LibraryArtistsScreen, val menuState, var viewType, var filter, val sortType, val onSortTypeChange, val sortDescending, val onSortDescendingChange, val gridItemSize, val ytmSync, val filterContent, val artists, … +6 more |
@@ -308,7 +308,7 @@
 | `app/src/main/kotlin/com/jtech/zemer/ui/screens/playlist/OnlinePlaylistScreen.kt` | 709 | fun OnlinePlaylistScreen, val menuState, val database, val haptic, val playerConnection, val isPlaying, val mediaMetadata, val playlist, val songs, val dbPlaylist, val isLoading, val isLoadingMore, … +18 more |
 | `app/src/main/kotlin/com/jtech/zemer/ui/screens/playlist/TopPlaylistScreen.kt` | 610 | fun TopPlaylistScreen, val coroutineScope, val context, val menuState, val haptic, val focusManager, val playerConnection, val isPlaying, val mediaMetadata, val maxSize, val songs, val mutableSongs, … +16 more |
 | `app/src/main/kotlin/com/jtech/zemer/ui/screens/search/OnlineSearchResult.kt` | 441 | fun OnlineSearchResult, val menuState, val database, val playerConnection, val haptic, val isPlaying, val mediaMetadata, val coroutineScope, val lazyListState, val chipsFocusRequester, val firstResultFocusRequester, val searchFilter, … +16 more |
-| `app/src/main/kotlin/com/jtech/zemer/ui/screens/search/OnlineSearchScreen.kt` | 459 | fun OnlineSearchScreen, val database, val keyboardController, val menuState, val playerConnection, val scope, val haptic, val isPlaying, val mediaMetadata, val coroutineScope, val viewState, val lazyListState, … +7 more |
+| `app/src/main/kotlin/com/jtech/zemer/ui/screens/search/OnlineSearchScreen.kt` | 472 | fun OnlineSearchScreen, val database, val keyboardController, val menuState, val playerConnection, val scope, val haptic, val isPlaying, val mediaMetadata, val coroutineScope, val viewState, val lazyListState, … +7 more |
 | `app/src/main/kotlin/com/jtech/zemer/ui/screens/settings/AboutScreen.kt` | 192 | fun AboutScreen, val uriHandler, val backFocus, val firstFocus |
 | `app/src/main/kotlin/com/jtech/zemer/ui/screens/settings/AccountSettings.kt` | 451 | fun AccountSettings, val context, val uriHandler, val accountNamePref, val onAccountNameChange, val accountEmail, val onAccountEmailChange, val accountChannelHandle, val onAccountChannelHandleChange, val innerTubeCookie, val onInnerTubeCookieChange, val visitorData, … +33 more |
 | `app/src/main/kotlin/com/jtech/zemer/ui/screens/settings/AndroidAutoSettings.kt` | 290 | class AndroidAutoSection, val id, fun AndroidAutoSection, fun AndroidAutoSection, fun serializeSections, fun deserializeSections, val parsed, val parts, val section, val enabled, val present, val missing, … +19 more |
