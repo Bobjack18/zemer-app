@@ -49,4 +49,15 @@ check "R9"  "hardcoded Color"                             "Color\(0x|Color\.(Bla
 
 echo "-----------------------------------------------------------"
 printf '%-51s %3d\n' "TOTAL violations" "$total"
+
+# Informational (not counted): gesture-only modifiers to verify are D-pad operable (R10/R11).
+# Every one of these must have a focus + key path or a focusable control alternative; confirm
+# with a D-pad-only walkthrough of the affected screen.
+if [ "$QUIET" != "--quiet" ]; then
+  echo
+  echo "== D-pad review (informational - verify each has a focus/D-pad path) =="
+  grep -rlE "pointerInput|detectTapGestures|\.draggable\(|anchoredDraggable|\.swipeable\(" "$UI" 2>/dev/null \
+    | sed "s#$UI/##" | sort | sed 's/^/  gesture: /'
+fi
+
 [ "$total" -eq 0 ] && { echo "clean"; exit 0; } || exit 1

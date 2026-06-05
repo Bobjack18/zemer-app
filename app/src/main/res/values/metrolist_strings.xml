@@ -456,4 +456,214 @@
 
     <!-- Mini player -->
     <string name="error_playing">Error playing</string>
+
+    <!-- Kid Zone -->
+    <string name="kid_zone">Kid Zone</string>
+    <string name="for_the_kids">For the kids</string>
+    <string name="kid_zone_empty">No kids artists available</string>
+
+    <!-- Whitelist loading -->
+    <string name="whitelist_loading">Loading whitelist…</string>
+    <string name="whitelist_loading_progress">Loading whitelist %1$d / %2$d</string>
+    <string name="whitelist_load_in_background">Load in background</string>
+
+    <!-- Account: anonymous access -->
+    <string name="account_status_anonymous">Anonymous access</string>
+    <string name="login_as_anonymous">Login as Anonymous</string>
+
+    <!-- Report artist -->
+    <string name="report_artist">Report</string>
+    <string name="report_artist_desc">Flag this for review</string>
+    <string name="report_reason_female">Female artist</string>
+    <string name="report_reason_gentile">Non-Jewish artist</string>
+    <string name="report_reason_bad_playlists">Bad/goyish playlists</string>
+    <string name="report_reason_bad_images">Bad images</string>
+    <string name="report_reason_other">Other</string>
+    <string name="report_optional_comment">Optional comment</string>
+    <string name="report_submit">Submit</string>
+    <string name="report_cancel">Cancel</string>
+    <string name="report_success">Report sent. Thank you.</string>
+    <string name="report_failure">Failed to send report.</string>
+    <string name="report_choose_reason">Please select a reason.</string>
+
+    <!-- Google token exchange -->
+    <string name="google_exchange_failed">Could not read YouTube cookies from the exchange response.</string>
+    <string name="google_id_token_missing">Google sign-in returned no ID token.</string>
+    <string name="google_exchange_url_missing">Set googleTokenExchangeUrl in gradle.properties to your Firebase HTTPS Function that exchanges Google ID tokens for YouTube cookies.</string>
+    <string name="google_exchange_url_missing_toast">Configure googleTokenExchangeUrl to point at a Firebase Function that returns visitorData, dataSyncId, innerTubeCookie, and account metadata.</string>
+
+    <!-- Discord Integration -->
+    <string name="discord_integration">Discord Integration</string>
+    <string name="discord_information">Zemer uses the KizzyRPC library to set your Discord account\'s status. This involves using the Discord Gateway connection, which may be considered a violation of Discord\'s TOS. However, there are no known cases of user accounts being suspended for this reason. Use at your own risk.\n\nZemer will only extract your token, and everything else is stored locally.</string>
+    <string name="enable_discord_rpc">Enable Rich Presence</string>
+
+    <!-- Updater: new version banner -->
+    <string name="new_version_available">New version available</string>
+
+    <!-- Content filters -->
+    <string name="content_filters">Content filters</string>
+    <string name="allow_female_singers">Allow female singers</string>
+    <string name="block_videos">Block videos</string>
+    <string name="block_videos_description">Hide all video content from the app</string>
+    <string name="videos_blocked">Videos Blocked</string>
+    <string name="videos_blocked_description">Video content has been disabled in settings. You can enable it again in Content Settings.</string>
+    <string name="female_passcode_setting">Set female singers passcode</string>
+    <string name="set_female_passcode_title">Protect female singers switch</string>
+    <string name="set_female_passcode_message">Create a passcode to unlock female artists.</string>
+    <string name="female_passcode_label">Passcode</string>
+    <string name="female_passcode_confirm_label">Confirm passcode</string>
+    <string name="female_passcode_required">Passcode cannot be empty.</string>
+    <string name="female_passcode_mismatch">Passcodes do not match.</string>
+    <string name="enter_female_passcode_title">Enter passcode</string>
+    <string name="enter_passcode_title">Enter passcode</string>
+    <string name="female_passcode_incorrect">Incorrect passcode.</string>
+    <string name="enable_personal_filters">Enable personal feed filters</string>
+    <string name="i_am_chasidish">Promote chassidish content</string>
+
+    <!-- Contribute -->
+    <string name="contribute">Contribute</string>
+    <string name="contribute_description">Verify artist info</string>
+    <string name="contribute_sign_in">Sign in with Google</string>
+    <string name="contribute_sign_out">Sign out</string>
+    <string name="contribute_phone">Phone number</string>
+    <string name="contribute_name">Name</string>
+    <string name="contribute_save_profile">Save profile</string>
+    <string name="contribute_require_profile">Add your name and phone to continue</string>
+    <string name="contribute_banned">Your account is banned from contributions.</string>
+    <string name="contribute_no_tasks">All artists are verified. Thank you!</string>
+    <string name="contribute_progress">Verified %1$d / %2$d</string>
+    <string name="contribute_refresh">Refresh task</string>
+    <string name="contribute_artist_prompt">Help verify this artist</string>
+    <string name="contribute_is_female">Is this artist female?</string>
+    <string name="contribute_is_chasid">Is this artist chasidish?</string>
+    <string name="contribute_is_genz">Is this artist Gen Z?</string>
+    <string name="contribute_submit">Submit</string>
+
+    <!-- D-pad Button Mapper -->
+    <string name="settings_button_setup">Set up your D-pad</string>
+    <string name="settings_button_setup_desc">Assign your hardware D-pad buttons</string>
+    <string name="dpad_setup_title">Set up your D-pad</string>
+    <string name="dpad_setup_description">Capture the arrows and center button from your hardware D-pad. We will automatically move to the next direction as soon as it is detected.</string>
+    <string name="dpad_setup_start">Start</string>
+    <string name="dpad_setup_skip">Skip</string>
+    <string name="dpad_setup_listening">Press D-pad %1$s</string>
+    <string name="dpad_setup_step_progress">Step %1$d of %2$d</string>
+    <string name="dpad_setup_auto_hint">We will jump to the next direction as soon as we detect a press.</string>
+    <string name="dpad_setup_press_any_key">Press any key to get started</string>
+    <string name="dpad_setup_listening_hint">Waiting for the requested direction.</string>
+    <string name="dpad_setup_skip_direction">Skip this direction</string>
+    <string name="dpad_setup_cancel">Cancel</string>
+    <string name="dpad_setup_completed">D-pad buttons saved</string>
+    <string name="dpad_setup_completed_hint">These values are now stored. We will close this screen automatically.</string>
+    <string name="dpad_setup_done">Done</string>
+    <string name="dpad_setup_again">Set again</string>
+    <string name="dpad_current_mapping">Current mapping</string>
+    <string name="dpad_mapping_not_set">Not set</string>
+    <string name="dpad_clear_button">Clear</string>
+    <string name="dpad_direction_right">Right</string>
+    <string name="dpad_direction_left">Left</string>
+    <string name="dpad_direction_up">Up</string>
+    <string name="dpad_direction_down">Down</string>
+    <string name="dpad_direction_center">Center</string>
+    <string name="button_setup_accessibility_required">Accessibility service required</string>
+    <string name="button_setup_enable_accessibility">Enable accessibility service</string>
+    <string name="accessibility_service_description">D-pad button mapper for custom hardware controls</string>
+
+    <!-- Onboarding -->
+    <string name="onboarding_welcome_title">Welcome to Zemer</string>
+    <string name="onboarding_welcome_subtitle">Your music hub. Quick note before you hit play.</string>
+    <string name="onboarding_safe_line">Your music, your choice</string>
+    <string name="onboarding_disclaimer">You’re responsible for what you play. We don’t host or upload content, and you agree not to hold us liable.</string>
+    <string name="onboarding_agree_label">I’ve read and agree to the Terms of Service and Privacy Policy</string>
+    <string name="onboarding_view_tos">View Terms</string>
+    <string name="onboarding_view_privacy">View Privacy</string>
+    <string name="onboarding_continue">Continue</string>
+    <string name="onboarding_continue_anyway">Continue anyway</string>
+    <string name="onboarding_tos_title">Terms of Service</string>
+    <string name="onboarding_tos_body">By using Zemer you agree:
+• You won’t hold the developers liable for any damages or claims.
+• You’re responsible for following copyright laws for anything you play.
+• We only point to third-party content and do not host media.
+• The app is provided as-is with no warranties.</string>
+    <string name="onboarding_privacy_title">Privacy Policy</string>
+    <string name="onboarding_privacy_body">We don’t collect personal data, analytics, or logins. Preferences stay on your device. Network calls only fetch what you choose to play.</string>
+    <string name="onboarding_permissions_title">Quick permission check</string>
+    <string name="onboarding_permissions_subtitle">Give a couple permissions so playback and downloads stay smooth. You can skip if you prefer.</string>
+    <string name="onboarding_perm_notifications_title">Notifications</string>
+    <string name="onboarding_perm_notifications_desc">Show playback controls in notifications.</string>
+    <string name="onboarding_perm_storage_title">Download access</string>
+    <string name="onboarding_perm_storage_desc">Allow saving music and video to your device.</string>
+    <string name="onboarding_perm_background_title">Background run</string>
+    <string name="onboarding_perm_background_desc">Keep playback alive without battery kills.</string>
+    <string name="onboarding_perm_accessibility_title">Accessibility</string>
+    <string name="onboarding_perm_accessibility_desc">Enable hardware button mapping (optional).</string>
+    <string name="onboarding_perm_system_alert_title">Display over other apps</string>
+    <string name="onboarding_perm_system_alert_desc">Required for Picture in Picture video mode.</string>
+    <string name="onboarding_perm_nearby_title">Nearby devices</string>
+    <string name="onboarding_perm_nearby_desc">For speakers or car systems that need it.</string>
+    <string name="onboarding_perm_pip_title">Picture in Picture</string>
+    <string name="onboarding_perm_pip_desc">Minimize videos to continue watching while using other apps.</string>
+    <string name="onboarding_grant">Grant</string>
+    <string name="onboarding_open_settings">Open settings</string>
+    <string name="onboarding_back">Back</string>
+    <string name="onboarding_skip">Skip for now</string>
+    <string name="onboarding_status_done">Ready</string>
+    <string name="onboarding_status_needed">Needed</string>
+    <string name="onboarding_permissions_required">These permissions are required for the app to run.</string>
+    <string name="onboarding_density_title">Have a small phone?</string>
+    <string name="onboarding_density_subtitle">Change density to gain more screen real estate</string>
+    <string name="onboarding_density_more_content">Fits more content on screen</string>
+    <string name="onboarding_apply_density">Apply &amp; Restart</string>
+
+    <!-- Display density -->
+    <string name="restart_required">Restart Required</string>
+    <string name="density_restart_message">The display density change will take effect after restarting the app. Do you want to restart now?</string>
+    <string name="restart">Restart</string>
+    <string name="custom_density_title">Custom Density</string>
+    <string name="custom_density_hint">Enter a value between 50 and 120</string>
+    <string name="ok">OK</string>
+
+    <!-- Splash / artist sync -->
+    <string name="now_playing_label">Now playing</string>
+    <string name="refresh_artists">Refresh artists</string>
+    <string name="version_short">v%1$s</string>
+    <string name="radio_empty_message">Nothing to play yet. Try adding or playing something first.</string>
+    <string name="splash_syncing_title">Setting up your music</string>
+    <string name="splash_syncing_progress_named">Syncing %1$d/%2$d: %3$s</string>
+    <string name="splash_syncing_progress">Syncing %1$d/%2$d artists</string>
+    <string name="splash_syncing_indeterminate">Syncing your whitelist…</string>
+    <string name="splash_preparing_app">Warming up your experience…</string>
+    <string name="splash_continue">Let\'s go</string>
+    <string name="splash_syncing_background_action">Continue while we sync</string>
+    <string name="splash_syncing_background_waiting">Syncing in background…</string>
+    <string name="splash_syncing_footer">You can browse while we finish downloading your artists.</string>
+
+    <!-- New releases -->
+    <string name="new_release_error_title">New releases unavailable</string>
+    <string name="new_release_empty_title">No new releases</string>
+    <string name="new_release_empty_subtitle">We could not find new releases right now. Try again in a bit.</string>
+    <string name="new_release_retry">Try again</string>
+    <string name="new_release_title">Recent releases</string>
+    <string name="new_release_songs_title">Latest singles</string>
+    <string name="new_release_albums_title">Latest albums</string>
+
+    <!-- Mood and genres -->
+    <string name="mood_and_genres_error_title">Could not load moods &amp; genres</string>
+    <string name="mood_and_genres_empty_title">No moods &amp; genres found</string>
+    <string name="mood_and_genres_empty_subtitle">Try refreshing to pull fresh categories.</string>
+    <string name="mood_and_genres_retry">Retry</string>
+
+    <!-- Search empty / error states -->
+    <string name="search_error_title">Search is having trouble</string>
+    <string name="search_empty_title">No results</string>
+    <string name="search_retry">Search again</string>
+
+    <!-- Library setup -->
+    <string name="setting_up_library_title">Setting up your library…</string>
+    <string name="setting_up_library_progress">Setting up your library… %1$d%%</string>
+
+    <!-- Widget -->
+    <string name="widget_name">Zemer Music</string>
+    <string name="widget_description">Control your music playback</string>
+    <string name="widget_tap_to_open">Tap to open</string>
 </resources>
