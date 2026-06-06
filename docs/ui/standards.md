@@ -110,6 +110,13 @@ fun ExampleSettings(navController: NavController, scrollBehavior: TopAppBarScrol
   focus state (the `PreferenceEntry` focus background + border is the baseline).
 - Focus order follows visual order (`focusGroup()`/`focusProperties` where needed). No focus traps.
 - Each screen requests a sensible initial focus (the `firstFocus`/`backFocus` `FocusRequester` pattern).
+  Multi-step flows (onboarding) request it per page on its primary control, so the very first key press
+  acts on something visible — no blind initialization press.
+- Flows own BACK: a multi-step flow has a `BackHandler` stepping to the previous page; BACK must never
+  exit the app mid-flow.
+- A selection row contains ONE focus target: the row is `clickable`/`selectable` and the
+  `RadioButton`/`Checkbox` inside it gets `onClick = null` (decoration). Two targets per row doubles
+  every D-pad step.
 - Focusing an off-screen item scrolls it into view.
 - Every touch-only gesture has a D-pad equivalent (reorder via the item menu's Move up/down, swipe
   actions via a focusable control / menu, etc.). When a control genuinely cannot hold D-pad focus
@@ -158,8 +165,14 @@ Always via the `Dialog.kt` helpers. One look, one structure, one motion.
 - Motion: enter/exit via the shared `Motion` spec (scale + fade).
 - D-pad: takes focus when shown, fully traversable, center activates, back dismisses; the *safe* action
   is default-focused (cancel for destructive dialogs). A scrim `Box` overlay does NOT do this — focus
-  stays trapped on the page behind it (onboarding's legal overlay had an unreachable OK until it became
-  a `DefaultDialog`). Always use the `Dialog.kt` helpers, which present a real dialog window.
+  stays trapped on the page behind it (onboarding's legal, restart and custom-density overlays all had
+  unreachable buttons until they became `DefaultDialog`s). Always use the `Dialog.kt` helpers, which
+  present a real dialog window.
+- A `TextField` inside a dialog eats LEFT/RIGHT for cursor movement and strands D-pad focus. Pair it
+  with -/+ stepper buttons for the D-pad path and mark the field `focusProperties { canFocus = false }`
+  (touch can still tap it) — the onboarding custom-density dialog is the reference.
+- Confirmation dialogs apply their effect in the CONFIRM action, never before showing the dialog
+  (the density "Apply & Restart" wrote the pref before asking — Cancel still silently applied it).
 - All text localized; no duplicated dialog content across screens (one component).
 
 ## Strings

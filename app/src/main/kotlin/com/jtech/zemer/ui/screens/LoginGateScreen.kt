@@ -21,6 +21,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -28,6 +29,8 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -63,6 +66,8 @@ import kotlinx.serialization.json.jsonPrimitive
 fun LoginGateScreen(
     navController: NavController
 ) {
+    val firstFocus = remember { FocusRequester() }
+    LaunchedEffect(Unit) { firstFocus.requestFocus() }
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
     var isAnonymousLoading by remember { mutableStateOf(false) }
@@ -133,6 +138,7 @@ fun LoginGateScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(48.dp)
+                        .focusRequester(firstFocus)
                         .dpadFocusRing(MaterialTheme.colorScheme.primary, MaterialTheme.shapes.extraLarge)
                         .padding(3.dp),
                     colors = ButtonDefaults.buttonColors(

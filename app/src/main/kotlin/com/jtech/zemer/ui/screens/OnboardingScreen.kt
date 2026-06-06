@@ -34,12 +34,14 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
+import androidx.activity.compose.BackHandler
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Checkbox
+import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
@@ -58,6 +60,9 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusProperties
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.foundation.layout.width
@@ -224,6 +229,17 @@ fun OnboardingFlow(
 
     var step by rememberSaveable { mutableStateOf(OnboardingStep.Welcome) }
 
+    // Hardware/D-pad BACK steps back through the flow (it used to exit the app mid-onboarding).
+    BackHandler(enabled = step != OnboardingStep.Welcome && step != OnboardingStep.Loading) {
+        step = when (step) {
+            OnboardingStep.Density -> OnboardingStep.Welcome
+            OnboardingStep.ContentFilters -> if (densityAlreadySet) OnboardingStep.Welcome else OnboardingStep.Density
+            OnboardingStep.Permissions -> OnboardingStep.ContentFilters
+            OnboardingStep.BottomNavSetup -> OnboardingStep.Permissions
+            else -> step
+        }
+    }
+
     when (step) {
         OnboardingStep.Welcome -> WelcomeScreen(
             onContinue = {
@@ -317,6 +333,9 @@ private fun WelcomeScreen(
         )
     )
 
+    val firstFocus = remember { FocusRequester() }
+    LaunchedEffect(Unit) { firstFocus.requestFocus() }
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -367,6 +386,7 @@ private fun WelcomeScreen(
                     horizontalArrangement = Arrangement.spacedBy(12.dp),
                     modifier = Modifier
                         .fillMaxWidth()
+                        .focusRequester(firstFocus)
                         .dpadFocusRing(MaterialTheme.colorScheme.primary, MaterialTheme.shapes.small)
                         .clickable { agreed = !agreed }
                         .padding(6.dp)
@@ -494,6 +514,8 @@ private fun DensityScreen(
             }
         }
     }
+    val firstFocus = remember { FocusRequester() }
+    LaunchedEffect(Unit) { firstFocus.requestFocus() }
     var selectedDensity by rememberSaveable { mutableStateOf(DensityScale.NATIVE) }
     var customDensityValue by rememberSaveable { mutableStateOf(0.85f) }
     var showRestartDialog by rememberSaveable { mutableStateOf(false) }
@@ -554,6 +576,7 @@ private fun DensityScreen(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .clip(MaterialTheme.shapes.extraSmall)
+                                .then(if (density == densityOptions.first()) Modifier.focusRequester(firstFocus) else Modifier)
                                 .clickable {
                                     if (density == DensityScale.CUSTOM) {
                                         showCustomDensityDialog = true
@@ -565,13 +588,7 @@ private fun DensityScreen(
                         ) {
                             RadioButton(
                                 selected = selectedDensity == density,
-                                onClick = {
-                                    if (density == DensityScale.CUSTOM) {
-                                        showCustomDensityDialog = true
-                                    } else {
-                                        selectedDensity = density
-                                    }
-                                },
+                                onClick = null, // the row is the (single) focusable click target
                                 modifier = Modifier.size(36.dp)
                             )
                             Text(
@@ -598,15 +615,8 @@ private fun DensityScreen(
                 if (selectedDensity != DensityScale.NATIVE) {
                     Button(
                         onClick = {
-                            val densityValue = if (selectedDensity == DensityScale.CUSTOM) {
-                                customDensityValue
-                            } else {
-                                selectedDensity.value
-                            }
-                            context.getSharedPreferences("metrolist_settings", Context.MODE_PRIVATE)
-                                .edit {
-                                    putFloat("density_scale_factor", densityValue)
-                                }
+                            // The pref is written in the dialog's onRestart — writing it here meant
+                            // Cancel still silently applied the new density on the next app restart.
                             showRestartDialog = true
                         },
                         enabled = isConnected && !isCheckingNetwork,
@@ -692,6 +702,15 @@ private fun DensityScreen(
         RestartDialog(
             onDismiss = { showRestartDialog = false },
             onRestart = {
+                val densityValue = if (selectedDensity == DensityScale.CUSTOM) {
+                    customDensityValue
+                } else {
+                    selectedDensity.value
+                }
+                context.getSharedPreferences("metrolist_settings", Context.MODE_PRIVATE)
+                    .edit {
+                        putFloat("density_scale_factor", densityValue)
+                    }
                 showRestartDialog = false
                 restartApp(context)
             }
@@ -704,53 +723,28 @@ private fun RestartDialog(
     onDismiss: () -> Unit,
     onRestart: () -> Unit,
 ) {
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(AppColors.scrim)
-            .clickable { onDismiss() },
-        contentAlignment = Alignment.Center
-    ) {
-        Surface(
-            modifier = Modifier
-                .fillMaxWidth(0.88f)
-                .padding(20.dp),
-            shape = MaterialTheme.shapes.medium,
-            tonalElevation = 6.dp,
-            color = MaterialTheme.colorScheme.surface
-        ) {
-            Column(
-                modifier = Modifier.padding(20.dp),
-                verticalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
-                Text(
-                    text = stringResource(R.string.restart_required),
-                    style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
-                    color = MaterialTheme.colorScheme.primary
-                )
-                Text(
-                    text = stringResource(R.string.density_restart_message),
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.End,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    TextButton(onClick = onDismiss) {
-                        Text(stringResource(android.R.string.cancel))
-                    }
-                    Button(
-                        onClick = onRestart,
-                        modifier = Modifier.padding(start = 8.dp),
-                        shape = MaterialTheme.shapes.small
-                    ) {
-                        Text(stringResource(R.string.restart))
-                    }
-                }
+    // A real Dialog: the dialog window owns D-pad focus, so Cancel/Restart are reachable and BACK
+    // dismisses. The old scrim Box left focus on the page behind it — the dialog ignored the D-pad.
+    DefaultDialog(
+        onDismiss = onDismiss,
+        title = { Text(stringResource(R.string.restart_required)) },
+        buttons = {
+            TextButton(onClick = onDismiss) {
+                Text(stringResource(android.R.string.cancel))
             }
-        }
+            Button(
+                onClick = onRestart,
+                modifier = Modifier.padding(start = 8.dp),
+            ) {
+                Text(stringResource(R.string.restart))
+            }
+        },
+    ) {
+        Text(
+            text = stringResource(R.string.density_restart_message),
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
     }
 }
 
@@ -763,36 +757,54 @@ private fun CustomDensityDialog(
     var textValue by remember { mutableStateOf((initialValue * 100).toInt().toString()) }
     var isError by remember { mutableStateOf(false) }
 
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(AppColors.scrim)
-            .clickable { onDismiss() },
-        contentAlignment = Alignment.Center
-    ) {
-        Surface(
-            modifier = Modifier
-                .fillMaxWidth(0.88f)
-                .padding(20.dp)
-                .clickable(enabled = false) { },
-            shape = MaterialTheme.shapes.medium,
-            tonalElevation = 6.dp,
-            color = MaterialTheme.colorScheme.surface
-        ) {
-            Column(
-                modifier = Modifier.padding(20.dp),
-                verticalArrangement = Arrangement.spacedBy(12.dp)
+    fun step(delta: Int) {
+        val current = textValue.toIntOrNull() ?: (initialValue * 100).toInt()
+        textValue = (current + delta).coerceIn(50, 120).toString()
+        isError = false
+    }
+
+    // A real Dialog (D-pad reachable) with -/+ steppers so the value is adjustable without typing.
+    DefaultDialog(
+        onDismiss = onDismiss,
+        title = { Text(stringResource(R.string.custom_density_title)) },
+        buttons = {
+            TextButton(onClick = onDismiss) {
+                Text(stringResource(android.R.string.cancel))
+            }
+            Button(
+                onClick = {
+                    val intValue = textValue.toIntOrNull()
+                    if (intValue != null && intValue in 50..120) {
+                        onConfirm(intValue / 100f)
+                    }
+                },
+                enabled = !isError && textValue.isNotEmpty(),
+                modifier = Modifier.padding(start = 8.dp),
             ) {
-                Text(
-                    text = stringResource(R.string.custom_density_title),
-                    style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
-                    color = MaterialTheme.colorScheme.primary
-                )
-                Text(
-                    text = stringResource(R.string.custom_density_hint),
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
+                Text(stringResource(R.string.ok))
+            }
+        },
+    ) {
+        Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+            Text(
+                text = stringResource(R.string.custom_density_hint),
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                FilledTonalIconButton(
+                    onClick = { step(-5) },
+                    modifier = Modifier.dpadFocusRing(MaterialTheme.colorScheme.primary, MaterialTheme.shapes.extraLarge),
+                ) {
+                    Icon(
+                        painter = painterResource(R.drawable.remove),
+                        contentDescription = stringResource(R.string.decrease),
+                    )
+                }
                 androidx.compose.material3.OutlinedTextField(
                     value = textValue,
                     onValueChange = { newValue ->
@@ -803,29 +815,18 @@ private fun CustomDensityDialog(
                     label = { Text("%") },
                     isError = isError,
                     singleLine = true,
-                    modifier = Modifier.fillMaxWidth()
+                    // D-pad skips the field (it eats LEFT/RIGHT for the cursor and would strand
+                    // focus between the steppers); adjust with -/+, type by tapping.
+                    modifier = Modifier.weight(1f).focusProperties { canFocus = false }
                 )
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.End,
-                    verticalAlignment = Alignment.CenterVertically
+                FilledTonalIconButton(
+                    onClick = { step(5) },
+                    modifier = Modifier.dpadFocusRing(MaterialTheme.colorScheme.primary, MaterialTheme.shapes.extraLarge),
                 ) {
-                    TextButton(onClick = onDismiss) {
-                        Text(stringResource(android.R.string.cancel))
-                    }
-                    Button(
-                        onClick = {
-                            val intValue = textValue.toIntOrNull()
-                            if (intValue != null && intValue in 50..120) {
-                                onConfirm(intValue / 100f)
-                            }
-                        },
-                        enabled = !isError && textValue.isNotEmpty(),
-                        modifier = Modifier.padding(start = 8.dp),
-                        shape = MaterialTheme.shapes.small
-                    ) {
-                        Text(stringResource(R.string.ok))
-                    }
+                    Icon(
+                        painter = painterResource(R.drawable.add),
+                        contentDescription = stringResource(R.string.increase),
+                    )
                 }
             }
         }
@@ -847,6 +848,8 @@ private fun ContentFiltersScreen(
     viewModel: OnboardingViewModel = hiltViewModel(),
     contentFiltersAlreadySet: Boolean = false
 ) {
+    val firstFocus = remember { FocusRequester() }
+    LaunchedEffect(Unit) { firstFocus.requestFocus() }
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
     val uiState by viewModel.uiState.collectAsState()
@@ -1078,6 +1081,7 @@ private fun ContentFiltersScreen(
                 FilterOptionCard(
                     title = "Allow Female Singers",
                     description = "Include music by female artists",
+                    switchFocusRequester = firstFocus,
                     isEnabled = allowFemaleSingers,
                     onToggle = { onAllowFemaleSingersChange(it) },
                     icon = R.drawable.person
@@ -1271,7 +1275,8 @@ private fun FilterOptionCard(
     description: String,
     isEnabled: Boolean,
     onToggle: (Boolean) -> Unit,
-    icon: Int
+    icon: Int,
+    switchFocusRequester: FocusRequester? = null,
 ) {
     Card(
         modifier = Modifier
@@ -1325,6 +1330,7 @@ private fun FilterOptionCard(
                 Switch(
                     checked = isEnabled,
                     onCheckedChange = onToggle,
+                    modifier = if (switchFocusRequester != null) Modifier.focusRequester(switchFocusRequester) else Modifier,
                     colors = SwitchDefaults.colors(
                         checkedThumbColor = MaterialTheme.colorScheme.primary,
                         checkedTrackColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.3f),
@@ -1342,6 +1348,8 @@ private fun PermissionsScreen(
     onBack: () -> Unit,
     onComplete: () -> Unit,
 ) {
+    val continueFocus = remember { FocusRequester() }
+    LaunchedEffect(Unit) { continueFocus.requestFocus() }
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
 
@@ -1562,6 +1570,7 @@ private fun PermissionsScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(44.dp)
+                        .focusRequester(continueFocus)
                         .dpadFocusRing(MaterialTheme.colorScheme.primary, MaterialTheme.shapes.small)
                         .padding(3.dp),
                     shape = MaterialTheme.shapes.small,
@@ -1824,6 +1833,8 @@ private fun BottomNavSetupScreen(
     onBack: () -> Unit,
     onComplete: () -> Unit,
 ) {
+    val firstFocus = remember { FocusRequester() }
+    LaunchedEffect(Unit) { firstFocus.requestFocus() }
     val context = LocalContext.current
     var enableBottomNav by remember { mutableStateOf(true) }
 
@@ -1886,6 +1897,7 @@ private fun BottomNavSetupScreen(
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
+                            .focusRequester(firstFocus)
                             .clickable { enableBottomNav = true }
                             .padding(14.dp),
                         verticalAlignment = Alignment.CenterVertically,
@@ -1906,7 +1918,7 @@ private fun BottomNavSetupScreen(
                         }
                         androidx.compose.material3.RadioButton(
                             selected = enableBottomNav,
-                            onClick = { enableBottomNav = true },
+                            onClick = null, // the card row is the (single) focusable click target
                             colors = androidx.compose.material3.RadioButtonDefaults.colors(
                                 selectedColor = MaterialTheme.colorScheme.primary
                             )
@@ -1957,7 +1969,7 @@ private fun BottomNavSetupScreen(
                         }
                         androidx.compose.material3.RadioButton(
                             selected = !enableBottomNav,
-                            onClick = { enableBottomNav = false },
+                            onClick = null, // the card row is the (single) focusable click target
                             colors = androidx.compose.material3.RadioButtonDefaults.colors(
                                 selectedColor = MaterialTheme.colorScheme.primary
                             )
