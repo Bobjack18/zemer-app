@@ -294,25 +294,12 @@ fun SongListItem(
     showInLibraryIcon: Boolean = false,
     showDownloadIcon: Boolean = true,
     badges: @Composable RowScope.() -> Unit = {
-        if (showLikedIcon && song.song.liked) {
-            Icon.Favorite()
-        }
-        if (song.song.explicit) {
-            Icon.Explicit()
-        }
-        if (showInLibraryIcon && song.song.inLibrary != null) {
-            Icon.Library()
-        }
-        if (showDownloadIcon) {
-            // Check database for downloaded status (persisted) or live download state (in-progress)
-            if (song.song.isDownloaded) {
-                Icon.Download(com.jtech.zemer.playback.MediaStoreDownloadManager.DownloadState.Status.COMPLETED)
-            } else {
-                val downloadState by LocalDownloadUtil.current.getMediaStoreDownload(song.id)
-                    .collectAsState(initial = null)
-                Icon.Download(downloadState?.status)
-            }
-        }
+        SongBadges(
+            song = song,
+            showLikedIcon = showLikedIcon,
+            showInLibraryIcon = showInLibraryIcon,
+            showDownloadIcon = showDownloadIcon,
+        )
     },
     isSelected: Boolean = false,
     isActive: Boolean = false,
@@ -367,21 +354,13 @@ fun SongGridItem(
     showInLibraryIcon: Boolean = false,
     showDownloadIcon: Boolean = true,
     badges: @Composable RowScope.() -> Unit = {
-        if (showLikedIcon && song.song.liked) {
-            Icon.Favorite()
-        }
-        if (showInLibraryIcon && song.song.inLibrary != null) {
-            Icon.Library()
-        }
-        if (showDownloadIcon) {
-            // Check database for downloaded status (persisted) or live download state (in-progress)
-            if (song.song.isDownloaded) {
-                Icon.Download(com.jtech.zemer.playback.MediaStoreDownloadManager.DownloadState.Status.COMPLETED)
-            } else {
-                val downloadState by LocalDownloadUtil.current.getMediaStoreDownload(song.id).collectAsState(initial = null)
-                Icon.Download(downloadState?.status)
-            }
-        }
+        SongBadges(
+            song = song,
+            showLikedIcon = showLikedIcon,
+            showExplicitIcon = false,
+            showInLibraryIcon = showInLibraryIcon,
+            showDownloadIcon = showDownloadIcon,
+        )
     },
     isActive: Boolean = false,
     isPlaying: Boolean = false,
@@ -505,42 +484,8 @@ fun AlbumListItem(
     album: Album,
     modifier: Modifier = Modifier,
     showLikedIcon: Boolean = true,
-    @SuppressLint("AutoboxingStateCreation") badges: @Composable RowScope.() -> Unit = {
-        val downloadUtil = LocalDownloadUtil.current
-        val database = LocalDatabase.current
-
-        val songs by produceState(initialValue = emptyList(), album.id) {
-            withContext(Dispatchers.IO) {
-                value = database.albumSongs(album.id).first()
-            }
-        }
-
-        val allMediaStoreDownloads by downloadUtil.getAllMediaStoreDownloads().collectAsState()
-
-        val downloadState by remember(songs, allMediaStoreDownloads) {
-            mutableStateOf(
-                if (songs.isEmpty()) {
-                    Download.STATE_STOPPED
-                } else {
-                    when {
-                        songs.all { allMediaStoreDownloads[it.id]?.status == com.jtech.zemer.playback.MediaStoreDownloadManager.DownloadState.Status.COMPLETED } -> STATE_COMPLETED
-                        songs.any { allMediaStoreDownloads[it.id]?.status in listOf(
-                            com.jtech.zemer.playback.MediaStoreDownloadManager.DownloadState.Status.QUEUED,
-                            com.jtech.zemer.playback.MediaStoreDownloadManager.DownloadState.Status.DOWNLOADING
-                        ) } -> STATE_DOWNLOADING
-                        else -> Download.STATE_STOPPED
-                    }
-                }
-            )
-        }
-
-        if (showLikedIcon && album.album.bookmarkedAt != null) {
-            Icon.Favorite()
-        }
-        if (album.album.explicit) {
-            Icon.Explicit()
-        }
-        Icon.Download(downloadState)
+    badges: @Composable RowScope.() -> Unit = {
+        AlbumBadges(album = album, showLikedIcon = showLikedIcon)
     },
     isActive: Boolean = false,
     isPlaying: Boolean = false,
@@ -1551,6 +1496,88 @@ data class Quadruple<A, B, C, D>(
     val third: C,
     val fourth: D
 )
+
+/**
+ * The standard library badges for a song row — liked / explicit / in-library / download (with live
+ * MediaStore progress). Single source of truth so every surface that shows a song's state (song rows,
+ * the Latest Releases singles) stays identical.
+ */
+@Composable
+fun RowScope.SongBadges(
+    song: Song,
+    showLikedIcon: Boolean = true,
+    showExplicitIcon: Boolean = true,
+    showInLibraryIcon: Boolean = false,
+    showDownloadIcon: Boolean = true,
+) {
+    if (showLikedIcon && song.song.liked) {
+        Icon.Favorite()
+    }
+    if (showExplicitIcon && song.song.explicit) {
+        Icon.Explicit()
+    }
+    if (showInLibraryIcon && song.song.inLibrary != null) {
+        Icon.Library()
+    }
+    if (showDownloadIcon) {
+        // Persisted downloaded flag, else the live MediaStore download state.
+        if (song.song.isDownloaded) {
+            Icon.Download(com.jtech.zemer.playback.MediaStoreDownloadManager.DownloadState.Status.COMPLETED)
+        } else {
+            val downloadState by LocalDownloadUtil.current.getMediaStoreDownload(song.id)
+                .collectAsState(initial = null)
+            Icon.Download(downloadState?.status)
+        }
+    }
+}
+
+/**
+ * The standard library badges for an album row — bookmarked / explicit / aggregate download state
+ * (downloaded when every track is, downloading when any is). Single source of truth shared by the
+ * library album rows and the Latest Releases album rows.
+ */
+@Composable
+fun RowScope.AlbumBadges(
+    album: Album,
+    showLikedIcon: Boolean = true,
+) {
+    val downloadUtil = LocalDownloadUtil.current
+    val database = LocalDatabase.current
+
+    val songs by produceState(initialValue = emptyList(), album.id) {
+        withContext(Dispatchers.IO) {
+            value = database.albumSongs(album.id).first()
+        }
+    }
+
+    val allMediaStoreDownloads by downloadUtil.getAllMediaStoreDownloads().collectAsState()
+
+    @SuppressLint("AutoboxingStateCreation")
+    val downloadState by remember(songs, allMediaStoreDownloads) {
+        mutableStateOf(
+            if (songs.isEmpty()) {
+                Download.STATE_STOPPED
+            } else {
+                when {
+                    songs.all { allMediaStoreDownloads[it.id]?.status == com.jtech.zemer.playback.MediaStoreDownloadManager.DownloadState.Status.COMPLETED } -> STATE_COMPLETED
+                    songs.any { allMediaStoreDownloads[it.id]?.status in listOf(
+                        com.jtech.zemer.playback.MediaStoreDownloadManager.DownloadState.Status.QUEUED,
+                        com.jtech.zemer.playback.MediaStoreDownloadManager.DownloadState.Status.DOWNLOADING
+                    ) } -> STATE_DOWNLOADING
+                    else -> Download.STATE_STOPPED
+                }
+            }
+        )
+    }
+
+    if (showLikedIcon && album.album.bookmarkedAt != null) {
+        Icon.Favorite()
+    }
+    if (album.album.explicit) {
+        Icon.Explicit()
+    }
+    Icon.Download(downloadState)
+}
 
 private object Icon {
     @Composable

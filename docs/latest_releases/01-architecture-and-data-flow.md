@@ -23,11 +23,11 @@ card composable), plus a ViewModel and two UI screens:
 | `latestreleases/LatestReleaseMapping.kt` | `LatestRelease.toAlbumItem()` — adapts a feed row to the InnerTube `AlbumItem` the rest of the app already renders, filters, and navigates. |
 | `latestreleases/LatestReleaseDate.kt` | `LatestRelease.relativeDateLabel()` — formats `uploadDate` as a localized relative span ("2 days ago"). |
 | `latestreleases/LatestReleasePlayback.kt` | `LatestRelease.playableSingle()` / `openOrPlay()` — the shared single-vs-album tap decision (play a 1-track single with radio, else open the album); `isNowPlaying()`, the now-playing match (single by videoId, album by browseId); and `sampleTracks()` / `shufflePlay()` backing the See-all shuffle FAB. |
-| `latestreleases/LatestReleaseCard.kt` | `LatestReleaseCard` — the one shared card composable both surfaces render each release through (`asGrid` picks grid vs list); centralizes the album mapping, subtitle, centred play button, now-playing state, tap and long-press menu. |
-| `viewmodels/LatestReleasesViewModel.kt` | Orchestration + whitelist re-filter. Owns the `StateFlow<List<LatestRelease>>` the UI observes. Hilt-injected. |
+| `latestreleases/LatestReleaseCard.kt` | `LatestReleaseCard` — the one shared card composable both surfaces render each release through (`asGrid` picks grid vs list); centralizes the subtitle, centred play button, now-playing state, multi-select wiring, and the **type-correct** badges + per-item menu (single → `SongBadges`/`SongMenu`, album → `AlbumBadges`/`YouTubeAlbumMenu`). |
+| `viewmodels/LatestReleasesViewModel.kt` | Orchestration + whitelist re-filter (owns the `StateFlow<List<LatestRelease>>` the UI observes), plus `resolveSelectionToSongs()` — resolves a multi-selection to real songs (single → its track, album → its tracklist, fetched in parallel) for the selection menu, keeping DB/network out of the UI. Hilt-injected. |
 | `ui/screens/HomeScreen.kt` | The Home shelf (`latest_releases_title` / `latest_releases_list` items), rendering each release via `LatestReleaseCard(asGrid = true)`. |
-| `ui/screens/LatestReleasesScreen.kt` | The "See all" full-list screen, route `latest_releases`, rendering each release via `LatestReleaseCard(asGrid = false)`. |
-| `ui/component/Items.kt` | `subtitleOverride` + `centeredPlayButton` params on `YouTubeGridItem` / `YouTubeListItem`, so a card can show `Artist • <relative date>` and a single can show the centred play button on its artwork. |
+| `ui/screens/LatestReleasesScreen.kt` | The "See all" full-list screen, route `latest_releases`: filter chips, multi-select, shuffle FAB, rendering each release via `LatestReleaseCard(asGrid = false)`. |
+| `ui/component/Items.kt` | `subtitleOverride` + `centeredPlayButton` params on `YouTubeGridItem` / `YouTubeListItem`; and the shared `SongBadges` / `AlbumBadges` row-badge composables (single source of truth for library badges, used by the library song/album rows and the Latest Releases rows). |
 
 ## End-to-end flow
 

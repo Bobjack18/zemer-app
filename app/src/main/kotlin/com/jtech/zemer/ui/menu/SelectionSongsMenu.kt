@@ -95,14 +95,19 @@ fun SelectionSongMenu(
 
     LaunchedEffect(songSelection) {
         if (songSelection.isEmpty()) return@LaunchedEffect
-        downloadUtil.downloads.collect { downloads ->
+        // The download action uses MediaStore (downloadToMediaStore), so reflect MediaStore state —
+        // not the ExoPlayer download map, which this path never populates.
+        downloadUtil.getAllMediaStoreDownloads().collect { downloads ->
             downloadState =
-                if (songSelection.all { downloads[it.id]?.state == Download.STATE_COMPLETED }) {
+                if (songSelection.all {
+                        downloads[it.id]?.status == com.jtech.zemer.playback.MediaStoreDownloadManager.DownloadState.Status.COMPLETED
+                    }
+                ) {
                     Download.STATE_COMPLETED
                 } else if (songSelection.all {
-                        downloads[it.id]?.state == Download.STATE_QUEUED ||
-                                downloads[it.id]?.state == Download.STATE_DOWNLOADING ||
-                                downloads[it.id]?.state == Download.STATE_COMPLETED
+                        downloads[it.id]?.status == com.jtech.zemer.playback.MediaStoreDownloadManager.DownloadState.Status.QUEUED ||
+                                downloads[it.id]?.status == com.jtech.zemer.playback.MediaStoreDownloadManager.DownloadState.Status.DOWNLOADING ||
+                                downloads[it.id]?.status == com.jtech.zemer.playback.MediaStoreDownloadManager.DownloadState.Status.COMPLETED
                     }
                 ) {
                     Download.STATE_DOWNLOADING
@@ -525,14 +530,19 @@ fun SelectionMediaMetadataMenu(
 
     LaunchedEffect(songSelection) {
         if (songSelection.isEmpty()) return@LaunchedEffect
-        downloadUtil.downloads.collect { downloads ->
+        // The download action uses MediaStore (downloadToMediaStore), so reflect MediaStore state —
+        // not the ExoPlayer download map, which this path never populates.
+        downloadUtil.getAllMediaStoreDownloads().collect { downloads ->
             downloadState =
-                if (songSelection.all { downloads[it.id]?.state == Download.STATE_COMPLETED }) {
+                if (songSelection.all {
+                        downloads[it.id]?.status == com.jtech.zemer.playback.MediaStoreDownloadManager.DownloadState.Status.COMPLETED
+                    }
+                ) {
                     Download.STATE_COMPLETED
                 } else if (songSelection.all {
-                        downloads[it.id]?.state == Download.STATE_QUEUED ||
-                                downloads[it.id]?.state == Download.STATE_DOWNLOADING ||
-                                downloads[it.id]?.state == Download.STATE_COMPLETED
+                        downloads[it.id]?.status == com.jtech.zemer.playback.MediaStoreDownloadManager.DownloadState.Status.QUEUED ||
+                                downloads[it.id]?.status == com.jtech.zemer.playback.MediaStoreDownloadManager.DownloadState.Status.DOWNLOADING ||
+                                downloads[it.id]?.status == com.jtech.zemer.playback.MediaStoreDownloadManager.DownloadState.Status.COMPLETED
                     }
                 ) {
                     Download.STATE_DOWNLOADING

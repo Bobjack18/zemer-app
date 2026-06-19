@@ -6,16 +6,26 @@ import androidx.lifecycle.viewModelScope
 import com.jtech.zemer.db.MusicDatabase
 import com.jtech.zemer.latestreleases.LatestRelease
 import com.jtech.zemer.latestreleases.LatestReleasesStore
+import com.jtech.zemer.latestreleases.isPlayableSingle
+import com.jtech.zemer.latestreleases.sampleMediaMetadata
 import com.jtech.zemer.latestreleases.toAlbumItem
+import com.jtech.zemer.models.MediaMetadata
+import com.jtech.zemer.models.toMediaMetadata
 import com.jtech.zemer.utils.filterWhitelisted
+import com.metrolist.innertube.YouTube
 import com.metrolist.innertube.models.AlbumItem
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -66,6 +76,40 @@ class LatestReleasesViewModel @Inject constructor(
             .mapNotNull { (it as? AlbumItem)?.browseId }
             .toSet()
         return unique.filter { it.browseId in allowedBrowseIds }
+    }
+
+    /**
+     * Resolves a multi-selection of releases to the actual songs to act on, at natural granularity:
+     * a single becomes its one track; an album becomes its full tracklist (from the DB, fetched once
+     * and cached if not present). De-duplicated by track id. Runs on IO; an album whose tracklist
+     * can't be fetched contributes nothing rather than failing the whole action. This keeps all the
+     * DB/network work out of the UI — the screen just feeds the result to the shared selection menu.
+     */
+    suspend fun resolveSelectionToSongs(releases: List<LatestRelease>): List<MediaMetadata> =
+        withContext(Dispatchers.IO) {
+            // Resolve releases concurrently — albums may each need a one-off network fetch, so doing
+            // them in parallel keeps the menu from stalling on a large selection.
+            coroutineScope {
+                releases.map { release -> async { resolveReleaseToSongs(release) } }.awaitAll()
+            }.flatten().distinctBy { it.id }
+        }
+
+    private suspend fun resolveReleaseToSongs(release: LatestRelease): List<MediaMetadata> {
+        if (release.isPlayableSingle()) {
+            val meta = release.sampleMediaMetadata() ?: return emptyList()
+            database.insert(meta)
+            return listOf(database.song(meta.id).first()?.toMediaMetadata() ?: meta)
+        }
+        var albumWithSongs = database.albumWithSongs(release.browseId).first()
+        if (albumWithSongs?.songs.isNullOrEmpty()) {
+            YouTube.album(release.browseId).onSuccess { albumPage ->
+                database.transaction { insert(albumPage) }
+                albumWithSongs = database.albumWithSongs(release.browseId).first()
+            }.onFailure {
+                Timber.tag(TAG).w(it, "Could not resolve album ${release.browseId} for selection")
+            }
+        }
+        return albumWithSongs?.songs?.map { it.toMediaMetadata() }.orEmpty()
     }
 
     private companion object {
