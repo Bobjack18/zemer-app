@@ -16,6 +16,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.produceState
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -49,6 +50,7 @@ import com.jtech.zemer.ui.component.NewAction
 import com.jtech.zemer.ui.component.NewActionGrid
 import com.metrolist.innertube.YouTube
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -503,8 +505,17 @@ fun SelectionMediaMetadataMenu(
     val playerConnection = LocalPlayerConnection.current ?: return
     val selectionQueueTitle = stringResource(R.string.queue_selection)
 
-    val allLiked by remember(songSelection) {
-        mutableStateOf(songSelection.isNotEmpty() && songSelection.all { it.liked })
+    // Reactive: reflects the live DB liked state of the selection (the passed MediaMetadata's `liked`
+    // is a stale snapshot — e.g. metadata built via toMediaMetadata() carries liked=false), so the
+    // heart icon flips correctly while the menu is open.
+    val allLiked by produceState(initialValue = false, songSelection) {
+        if (songSelection.isEmpty()) {
+            value = false
+            return@produceState
+        }
+        combine(songSelection.map { database.song(it.id) }) { songs ->
+            songs.all { it?.song?.liked == true }
+        }.collect { value = it }
     }
 
     var showChoosePlaylistDialog by rememberSaveable {
@@ -686,14 +697,23 @@ fun SelectionMediaMetadataMenu(
                             },
                             title = { Text(stringResource(R.string.like_all)) },
                             onClick = {
-                                database.query {
-                                    if (allLiked) {
-                                        songSelection.forEach { song ->
-                                            update(song.toSongEntity().toggleLike())
-                                        }
-                                    } else {
-                                        songSelection.filter { !it.liked }.forEach { song ->
-                                            update(song.toSongEntity().toggleLike())
+                                coroutineScope.launch(Dispatchers.IO) {
+                                    // Toggle the CANONICAL DB row (inserting it first if unknown) rather
+                                    // than rebuilding a SongEntity from the lossy MediaMetadata — a
+                                    // full-row update from metadata would wipe inLibrary / isDownloaded /
+                                    // explicit. Decide the target from live state, flip only what differs.
+                                    val entities = songSelection.mapNotNull { meta ->
+                                        database.song(meta.id).first()?.song
+                                            ?: run {
+                                                database.insert(meta)
+                                                database.song(meta.id).first()?.song
+                                            }
+                                    }
+                                    if (entities.isEmpty()) return@launch
+                                    val targetLiked = !entities.all { it.liked }
+                                    database.query {
+                                        entities.forEach { entity ->
+                                            if (entity.liked != targetLiked) update(entity.toggleLike())
                                         }
                                     }
                                 }
