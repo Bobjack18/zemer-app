@@ -1,23 +1,23 @@
 # Non-Kotlin file reference
 
-Every tracked non-Kotlin path outside `docs/` is listed. Text files report line counts; binary files report byte counts; gitlinks are recorded as non-file tracked paths. Total paths: `359`.
+Every tracked non-Kotlin path outside `docs/` is listed. Text files report line counts; binary files report byte counts; gitlinks are recorded as non-file tracked paths. Total paths: `362`.
 
 | Path | Size/status | Type metadata |
 | --- | ---: | --- |
 | `.github/workflows/debug-build.yml` | 81 lines | text `.yml` |
 | `.github/workflows/docs-regenerate.yml` | 74 lines | text `.yml` |
-| `.github/workflows/player-monitor.yml` | 195 lines | text `.yml` |
+| `.github/workflows/player-monitor.yml` | 181 lines | text `.yml` |
 | `.github/workflows/release-build.yml` | 155 lines | text `.yml` |
 | `.github/workflows/ui-audit.yml` | 38 lines | text `.yml` |
 | `.gitignore` | 115 lines | text `[none]` |
 | `.gitmodules` | 6 lines | text `[none]` |
-| `AGENTS.md` | 216 lines | text `.md` |
+| `AGENTS.md` | 214 lines | text `.md` |
 | `LICENSE` | 674 lines | text `[none]` |
 | `README.md` | 19 lines | text `.md` |
 | `app/.gitignore` | 1 lines | text `[none]` |
-| `app/build.gradle.kts` | 283 lines | text `.kts`; plugins `com.android.application, android, kotlin.serialization, hilt, kotlin.ksp, compose.compiler, google.gms.google.services, firebase.crashlytics, rikka.tools.refine` |
+| `app/build.gradle.kts` | 291 lines | text `.kts`; plugins `com.android.application, android, kotlin.serialization, hilt, kotlin.ksp, compose.compiler, google.gms.google.services, firebase.crashlytics, rikka.tools.refine` |
 | `app/lint.xml` | 12 lines | text `.xml`; XML root `lint` |
-| `app/proguard-rules.pro` | 257 lines | text `.pro` |
+| `app/proguard-rules.pro` | 269 lines | text `.pro` |
 | `app/schemas/com.jtech.zemer.db.InternalDatabase/1.json` | 297 lines | text `.json`; JSON keys `formatVersion, database` |
 | `app/schemas/com.jtech.zemer.db.InternalDatabase/10.json` | 814 lines | text `.json`; JSON keys `formatVersion, database` |
 | `app/schemas/com.jtech.zemer.db.InternalDatabase/11.json` | 796 lines | text `.json`; JSON keys `formatVersion, database` |
@@ -80,10 +80,13 @@ Every tracked non-Kotlin path outside `docs/` is listed. Text files report line 
 | `app/src/main/res/drawable/bookmark_filled.xml` | 9 lines | text `.xml`; XML root `vector` |
 | `app/src/main/res/drawable/cached.xml` | 9 lines | text `.xml`; XML root `vector` |
 | `app/src/main/res/drawable/casino.xml` | 10 lines | text `.xml`; XML root `vector` |
+| `app/src/main/res/drawable/cast.xml` | 9 lines | text `.xml`; XML root `vector` |
+| `app/src/main/res/drawable/cast_connected.xml` | 9 lines | text `.xml`; XML root `vector` |
 | `app/src/main/res/drawable/check.xml` | 9 lines | text `.xml`; XML root `vector` |
 | `app/src/main/res/drawable/check_box.xml` | 9 lines | text `.xml`; XML root `vector` |
 | `app/src/main/res/drawable/clear_all.xml` | 9 lines | text `.xml`; XML root `vector` |
 | `app/src/main/res/drawable/close.xml` | 9 lines | text `.xml`; XML root `vector` |
+| `app/src/main/res/drawable/content_copy.xml` | 10 lines | text `.xml`; XML root `vector` |
 | `app/src/main/res/drawable/contrast.xml` | 9 lines | text `.xml`; XML root `vector` |
 | `app/src/main/res/drawable/dark_mode.xml` | 9 lines | text `.xml`; XML root `vector` |
 | `app/src/main/res/drawable/delete.xml` | 9 lines | text `.xml`; XML root `vector` |
@@ -249,7 +252,7 @@ Every tracked non-Kotlin path outside `docs/` is listed. Text files report line 
 | `app/src/main/res/values/app_name.xml` | 4 lines | text `.xml`; XML root `resources` |
 | `app/src/main/res/values/colors.xml` | 9 lines | text `.xml`; XML root `resources` |
 | `app/src/main/res/values/ic_launcher_background.xml` | 6 lines | text `.xml`; XML root `resources` |
-| `app/src/main/res/values/metrolist_strings.xml` | 554 lines | text `.xml`; XML root `resources` |
+| `app/src/main/res/values/metrolist_strings.xml` | 573 lines | text `.xml`; XML root `resources` |
 | `app/src/main/res/values/strings.xml` | 560 lines | text `.xml`; XML root `resources` |
 | `app/src/main/res/values/styles.xml` | 26 lines | text `.xml`; XML root `resources` |
 | `app/src/main/res/values/values.xml` | 8 lines | text `.xml`; XML root `resources` |
@@ -343,7 +346,7 @@ Every tracked non-Kotlin path outside `docs/` is listed. Text files report line 
 | `tests/results.json` | 222 lines | text `.json` |
 | `tests/retest-web.mjs` | 58 lines | text `.mjs` |
 | `tests/run.mjs` | 181 lines | text `.mjs` |
-| `tests/scan-live-players.mjs` | 124 lines | text `.mjs` |
+| `tests/scan-live-players.mjs` | 115 lines | text `.mjs` |
 | `tests/scan-live-players.test.mjs` | 44 lines | text `.mjs` |
 | `tests/search/README.md` | 114 lines | text `.md` |
 | `tests/search/album-facet-probe.mjs` | 42 lines | text `.mjs` |
