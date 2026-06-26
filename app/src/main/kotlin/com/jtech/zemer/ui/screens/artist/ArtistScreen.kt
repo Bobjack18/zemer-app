@@ -118,7 +118,9 @@ import com.jtech.zemer.utils.rememberPreference
 import com.jtech.zemer.viewmodels.ArtistViewModel
 import com.metrolist.innertube.models.AlbumItem
 import com.metrolist.innertube.models.ArtistItem
+import com.metrolist.innertube.models.EpisodeItem
 import com.metrolist.innertube.models.PlaylistItem
+import com.metrolist.innertube.models.PodcastItem
 import com.metrolist.innertube.models.SongItem
 import com.metrolist.innertube.models.WatchEndpoint
 import com.valentinilk.shimmer.shimmer
@@ -715,6 +717,8 @@ fun ArtistScreen(
                                                 is AlbumItem -> mediaMetadata?.album?.id == item.id
                                                 is ArtistItem -> false
                                                 is PlaylistItem -> false
+                                                is PodcastItem -> false
+                                                is EpisodeItem -> false
                                             },
                                             isPlaying = isPlaying,
                                             coroutineScope = coroutineScope,
@@ -744,6 +748,15 @@ fun ArtistScreen(
                                                                 is AlbumItem -> navController.navigate("album/${item.id}")
                                                                 is ArtistItem -> navController.navigate("artist/${item.id}")
                                                                 is PlaylistItem -> navController.navigate("online_playlist/${item.id}")
+                                                                is PodcastItem -> navController.navigate("online_podcast/${item.id}")
+                                                                is EpisodeItem -> {
+                                                                    playerConnection.playQueue(
+                                                                        ListQueue(
+                                                                            title = item.title,
+                                                                            items = listOf(item.asSongItem().toMediaItem()),
+                                                                        )
+                                                                    )
+                                                                }
                                                             }
                                                         }
                                                     },
@@ -776,6 +789,20 @@ fun ArtistScreen(
                                                                     YouTubePlaylistMenu(
                                                                         playlist = item,
                                                                         coroutineScope = coroutineScope,
+                                                                        onDismiss = menuState::dismiss,
+                                                                    )
+
+                                                                is PodcastItem ->
+                                                                    YouTubePlaylistMenu(
+                                                                        playlist = item.asPlaylistItem(),
+                                                                        coroutineScope = coroutineScope,
+                                                                        onDismiss = menuState::dismiss,
+                                                                    )
+
+                                                                is EpisodeItem ->
+                                                                    YouTubeSongMenu(
+                                                                        song = item.asSongItem(),
+                                                                        navController = navController,
                                                                         onDismiss = menuState::dismiss,
                                                                     )
                                                             }

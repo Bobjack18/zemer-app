@@ -710,7 +710,8 @@ fun AppearanceSettings(
             selectedValue = defaultChip,
             values = listOf(
                 LibraryFilter.LIBRARY, LibraryFilter.PLAYLISTS, LibraryFilter.SONGS,
-                LibraryFilter.VIDEOS, LibraryFilter.ALBUMS, LibraryFilter.ARTISTS
+                LibraryFilter.VIDEOS, LibraryFilter.ALBUMS, LibraryFilter.ARTISTS,
+                LibraryFilter.PODCASTS
             ),
             valueText = {
                 when (it) {
@@ -719,6 +720,7 @@ fun AppearanceSettings(
                     LibraryFilter.ARTISTS -> stringResource(R.string.artists)
                     LibraryFilter.ALBUMS -> stringResource(R.string.albums)
                     LibraryFilter.PLAYLISTS -> stringResource(R.string.playlists)
+                    LibraryFilter.PODCASTS -> stringResource(R.string.podcasts)
                     LibraryFilter.LIBRARY -> stringResource(R.string.filter_library)
                 }
             },

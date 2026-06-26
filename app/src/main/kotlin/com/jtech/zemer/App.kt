@@ -301,6 +301,14 @@ class App : Application(), SingletonImageLoader.Factory {
             val nm = getSystemService(NotificationManager::class.java)
             nm.createNotificationChannel(channel)
         }
+
+        // Run all syncs at app startup if user is logged in
+        val userCookie = settings[InnerTubeCookieKey]
+        val isLoggedIn = !userCookie.isNullOrEmpty() && "SAPISID" in parseCookieString(userCookie)
+        if (isLoggedIn) {
+            syncUtils.runAllSyncs()
+            Log.d("App", "Started background sync for logged-in user")
+        }
     }
 
     private fun observeSettingsChanges() {
