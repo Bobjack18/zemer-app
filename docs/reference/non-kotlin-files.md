@@ -6,12 +6,12 @@ Every tracked non-Kotlin path outside `docs/` is listed. Text files report line 
 | --- | ---: | --- |
 | `.github/workflows/debug-build.yml` | 81 lines | text `.yml` |
 | `.github/workflows/docs-regenerate.yml` | 74 lines | text `.yml` |
-| `.github/workflows/player-monitor.yml` | 181 lines | text `.yml` |
+| `.github/workflows/player-monitor.yml` | 195 lines | text `.yml` |
 | `.github/workflows/release-build.yml` | 155 lines | text `.yml` |
 | `.github/workflows/ui-audit.yml` | 38 lines | text `.yml` |
 | `.gitignore` | 115 lines | text `[none]` |
 | `.gitmodules` | 6 lines | text `[none]` |
-| `AGENTS.md` | 214 lines | text `.md` |
+| `AGENTS.md` | 216 lines | text `.md` |
 | `LICENSE` | 674 lines | text `[none]` |
 | `README.md` | 19 lines | text `.md` |
 | `app/.gitignore` | 1 lines | text `[none]` |
@@ -252,7 +252,7 @@ Every tracked non-Kotlin path outside `docs/` is listed. Text files report line 
 | `app/src/main/res/values/app_name.xml` | 4 lines | text `.xml`; XML root `resources` |
 | `app/src/main/res/values/colors.xml` | 9 lines | text `.xml`; XML root `resources` |
 | `app/src/main/res/values/ic_launcher_background.xml` | 6 lines | text `.xml`; XML root `resources` |
-| `app/src/main/res/values/metrolist_strings.xml` | 573 lines | text `.xml`; XML root `resources` |
+| `app/src/main/res/values/metrolist_strings.xml` | 574 lines | text `.xml`; XML root `resources` |
 | `app/src/main/res/values/strings.xml` | 560 lines | text `.xml`; XML root `resources` |
 | `app/src/main/res/values/styles.xml` | 26 lines | text `.xml`; XML root `resources` |
 | `app/src/main/res/values/values.xml` | 8 lines | text `.xml`; XML root `resources` |
@@ -346,7 +346,7 @@ Every tracked non-Kotlin path outside `docs/` is listed. Text files report line 
 | `tests/results.json` | 222 lines | text `.json` |
 | `tests/retest-web.mjs` | 58 lines | text `.mjs` |
 | `tests/run.mjs` | 181 lines | text `.mjs` |
-| `tests/scan-live-players.mjs` | 115 lines | text `.mjs` |
+| `tests/scan-live-players.mjs` | 124 lines | text `.mjs` |
 | `tests/scan-live-players.test.mjs` | 44 lines | text `.mjs` |
 | `tests/search/README.md` | 114 lines | text `.md` |
 | `tests/search/album-facet-probe.mjs` | 42 lines | text `.mjs` |
