@@ -4,6 +4,7 @@ import android.net.ConnectivityManager
 import androidx.core.net.toUri
 import androidx.media3.common.PlaybackException
 import com.jtech.zemer.constants.AudioQuality
+import com.jtech.zemer.constants.DownloadFormat
 import com.jtech.zemer.constants.StreamSourceAndroidVRKey
 import com.jtech.zemer.constants.StreamSourceIOSKey
 import com.jtech.zemer.constants.StreamSourceIPadOSKey
@@ -161,6 +162,7 @@ object YTPlayerUtils {
         preferVideo: Boolean = false,
         maxVideoBitrateKbps: Int? = null,
         forDownload: Boolean = false,
+        downloadFormat: DownloadFormat = DownloadFormat.OPUS,
     ): Result<PlaybackData> = runCatching {
         val mainClient = if (MAIN_CLIENT.clientName in disabledStreamClients) {
             STREAM_FALLBACK_CLIENTS.firstOrNull()
@@ -276,6 +278,7 @@ object YTPlayerUtils {
                         preferVideo,
                         maxVideoBitrateKbps,
                         forDownload,
+                        downloadFormat,
                     )
 
                 if (format == null) {
@@ -454,6 +457,7 @@ object YTPlayerUtils {
         preferVideo: Boolean,
         maxVideoBitrateKbps: Int?,
         forDownload: Boolean = false,
+        downloadFormat: DownloadFormat = DownloadFormat.OPUS,
     ): PlayerResponse.StreamingData.Format? {
         if (preferVideo) {
             val progressive = playerResponse.streamingData?.formats.orEmpty()
@@ -473,13 +477,22 @@ object YTPlayerUtils {
             return null
         }
 
-        // For downloads: exclude webm (MediaStore doesn't support it)
+        // For downloads: filter by user's preferred container format
         // For streaming: prefer opus (webm) for better quality
         val audioFormats = playerResponse.streamingData?.adaptiveFormats
             ?.filter { it.isAudio && it.isOriginal }
             ?.let { formats ->
-                if (forDownload) {
-                    // Exclude webm for downloads - MediaStore only supports mp4/m4a
+                if (forDownload && downloadFormat == DownloadFormat.M4A) {
+                    // Filter formats matching the user's selected container format
+                    val matching = formats.filter { it.mimeType.startsWith(downloadFormat.mimeTypePrefix) }
+                    matching.ifEmpty { formats }
+                } else {
+                    formats
+                }
+            }
+            ?.let { formats ->
+                if (forDownload && downloadFormat == DownloadFormat.M4A) {
+                    // Exclude webm for M4A downloads
                     formats.filter { !it.mimeType.startsWith("audio/webm") }.ifEmpty { formats }
                 } else {
                     formats
@@ -491,7 +504,11 @@ object YTPlayerUtils {
                 AudioQuality.AUTO -> if (connectivityManager.isActiveNetworkMetered) -1 else 1
                 AudioQuality.HIGH -> 1
                 AudioQuality.LOW -> -1
-            } + (if (!forDownload && it.mimeType.startsWith("audio/webm")) 10240 else 0) // prefer opus for streaming only
+            } + when {
+                !forDownload && it.mimeType.startsWith("audio/webm") -> 10240 // prefer opus for streaming
+                forDownload && downloadFormat == DownloadFormat.OPUS && it.mimeType.startsWith("audio/webm") -> 10240
+                else -> 0
+            }
         }
 
         return audioFormat

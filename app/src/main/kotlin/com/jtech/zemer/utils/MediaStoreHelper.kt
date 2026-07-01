@@ -38,7 +38,7 @@ class MediaStoreHelper(private val context: Context) {
 
         // Supported audio MIME types
         private val MIME_TYPE_MAP = mapOf(
-            "opus" to "audio/opus",
+            "opus" to "audio/ogg",
             "m4a" to "audio/mp4",
             "mp4" to "audio/mp4",
             "webm" to "audio/webm",
