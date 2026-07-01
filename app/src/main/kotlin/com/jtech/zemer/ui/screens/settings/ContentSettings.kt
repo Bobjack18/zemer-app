@@ -66,6 +66,7 @@ import com.jtech.zemer.constants.ContentLanguageKey
 import com.jtech.zemer.constants.CountryCodeToName
 import com.jtech.zemer.constants.EnableContentFiltersKey
 import com.jtech.zemer.constants.EnableLrcLibKey
+import com.jtech.zemer.constants.AutoFetchLyricsKey
 import com.jtech.zemer.constants.LanguageCodeToName
 import com.jtech.zemer.constants.QuickPicks
 import com.jtech.zemer.constants.QuickPicksKey
@@ -195,6 +196,7 @@ fun ContentSettings(
     val (contentLanguage, onContentLanguageChange) = rememberPreference(key = ContentLanguageKey, defaultValue = "system")
     val (contentCountry, onContentCountryChange) = rememberPreference(key = ContentCountryKey, defaultValue = "system")
     val (enableLrclib, onEnableLrclibChange) = rememberPreference(key = EnableLrcLibKey, defaultValue = true)
+    val (autoFetchLyrics, onAutoFetchLyricsChange) = rememberPreference(key = AutoFetchLyricsKey, defaultValue = true)
     val (lengthTop, onLengthTopChange) = rememberPreference(key = TopSize, defaultValue = "50")
     val (quickPicks, onQuickPicksChange) = rememberEnumPreference(key = QuickPicksKey, defaultValue = QuickPicks.QUICK_PICKS)
     val (enableContentFilters, onEnableContentFiltersChange) = rememberPreference(key = EnableContentFiltersKey, defaultValue = true)
@@ -317,6 +319,13 @@ fun ContentSettings(
             icon = { Icon(painterResource(R.drawable.lyrics), null) },
             checked = enableLrclib,
             onCheckedChange = onEnableLrclibChange,
+        )
+        SwitchPreference(
+            title = { Text(stringResource(R.string.auto_fetch_lyrics)) },
+            description = stringResource(R.string.auto_fetch_lyrics_desc),
+            icon = { Icon(painterResource(R.drawable.lyrics), null) },
+            checked = autoFetchLyrics,
+            onCheckedChange = onAutoFetchLyricsChange,
         )
 
         PreferenceGroupTitle(title = stringResource(R.string.content_filters))

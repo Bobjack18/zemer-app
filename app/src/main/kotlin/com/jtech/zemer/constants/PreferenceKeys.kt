@@ -346,6 +346,7 @@ val LyricsTextPositionKey = stringPreferencesKey("lyricsTextPosition")
 val LyricsClickKey = booleanPreferencesKey("lyricsClick")
 val LyricsScrollKey = booleanPreferencesKey("lyricsScrollKey")
 val TranslateLyricsKey = booleanPreferencesKey("translateLyrics")
+val AutoFetchLyricsKey = booleanPreferencesKey("autoFetchLyrics")
 
 val PlayerVolumeKey = floatPreferencesKey("playerVolume")
 val RepeatModeKey = intPreferencesKey("repeatMode")

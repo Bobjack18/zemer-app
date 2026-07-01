@@ -551,4 +551,7 @@
     <string name="recognize_music_play">Play</string>
     <string name="recognize_music_try_again">Try again</string>
     <string name="recognize_music_close">Close</string>
+
+    <string name="auto_fetch_lyrics">Auto-fetch lyrics</string>
+    <string name="auto_fetch_lyrics_desc">Automatically fetch lyrics when a song starts playing (fetches on demand when lyrics screen is opened if disabled)</string>
 </resources>
