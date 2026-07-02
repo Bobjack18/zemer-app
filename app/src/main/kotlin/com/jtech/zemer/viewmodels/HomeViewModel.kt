@@ -20,6 +20,8 @@ import com.jtech.zemer.db.entities.LocalItem
 import com.jtech.zemer.db.entities.Song
 import com.jtech.zemer.extensions.toEnum
 import com.jtech.zemer.models.toMediaMetadata
+import com.jtech.zemer.supabase.SupabaseItem
+import com.jtech.zemer.supabase.SupabaseRepository
 import com.jtech.zemer.utils.IsraeliArtistRegistry
 import com.jtech.zemer.utils.ContentFilterConfig
 import com.jtech.zemer.utils.ContentFilterState
@@ -61,6 +63,7 @@ class HomeViewModel @Inject constructor(
     @ApplicationContext val context: Context,
     val database: MusicDatabase,
     val syncUtils: SyncUtils,
+    private val supabaseRepository: SupabaseRepository,
 ) : ViewModel() {
     private data class HomeArtistProfile(
         val id: String,
@@ -81,6 +84,7 @@ class HomeViewModel @Inject constructor(
         val quickPicks: List<Song> = emptyList(),
         val featuredPlaylists: List<PlaylistItem> = emptyList(),
         val trendingSongs: List<SongItem> = emptyList(),
+        val trendingByCategory: Map<String, List<SupabaseItem.TrendingWithComparison>> = emptyMap(),
         val keepListening: List<LocalItem> = emptyList(),
         val forgottenFavorites: List<Song> = emptyList(),
         val featuredAlbums: List<AlbumItem> = emptyList(),
@@ -992,6 +996,18 @@ class HomeViewModel @Inject constructor(
             // Now start NETWORK calls (after prep work is done)
             Timber.d("HomeViewModel: Starting NETWORK fetch at +${System.currentTimeMillis() - loadStartTime}ms")
             val trendingDeferred = viewModelScope.async(Dispatchers.IO) { loadTrendingSongs(effectiveFilters, hideExplicit) }
+            val supabaseTrendingDeferred = viewModelScope.async(Dispatchers.IO) {
+                try {
+                    supabaseRepository.getTrendingWithComparison()
+                        .groupBy { it.category }
+                        .mapValues { (_, rows) ->
+                            rows.map { it.toSupabaseItem() }
+                        }
+                } catch (e: Exception) {
+                    Timber.w("Supabase trending fetch failed: ${e.message}")
+                    emptyMap()
+                }
+            }
             val homeDeferred = viewModelScope.async(Dispatchers.IO) {
                 if (useWhitelist) {
                     loadWhitelistHome(
@@ -1016,6 +1032,7 @@ class HomeViewModel @Inject constructor(
             }
 
             val trendingSongs = trendingDeferred.await()
+            val trendingByCategory = supabaseTrendingDeferred.await()
             val home = homeDeferred.await()
             val explore = exploreDeferred.await()
             Timber.d("HomeViewModel: NETWORK data ready at +${System.currentTimeMillis() - loadStartTime}ms")
@@ -1284,6 +1301,7 @@ class HomeViewModel @Inject constructor(
                     isNewUser = isNewUser,
                     quickPicks = finalQuick.shuffled(Random(System.nanoTime())),
                     trendingSongs = finalTrending,
+                    trendingByCategory = trendingByCategory,
                     featuredPlaylists = finalFeaturedPlaylists,
                     keepListening = finalKeepListening,
                     forgottenFavorites = finalForgotten,
