@@ -6,6 +6,8 @@ import android.net.Uri
 import androidx.core.content.getSystemService
 import com.jtech.zemer.constants.AudioQuality
 import com.jtech.zemer.constants.AudioQualityKey
+import com.jtech.zemer.constants.DownloadFormat
+import com.jtech.zemer.constants.DownloadFormatKey
 import com.jtech.zemer.db.MusicDatabase
 import com.jtech.zemer.db.entities.Song
 import com.jtech.zemer.db.entities.SongAlbumMap
@@ -67,6 +69,7 @@ constructor(
     private val connectivityManager = context.getSystemService<ConnectivityManager>()
         ?: throw IllegalStateException("ConnectivityManager not available on this device")
     private val audioQuality by enumPreference(context, AudioQualityKey, AudioQuality.AUTO)
+    private val downloadFormat by enumPreference(context, DownloadFormatKey, DownloadFormat.OPUS)
     private val httpClient = OkHttpClient.Builder()
         .dns(ResilientDns())
         .proxy(YouTube.proxy)
@@ -416,6 +419,7 @@ constructor(
                 preferVideo = isVideoDownload,
                 maxVideoBitrateKbps = if (isVideoDownload) requestedVideoBitrate[song.id] else null,
                 forDownload = true,
+                downloadFormat = downloadFormat,
             ).getOrThrow()
 
             val format = playbackData.format
@@ -433,17 +437,15 @@ constructor(
             // Create temporary file for download
             val mimeTypeRaw = format.mimeType.substringBefore(";").trim()
             val extension = if (isVideoDownload) {
-                // For video downloads, keep video extensions
                 when {
                     mimeTypeRaw.contains("webm") -> "webm"
                     mimeTypeRaw.contains("mp4") -> "mp4"
                     mimeTypeRaw.contains("3gp") -> "3gp"
-                    else -> "mp4" // Default to mp4 for videos
+                    else -> "mp4"
                 }
             } else {
-                // For audio downloads, convert to audio extensions
                 when {
-                    mimeTypeRaw.contains("webm") -> "webm"
+                    mimeTypeRaw.contains("webm") -> "opus"
                     mimeTypeRaw.contains("mp4") -> "m4a"
                     mimeTypeRaw.contains("ogg") -> "ogg"
                     mimeTypeRaw.contains("opus") -> "opus"
