@@ -28,9 +28,9 @@ import com.jtech.zemer.ui.screens.playlist.TopPlaylistScreen
 import com.jtech.zemer.ui.screens.recognition.RecognitionHistoryScreen
 import com.jtech.zemer.ui.screens.search.OnlineSearchResult
 import com.jtech.zemer.ui.screens.settings.AboutScreen
-import com.jtech.zemer.ui.screens.playlist.FolderManagementScreen
 import com.jtech.zemer.ui.screens.settings.AndroidAutoSettings
 import com.jtech.zemer.ui.screens.settings.AppearanceSettings
+import com.jtech.zemer.ui.screens.settings.LogViewerScreen
 import com.jtech.zemer.ui.screens.settings.BackupAndRestore
 import com.jtech.zemer.ui.screens.settings.ButtonSetupScreen
 import com.jtech.zemer.ui.screens.settings.ContentSettings
@@ -345,8 +345,8 @@ fun NavGraphBuilder.navigationBuilder(
     composable("settings/about") {
         AboutScreen(navController, scrollBehavior)
     }
-    composable(route = "playlist_folders") {
-        FolderManagementScreen(onNavigateBack = { navController.popBackStack() })
+    composable("settings/log_viewer") {
+        LogViewerScreen(navController, scrollBehavior)
     }
     composable("login") {
         LoginScreen(navController)
