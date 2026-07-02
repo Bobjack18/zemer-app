@@ -184,12 +184,6 @@
     <string name="swipe_sensitivity_desc">Adjust how sensitive swipe gestures are for changing songs</string>
     <string name="sensitivity_percentage">%1$d%%</string>
 
-    <string name="download_format">Download format</string>
-    <string name="download_format_desc">Preferred audio format for downloads. Opus = best quality/smallest, M4A = widely compatible, MP3 = most compatible but larger at same quality</string>
-    <string name="download_format_opus">Opus (best quality, smallest)</string>
-    <string name="download_format_m4a">M4A (AAC, widely compatible)</string>
-    <string name="download_format_mp3">MP3 (most compatible, larger)</string>
-
     <string name="clear_song_cache_dialog">  Are you sure you want to clear all cached songs?</string>
     <string name="clear_image_cache_dialog">  Are you sure you want to clear all cached image?</string>
     <string name="clear_downloads_dialog">  Are you sure you want to clear all downloads?</string>
@@ -558,6 +552,6 @@
     <string name="recognize_music_try_again">Try again</string>
     <string name="recognize_music_close">Close</string>
 
-    <string name="artist_blacklist">Artist Blacklist</string>
-    <string name="artist_blacklist_desc">Block specific artists from appearing anywhere in the app</string>
+    <string name="auto_fetch_lyrics">Auto-fetch lyrics</string>
+    <string name="auto_fetch_lyrics_desc">Automatically fetch lyrics when a song starts playing (fetches on demand when lyrics screen is opened if disabled)</string>
 </resources>
