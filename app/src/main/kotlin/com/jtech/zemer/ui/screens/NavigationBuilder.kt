@@ -20,7 +20,6 @@ import com.jtech.zemer.ui.screens.library.LibraryScreen
 import com.jtech.zemer.ui.screens.player.VideoPlayerScreen
 import com.jtech.zemer.ui.screens.playlist.AutoPlaylistScreen
 import com.jtech.zemer.ui.screens.playlist.CachePlaylistScreen
-import com.jtech.zemer.ui.screens.playlist.FolderManagementScreen
 import com.jtech.zemer.ui.screens.playlist.DownloadedContentScreen
 import com.jtech.zemer.ui.screens.playlist.DownloadedVideosScreen
 import com.jtech.zemer.ui.screens.playlist.LocalPlaylistScreen
@@ -29,6 +28,7 @@ import com.jtech.zemer.ui.screens.playlist.TopPlaylistScreen
 import com.jtech.zemer.ui.screens.recognition.RecognitionHistoryScreen
 import com.jtech.zemer.ui.screens.search.OnlineSearchResult
 import com.jtech.zemer.ui.screens.settings.AboutScreen
+import com.jtech.zemer.ui.screens.playlist.FolderManagementScreen
 import com.jtech.zemer.ui.screens.settings.AndroidAutoSettings
 import com.jtech.zemer.ui.screens.settings.AppearanceSettings
 import com.jtech.zemer.ui.screens.settings.BackupAndRestore
@@ -42,8 +42,6 @@ import com.jtech.zemer.ui.screens.settings.StorageSettings
 import com.jtech.zemer.ui.screens.settings.StreamSourceSettings
 import com.jtech.zemer.ui.screens.settings.UpdaterScreen
 import com.jtech.zemer.ui.screens.settings.integrations.IntegrationScreen
-import com.jtech.zemer.ui.screens.settings.LogViewerScreen
-import com.jtech.zemer.ui.screens.settings.ArtistBlacklistScreen
 import com.jtech.zemer.viewmodels.HomeViewModel
 
 
@@ -272,9 +270,6 @@ fun NavGraphBuilder.navigationBuilder(
     ) {
         CachePlaylistScreen(navController, scrollBehavior)
     }
-    composable(route = "playlist_folders") {
-        FolderManagementScreen(onNavigateBack = { navController.popBackStack() })
-    }
     composable(route = "downloaded_content") {
         DownloadedContentScreen(navController, scrollBehavior)
     }
@@ -350,11 +345,8 @@ fun NavGraphBuilder.navigationBuilder(
     composable("settings/about") {
         AboutScreen(navController, scrollBehavior)
     }
-    composable("settings/log_viewer") {
-        LogViewerScreen(navController, scrollBehavior)
-    }
-    composable("settings/artist_blacklist") {
-        ArtistBlacklistScreen(navController, scrollBehavior)
+    composable(route = "playlist_folders") {
+        FolderManagementScreen(onNavigateBack = { navController.popBackStack() })
     }
     composable("login") {
         LoginScreen(navController)
