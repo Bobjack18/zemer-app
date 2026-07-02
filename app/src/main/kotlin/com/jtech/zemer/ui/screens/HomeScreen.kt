@@ -6,6 +6,9 @@ import androidx.compose.foundation.gestures.snapping.rememberSnapFlingBehavior
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.asPaddingValues
@@ -14,8 +17,13 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -93,6 +101,7 @@ import com.jtech.zemer.ui.screens.videoRoute
 import com.jtech.zemer.ui.utils.SnapLayoutInfoProvider
 import com.jtech.zemer.utils.rememberPreference
 import com.jtech.zemer.latestreleases.LatestReleaseCard
+import com.jtech.zemer.supabase.SupabaseItem
 import com.jtech.zemer.viewmodels.HomeViewModel
 import com.jtech.zemer.viewmodels.LatestReleasesViewModel
 import com.metrolist.innertube.models.AlbumItem
@@ -129,6 +138,7 @@ fun HomeScreen(
     val quickPicks = homeUiState.quickPicks
     val featuredPlaylists = homeUiState.featuredPlaylists
     val trendingSongs = homeUiState.trendingSongs
+    val trendingByCategory = homeUiState.trendingByCategory
     val forgottenFavorites = homeUiState.forgottenFavorites
     val keepListening = homeUiState.keepListening
     val featuredAlbums = homeUiState.featuredAlbums
@@ -783,6 +793,36 @@ fun HomeScreen(
                 }
             }
 
+            trendingByCategory.forEach { (category, items) ->
+                item(key = "trending_category_${category}_title", contentType = "header") {
+                    NavigationTitle(
+                        title = category,
+                        modifier = Modifier.animateItem()
+                    )
+                }
+                items.chunked(2).forEachIndexed { rowIndex, rowItems ->
+                    item(key = "trending_category_${category}_row_$rowIndex", contentType = "grid") {
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 12.dp)
+                                .animateItem(),
+                            horizontalArrangement = Arrangement.spacedBy(12.dp)
+                        ) {
+                            rowItems.forEach { item ->
+                                TrendingCategoryCard(
+                                    item = item,
+                                    modifier = Modifier.weight(1f),
+                                )
+                            }
+                            if (rowItems.size < 2) {
+                                Spacer(Modifier.weight(1f))
+                            }
+                        }
+                    }
+                }
+            }
+
             // Show featured artists
             if (featuredArtists.isNotEmpty()) {
                 item(key = "featured_artists_title", contentType = "header") {
@@ -938,5 +978,62 @@ fun HomeScreen(
                 .align(Alignment.TopCenter)
                 .padding(LocalPlayerAwareWindowInsets.current.asPaddingValues()),
         )
+    }
+}
+
+@Composable
+private fun TrendingCategoryCard(
+    item: SupabaseItem.TrendingWithComparison,
+    modifier: Modifier = Modifier,
+) {
+    val spotColor = when (item.spotChange) {
+        "up" -> MaterialTheme.colorScheme.primary
+        "down" -> MaterialTheme.colorScheme.error
+        else -> MaterialTheme.colorScheme.onSurfaceVariant
+    }
+    val spotIcon = when (item.spotChange) {
+        "up" -> R.drawable.arrow_upward
+        "down" -> R.drawable.arrow_downward
+        else -> R.drawable.remove
+    }
+    Card(
+        modifier = modifier.padding(vertical = 6.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surfaceVariant
+        ),
+    ) {
+        Column(modifier = Modifier.padding(12.dp)) {
+            Text(
+                text = item.title,
+                style = MaterialTheme.typography.bodyMedium,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+            )
+            Text(
+                text = item.artistNames,
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+            )
+            item.currentSpot?.let { spot ->
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(4.dp),
+                ) {
+                    Icon(
+                        painter = painterResource(spotIcon),
+                        contentDescription = null,
+                        tint = spotColor,
+                        modifier = Modifier.size(16.dp),
+                    )
+                    Text(
+                        text = "#$spot",
+                        style = MaterialTheme.typography.labelSmall,
+                        color = spotColor,
+                    )
+                }
+            }
+        }
     }
 }
