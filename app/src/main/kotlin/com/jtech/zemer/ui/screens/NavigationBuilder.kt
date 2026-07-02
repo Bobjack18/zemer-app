@@ -30,9 +30,9 @@ import com.jtech.zemer.ui.screens.search.OnlineSearchResult
 import com.jtech.zemer.ui.screens.settings.AboutScreen
 import com.jtech.zemer.ui.screens.settings.AndroidAutoSettings
 import com.jtech.zemer.ui.screens.settings.AppearanceSettings
-import com.jtech.zemer.ui.screens.settings.LogViewerScreen
 import com.jtech.zemer.ui.screens.settings.BackupAndRestore
 import com.jtech.zemer.ui.screens.settings.ButtonSetupScreen
+import com.jtech.zemer.ui.screens.settings.ArtistBlacklistScreen
 import com.jtech.zemer.ui.screens.settings.ContentSettings
 import com.jtech.zemer.ui.screens.settings.GeneralSettings
 import com.jtech.zemer.ui.screens.settings.PlayerSettings
@@ -345,8 +345,8 @@ fun NavGraphBuilder.navigationBuilder(
     composable("settings/about") {
         AboutScreen(navController, scrollBehavior)
     }
-    composable("settings/log_viewer") {
-        LogViewerScreen(navController, scrollBehavior)
+    composable("settings/artist_blacklist") {
+        ArtistBlacklistScreen(navController, scrollBehavior)
     }
     composable("login") {
         LoginScreen(navController)

@@ -86,12 +86,6 @@ val StreamSourceWebCreatorKey = booleanPreferencesKey("streamSourceWebCreator")
 val StreamSourceAndroidCreatorKey = booleanPreferencesKey("streamSourceAndroidCreator")
 val StreamSourceVisionOSKey   = booleanPreferencesKey("streamSourceVisionOS")
 
-enum class DownloadFormat(val extension: String, val mimeTypePrefix: String) {
-    OPUS("opus", "audio/opus"),
-    M4A("m4a", "audio/mp4"),
-    MP3("mp3", "audio/mpeg"),
-}
-
 enum class AudioQuality {
     AUTO,
     HIGH,
@@ -109,7 +103,6 @@ val AutoDownloadOnLikeKey = booleanPreferencesKey("autoDownloadOnLike")
 val AutoSkipNextOnErrorKey = booleanPreferencesKey("autoSkipNextOnError")
 val StopMusicOnTaskClearKey = booleanPreferencesKey("stopMusicOnTaskClear")
 val CustomDownloadPathKey = stringPreferencesKey("customDownloadPath")
-val DownloadFormatKey = stringPreferencesKey("downloadFormat")
 
 val MaxImageCacheSizeKey = intPreferencesKey("maxImageCacheSize")
 val MaxSongCacheSizeKey = intPreferencesKey("maxSongCacheSize")
@@ -353,8 +346,7 @@ val LyricsTextPositionKey = stringPreferencesKey("lyricsTextPosition")
 val LyricsClickKey = booleanPreferencesKey("lyricsClick")
 val LyricsScrollKey = booleanPreferencesKey("lyricsScrollKey")
 val TranslateLyricsKey = booleanPreferencesKey("translateLyrics")
-val DeveloperModeEnabledKey = booleanPreferencesKey("developerModeEnabled")
-val DebugLoggingEnabledKey = booleanPreferencesKey("debugLoggingEnabled")
+val ArtistBlacklistKey = stringPreferencesKey("artistBlacklist")
 
 val PlayerVolumeKey = floatPreferencesKey("playerVolume")
 val RepeatModeKey = intPreferencesKey("repeatMode")
