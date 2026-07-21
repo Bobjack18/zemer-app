@@ -1,9 +1,12 @@
 package com.jtech.zemer.ui.component
 
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Slider
 import androidx.compose.material3.SliderDefaults
@@ -11,6 +14,7 @@ import androidx.compose.material3.SliderState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
@@ -53,10 +57,11 @@ fun WaveformSeekBar(
         valueRange = valueRange,
         modifier = modifier.height(trackHeight),
         thumb = {
-            SliderDefaults.Thumb(
-                interactionSource = androidx.compose.foundation.interaction.MutableInteractionSource(),
-                modifier = Modifier.size(12.dp),
-                color = activeColor,
+            Box(
+                modifier = Modifier
+                    .size(12.dp)
+                    .clip(CircleShape)
+                    .background(activeColor),
             )
         },
         track = { state: SliderState ->
