@@ -117,9 +117,11 @@ import com.jtech.zemer.constants.PlayerBackgroundStyleKey
 import com.jtech.zemer.constants.PlayerButtonsStyle
 import com.jtech.zemer.constants.PlayerButtonsStyleKey
 import com.jtech.zemer.constants.PlayerHorizontalPadding
+import com.jtech.zemer.constants.ParticlesEnabledKey
 import com.jtech.zemer.constants.QueuePeekHeight
 import com.jtech.zemer.constants.SliderStyle
 import com.jtech.zemer.constants.SliderStyleKey
+import com.jtech.zemer.constants.ShowWaveformKey
 import com.jtech.zemer.constants.UseNewPlayerDesignKey
 import com.jtech.zemer.extensions.toggleRepeatMode
 import com.jtech.zemer.models.MediaMetadata
@@ -130,6 +132,8 @@ import com.jtech.zemer.ui.component.LocalBottomSheetPageState
 import com.jtech.zemer.ui.component.LocalMenuState
 import com.jtech.zemer.ui.component.PlayerSliderTrack
 import com.jtech.zemer.ui.component.ResizableIconButton
+import com.jtech.zemer.ui.component.AnimatedParticles
+import com.jtech.zemer.ui.component.WaveformSeekBar
 import com.jtech.zemer.ui.component.rememberBottomSheetState
 import com.jtech.zemer.ui.menu.PlayerMenu
 import com.jtech.zemer.ui.screens.settings.DarkMode
@@ -218,6 +222,8 @@ fun BottomSheetPlayer(
     val canSkipPrevious by playerConnection.canSkipPrevious.collectAsState()
     val canSkipNext by playerConnection.canSkipNext.collectAsState()
     val sliderStyle by rememberEnumPreference(SliderStyleKey, SliderStyle.DEFAULT)
+    val showWaveform by rememberPreference(ShowWaveformKey, defaultValue = false)
+    val showParticles by rememberPreference(ParticlesEnabledKey, defaultValue = false)
 
     var position by rememberSaveable(playbackState) {
         mutableLongStateOf(playerConnection.player.currentPosition)
@@ -500,6 +506,16 @@ fun BottomSheetPlayer(
                     else -> {
                         PlayerBackgroundStyle.DEFAULT
                     }
+                }
+
+                if (showParticles) {
+                    AnimatedParticles(
+                        amplitudeFlow = playerConnection.service.audioEffects.amplitude,
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .alpha(backgroundAlpha),
+                        color = Color.White,
+                    )
                 }
             }
         },
@@ -852,73 +868,93 @@ fun BottomSheetPlayer(
                     .fillMaxWidth()
                     .padding(horizontal = PlayerHorizontalPadding - 8.dp)
             ) {
-                when (sliderStyle) {
-                    SliderStyle.DEFAULT -> {
-                        Slider(
-                            value = (sliderPosition ?: position).toFloat(),
-                            valueRange = 0f..(if (duration == C.TIME_UNSET) 0f else duration.toFloat()),
-                            onValueChange = {
-                                sliderPosition = it.toLong()
-                            },
-                            onValueChangeFinished = {
-                                sliderPosition?.let {
-                                    playerConnection.seekTo(it)
-                                    position = it
-                                }
-                                sliderPosition = null
-                            },
-                            colors = PlayerSliderColors.defaultSliderColors(accentColor, playerBackground, useDarkTheme),
-                            modifier = Modifier.padding(horizontal = PlayerHorizontalPadding - 8.dp),
-                        )
-                    }
+                if (showWaveform) {
+                    WaveformSeekBar(
+                        value = (sliderPosition ?: position).toFloat(),
+                        onValueChange = { sliderPosition = it.toLong() },
+                        onValueChangeFinished = {
+                            sliderPosition?.let {
+                                playerConnection.seekTo(it)
+                                position = it
+                            }
+                            sliderPosition = null
+                        },
+                        valueRange = 0f..(if (duration == C.TIME_UNSET) 0f else duration.toFloat()),
+                        spectrumFlow = playerConnection.service.audioEffects.spectrum,
+                        activeColor = accentColor,
+                        inactiveColor = accentColor.copy(alpha = 0.35f),
+                        trackHeight = 40.dp,
+                        modifier = Modifier.padding(horizontal = 8.dp),
+                    )
+                } else {
+                    when (sliderStyle) {
+                        SliderStyle.DEFAULT -> {
+                            Slider(
+                                value = (sliderPosition ?: position).toFloat(),
+                                valueRange = 0f..(if (duration == C.TIME_UNSET) 0f else duration.toFloat()),
+                                onValueChange = {
+                                    sliderPosition = it.toLong()
+                                },
+                                onValueChangeFinished = {
+                                    sliderPosition?.let {
+                                        playerConnection.seekTo(it)
+                                        position = it
+                                    }
+                                    sliderPosition = null
+                                },
+                                colors = PlayerSliderColors.defaultSliderColors(accentColor, playerBackground, useDarkTheme),
+                                modifier = Modifier.padding(horizontal = PlayerHorizontalPadding - 8.dp),
+                            )
+                        }
 
-                    SliderStyle.SQUIGGLY -> {
-                        SquigglySlider(
-                            value = (sliderPosition ?: position).toFloat(),
-                            valueRange = 0f..(if (duration == C.TIME_UNSET) 0f else duration.toFloat()),
-                            onValueChange = {
-                                sliderPosition = it.toLong()
-                            },
-                            onValueChangeFinished = {
-                                sliderPosition?.let {
-                                    playerConnection.seekTo(it)
-                                    position = it
-                                }
-                                sliderPosition = null
-                            },
-                            colors = PlayerSliderColors.squigglySliderColors(accentColor, playerBackground, useDarkTheme),
-                            modifier = Modifier.padding(horizontal = PlayerHorizontalPadding - 8.dp),
-                            squigglesSpec =
-                            SquigglySlider.SquigglesSpec(
-                                amplitude = if (isPlaying) (2.dp).coerceAtLeast(2.dp) else 0.dp,
-                                strokeWidth = 3.dp,
-                            ),
-                        )
-                    }
+                        SliderStyle.SQUIGGLY -> {
+                            SquigglySlider(
+                                value = (sliderPosition ?: position).toFloat(),
+                                valueRange = 0f..(if (duration == C.TIME_UNSET) 0f else duration.toFloat()),
+                                onValueChange = {
+                                    sliderPosition = it.toLong()
+                                },
+                                onValueChangeFinished = {
+                                    sliderPosition?.let {
+                                        playerConnection.seekTo(it)
+                                        position = it
+                                    }
+                                    sliderPosition = null
+                                },
+                                colors = PlayerSliderColors.squigglySliderColors(accentColor, playerBackground, useDarkTheme),
+                                modifier = Modifier.padding(horizontal = PlayerHorizontalPadding - 8.dp),
+                                squigglesSpec =
+                                SquigglySlider.SquigglesSpec(
+                                    amplitude = if (isPlaying) (2.dp).coerceAtLeast(2.dp) else 0.dp,
+                                    strokeWidth = 3.dp,
+                                ),
+                            )
+                        }
 
-                    SliderStyle.SLIM -> {
-                        Slider(
-                            value = (sliderPosition ?: position).toFloat(),
-                            valueRange = 0f..(if (duration == C.TIME_UNSET) 0f else duration.toFloat()),
-                            onValueChange = {
-                                sliderPosition = it.toLong()
-                            },
-                            onValueChangeFinished = {
-                                sliderPosition?.let {
-                                    playerConnection.seekTo(it)
-                                    position = it
-                                }
-                                sliderPosition = null
-                            },
-                            thumb = { Spacer(modifier = Modifier.size(0.dp)) },
-                            track = { sliderState ->
-                                PlayerSliderTrack(
-                                    sliderState = sliderState,
-                                    colors = PlayerSliderColors.slimSliderColors(accentColor, playerBackground, useDarkTheme)
-                                )
-                            },
-                            modifier = Modifier.padding(horizontal = PlayerHorizontalPadding - 8.dp)
-                        )
+                        SliderStyle.SLIM -> {
+                            Slider(
+                                value = (sliderPosition ?: position).toFloat(),
+                                valueRange = 0f..(if (duration == C.TIME_UNSET) 0f else duration.toFloat()),
+                                onValueChange = {
+                                    sliderPosition = it.toLong()
+                                },
+                                onValueChangeFinished = {
+                                    sliderPosition?.let {
+                                        playerConnection.seekTo(it)
+                                        position = it
+                                    }
+                                    sliderPosition = null
+                                },
+                                thumb = { Spacer(modifier = Modifier.size(0.dp)) },
+                                track = { sliderState ->
+                                    PlayerSliderTrack(
+                                        sliderState = sliderState,
+                                        colors = PlayerSliderColors.slimSliderColors(accentColor, playerBackground, useDarkTheme)
+                                    )
+                                },
+                                modifier = Modifier.padding(horizontal = PlayerHorizontalPadding - 8.dp)
+                            )
+                        }
                     }
                 }
             }

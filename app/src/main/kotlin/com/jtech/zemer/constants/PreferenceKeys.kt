@@ -100,6 +100,27 @@ enum class AudioQuality {
 
 val AudioOffload = booleanPreferencesKey("enableOffload")
 
+// ── Professional audio features (waveform, equalizer, crossfade, replay gain, particles) ──
+val ShowWaveformKey = booleanPreferencesKey("showWaveform")
+val EqualizerEnabledKey = booleanPreferencesKey("equalizerEnabled")
+val EqualizerPresetKey = stringPreferencesKey("equalizerPreset")
+val EqualizerBandsKey = stringPreferencesKey("equalizerBands")
+val CrossfadeDurationKey = intPreferencesKey("crossfadeDuration")
+val ReplayGainModeKey = stringPreferencesKey("replayGainMode")
+val ReplayGainPreampKey = floatPreferencesKey("replayGainPreamp")
+val ParticlesEnabledKey = booleanPreferencesKey("particlesEnabled")
+
+enum class ReplayGainMode {
+    OFF,
+    AUTO,
+    FORCE,
+    ;
+
+    companion object {
+        fun from(value: String?): ReplayGainMode = entries.firstOrNull { it.name == value } ?: AUTO
+    }
+}
+
 val PersistentQueueKey = booleanPreferencesKey("persistentQueue")
 val SkipSilenceKey = booleanPreferencesKey("skipSilence")
 val AudioNormalizationKey = booleanPreferencesKey("audioNormalization")

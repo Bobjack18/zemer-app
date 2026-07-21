@@ -4,6 +4,34 @@
     <string name="replay">Replay</string>
     <string name="crop_album_art">Crop album art</string>
     <string name="crop_album_art_desc">Fill the player with the cover art instead of fitting it (edges may be cropped)</string>
+
+    <!-- Professional audio features -->
+    <string name="waveform">Waveform seekbar</string>
+    <string name="waveform_desc">Show a live audio spectrum in place of the progress bar</string>
+    <string name="seconds_format">%1$d s</string>
+    <string name="equalizer">Equalizer</string>
+    <string name="equalizer_desc">Tune the sound with band filters and presets</string>
+    <string name="equalizer_preset">Preset</string>
+    <string name="equalizer_flat">Flat</string>
+    <string name="equalizer_custom">Custom</string>
+    <string name="equalizer_band">Band %1$d</string>
+    <string name="equalizer_band_hz">%1$d Hz</string>
+    <string name="crossfade">Crossfade</string>
+    <string name="crossfade_desc">Smoothly blend the end of a track into the next one</string>
+    <string name="replay_gain">Replay gain</string>
+    <string name="replay_gain_desc">Normalize loudness across tracks using YouTube loudness metadata</string>
+    <string name="replay_gain_mode">Mode</string>
+    <string name="replay_gain_off">Off</string>
+    <string name="replay_gain_auto">Auto</string>
+    <string name="replay_gain_force">Force</string>
+    <string name="replay_gain_preamp">Preamp</string>
+    <string name="particles">Animated particles</string>
+    <string name="particles_desc">Reactive particles behind the artwork that pulse with the music</string>
+    <string name="recommendations">Recommended</string>
+    <string name="recommendations_desc">Songs you often listen to around the one playing</string>
+    <string name="recommended_for_you">Recommended for you</string>
+    <string name="recommended_empty">No recommendations yet. Keep listening to build your taste profile.</string>
+    <string name="add_recommended_to_queue">Add recommended to queue</string>
     <string name="not_applicable">N/A</string>
 
     <string name="local_history">Local</string>
