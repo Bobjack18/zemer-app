@@ -7,16 +7,22 @@ import androidx.media3.common.util.UnstableApi
 import com.jtech.zemer.constants.EqualizerBandsKey
 import com.jtech.zemer.constants.EqualizerEnabledKey
 import com.jtech.zemer.constants.EqualizerPresetKey
+import androidx.datastore.preferences.core.edit
 import com.jtech.zemer.utils.dataStore
 import com.jtech.zemer.utils.get
 import com.jtech.zemer.utils.reportException
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonPrimitive
-import kotlin.math.minOf
+import kotlin.math.min
 import kotlin.math.sqrt
 
 data class EqualizerState(
@@ -50,7 +56,11 @@ data class EqualizerState(
  * crossfade player swaps (the service re-attaches to the new active session).
  */
 @UnstableApi
-class AudioEffectsEngine(private val context: Context) {
+class AudioEffectsEngine(
+    private val context: Context,
+) {
+    private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
+
     companion object {
         const val SPECTRUM_BARS = 48
 
@@ -141,7 +151,7 @@ class AudioEffectsEngine(private val context: Context) {
                                 updateSpectrum(fft)
                             }
                         },
-                        minOf(Visualizer.getMaxCaptureRate(), 20000),
+                        min(Visualizer.getMaxCaptureRate(), 20000),
                         true,
                         true,
                     )
@@ -269,6 +279,7 @@ class AudioEffectsEngine(private val context: Context) {
         }
         equalizer = null
         attachedSessionId = -1
+        scope.cancel()
     }
 
     /** Load EQ configuration from DataStore and apply it. Called once on service start. */
@@ -292,15 +303,17 @@ class AudioEffectsEngine(private val context: Context) {
     }
 
     fun persist() {
-        try {
-            val arr = JsonArray(_eqBands.value.map { JsonPrimitive(it) })
-            context.dataStore.edit {
-                it[EqualizerBandsKey] = arr.toString()
-                it[EqualizerPresetKey] = _eqPreset.value
-                it[EqualizerEnabledKey] = eqEnabled
+        val arr = JsonArray(_eqBands.value.map { JsonPrimitive(it) })
+        scope.launch {
+            try {
+                context.dataStore.edit {
+                    it[EqualizerBandsKey] = arr.toString()
+                    it[EqualizerPresetKey] = _eqPreset.value
+                    it[EqualizerEnabledKey] = eqEnabled
+                }
+            } catch (e: Exception) {
+                reportException(e)
             }
-        } catch (e: Exception) {
-            reportException(e)
         }
     }
 }

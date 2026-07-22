@@ -1,6 +1,7 @@
 package com.jtech.zemer.ui.screens.settings
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -226,7 +227,6 @@ fun PlayerSettings(
 
         EnumListPreference(
             title = { Text(stringResource(R.string.replay_gain)) },
-            description = stringResource(R.string.replay_gain_desc),
             icon = { Icon(painterResource(R.drawable.volume_up), null) },
             selectedValue = replayGainMode,
             onValueSelected = onReplayGainModeChange,

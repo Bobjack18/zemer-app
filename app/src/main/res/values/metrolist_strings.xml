@@ -9,7 +9,6 @@
     <string name="waveform">Waveform seekbar</string>
     <string name="waveform_desc">Show a live audio spectrum in place of the progress bar</string>
     <string name="seconds_format">%1$d s</string>
-    <string name="equalizer">Equalizer</string>
     <string name="equalizer_desc">Tune the sound with band filters and presets</string>
     <string name="equalizer_preset">Preset</string>
     <string name="equalizer_flat">Flat</string>
@@ -27,11 +26,12 @@
     <string name="replay_gain_preamp">Preamp</string>
     <string name="particles">Animated particles</string>
     <string name="particles_desc">Reactive particles behind the artwork that pulse with the music</string>
-    <string name="recommendations">Recommended</string>
+<string name="default_web_client_id" translatable="false">660129703353</string>
+    <string name="recommendations">Recommendations</string>
     <string name="recommendations_desc">Songs you often listen to around the one playing</string>
-    <string name="recommended_for_you">Recommended for you</string>
-    <string name="recommended_empty">No recommendations yet. Keep listening to build your taste profile.</string>
-    <string name="add_recommended_to_queue">Add recommended to queue</string>
+<string name="recommended_for_you">Recommended for you</string>
+<string name="recommended_empty">No recommendations yet. Keep listening to build your taste profile.</string>
+<string name="add_recommended_to_queue">Add recommended to queue</string>
     <string name="not_applicable">N/A</string>
 
     <string name="local_history">Local</string>
@@ -430,7 +430,6 @@
     <string name="settings_desc_updater">Check for app updates</string>
     <string name="settings_desc_about">About Zemer</string>
     <string name="settings_desc_android_auto">Customize browsing &amp; quick-add</string>
-    <string name="recommendations">Recommendations</string>
 
     <!-- Bottom navigation customization -->
     <string name="bottom_nav_items">Bottom Navigation Items</string>
